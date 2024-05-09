@@ -41,9 +41,9 @@ function RootLayoutNav() {
         redirect
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen name={ROOT_STACK.tabs} options={{ headerShown: false }} /> */}
-      <Stack.Screen name={ROOT_STACK.signIn} options={{ headerShown: false }} />
-      <Stack.Screen name={ROOT_STACK.signUp} options={{ headerShown: false }} />
+      <Stack.Screen name={ROOT_STACK.tabs} options={{ headerShown: false }} />
+      {/* <Stack.Screen name={ROOT_STACK.signIn} options={{ headerShown: false }} /> */}
+      {/* <Stack.Screen name={ROOT_STACK.signUp} options={{ headerShown: false }} /> */}
     </Stack>
   );
 }

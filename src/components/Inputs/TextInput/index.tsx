@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.black2,
     flexDirection: "row",
     alignItems: "center",
-    height: normalizeHeight(50),
+    minHeight: normalizeHeight(50),
     backgroundColor: COLORS.black2,
   },
   input: {

@@ -40,7 +40,7 @@ const styles = RN.StyleSheet.create({
     alignItems: "center",
     paddingVertical: normalizeHeight(12),
     borderRadius: normalizeWidth(16),
-    height: normalizeHeight(50),
+    minHeight: normalizeHeight(52),
   },
   buttonDisabled: {
     opacity: 0.4,
