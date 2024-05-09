@@ -5,40 +5,45 @@ import RN from "@/components/RN";
 import { PoppinsFonts } from "@/shared/assets/fonts/poppins.fonts";
 import { COLORS } from "@/shared/constants/colors";
 import { normalizeHeight } from "@/shared/constants/dimensions";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import { Link } from "expo-router";
-import { ROOT_STACK } from "./(tabs)/routes";
 
-export default function SignIn() {
+export default function SignUp() {
   const [{ email, password }, setState] = useState({ email: "", password: "" });
-
   return (
     <Container style={styles.container}>
       <RN.View g={16}>
         <TextInput
-          placeholder="Email"
+          placeholder="Ism"
           value={email}
           onChangeText={(email) => setState((prev) => ({ ...prev, email }))}
         />
         <TextInput
-          placeholder="Parol"
+          placeholder="Email"
           value={password}
-          secureTextEntry
           onChangeText={(password) =>
             setState((prev) => ({ ...prev, password }))
           }
         />
-        <Button title="Kirish" />
+        <TextInput
+          placeholder="Parol"
+          value={password}
+          onChangeText={(password) =>
+            setState((prev) => ({ ...prev, password }))
+          }
+        />
+        <Button title="Ro’yxatdan o’tish" />
 
         <RN.View fd={"row"} jc={"center"} g={5}>
-          <RN.Text style={styles.warningText}>Hisobingiz yo'qmi?</RN.Text>
-          <Link href={ROOT_STACK.signUp} asChild>
-            <RN.TouchableOpacity activeOpacity={0.5}>
-              <RN.Text style={[styles.warningText, styles.signUpText]}>
-                Ro'yxatdan o'tish!
-              </RN.Text>
-            </RN.TouchableOpacity>
-          </Link>
+          <RN.Text style={styles.warningText}>Hisobingiz bormi?</RN.Text>
+          <RN.TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => router.back()}
+          >
+            <RN.Text style={[styles.warningText, styles.signUpText]}>
+              Kirish!
+            </RN.Text>
+          </RN.TouchableOpacity>
         </RN.View>
       </RN.View>
     </Container>

@@ -2,6 +2,7 @@ export enum ROOT_STACK {
   tabs = "(tabs)",
   onboarding = "index",
   signIn = "sign-in",
+  signUp = "sign-up",
 }
 
 export enum TAB_BAR_STACK {
