@@ -2,11 +2,14 @@ import RN from '@/components/RN';
 import { onBoardingImageWebp } from '@/shared/assets/images';
 import { COLORS } from '@/shared/constants/colors';
 import { SIZES } from '@/shared/constants/dimensions';
-import { Image } from 'expo-image';
 
 const OnBoardingScreen = () => (
   <RN.View style={styles.container}>
-    <Image source={onBoardingImageWebp} style={styles.image} />
+    <RN.Image
+      source={onBoardingImageWebp}
+      style={styles.image}
+      contentFit={'contain'}
+    />
   </RN.View>
 );
 

@@ -16,7 +16,11 @@ export default function Card({ isPremium = false }: CardProps) {
       {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}
-      <RN.Image source={MockUserImagePng} style={styles.movieImage} />
+      <RN.Image
+        source={MockUserImagePng}
+        style={styles.movieImage}
+        contentFit={'contain'}
+      />
       <RN.Text style={styles.movieName}>{'Jujutsu Kaisen'}</RN.Text>
       <RN.Text style={styles.movieCategories}>
         {'Maktab / Romantik / drama'}
@@ -49,7 +53,6 @@ const styles = RN.StyleSheet.create({
     width: normalizeWidth(65),
     height: normalizeWidth(25),
     zIndex: 1,
-    resizeMode: 'contain',
     left: 5,
     top: 5,
   },

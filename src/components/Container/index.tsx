@@ -27,7 +27,9 @@ const Container: FC<ContainerProps> = ({
       style={[styles.container, resOfProps.style, { backgroundColor }]}
     >
       {Header}
-      <Main showsVerticalScrollIndicator={false}>{children}</Main>
+      <Main showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+        {children}
+      </Main>
     </SafeAreaView>
   );
 };
