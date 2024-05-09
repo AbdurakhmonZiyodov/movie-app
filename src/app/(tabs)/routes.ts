@@ -1,15 +1,15 @@
 export enum ROOT_STACK {
-  tabs = "(tabs)",
-  onboarding = "index",
-  signIn = "sign-in",
-  signUp = "sign-up",
+  tabs = '(tabs)',
+  onboarding = 'index',
+  signIn = 'sign-in',
+  signUp = 'sign-up',
 }
 
 export enum TAB_BAR_STACK {
-  HOME = "index",
-  SEARCH = "search",
-  CATEGORY = "category",
-  PROFILE = "profile",
+  HOME = 'index',
+  SEARCH = 'search',
+  CATEGORY = 'category',
+  PROFILE = 'profile',
 }
 
 // export enum REGISTER_STACK {

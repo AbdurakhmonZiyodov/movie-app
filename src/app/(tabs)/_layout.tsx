@@ -1,12 +1,12 @@
-import React, { ReactNode } from "react";
-import { Tabs } from "expo-router";
-import { TAB_BAR_STACK } from "./routes";
-import { FontAwesome as FontAwesomeIcon } from "@expo/vector-icons";
+import React, { ReactNode } from 'react';
+import { Tabs } from 'expo-router';
+import { TAB_BAR_STACK } from './routes';
+import { FontAwesome as FontAwesomeIcon } from '@expo/vector-icons';
 
-import { map } from "lodash";
-import { COLORS } from "@/shared/constants/colors";
-import GirdsIcon from "@/shared/assets/icons/GirdsIcon";
-import RN from "@/components/RN";
+import { map } from 'lodash';
+import { COLORS } from '@/shared/constants/colors';
+import GirdsIcon from '@/shared/assets/icons/GirdsIcon';
+import RN from '@/components/RN';
 
 const iconOptions = {
   size: 25,
@@ -23,12 +23,12 @@ const tabs: Record<
 > = {
   [TAB_BAR_STACK.HOME]: {
     icon: ({ color }) => (
-      <FontAwesomeIcon name="home" color={color} {...iconOptions} />
+      <FontAwesomeIcon name={'home'} color={color} {...iconOptions} />
     ),
   },
   [TAB_BAR_STACK.SEARCH]: {
     icon: ({ color }) => (
-      <FontAwesomeIcon name="search" color={color} {...iconOptions} />
+      <FontAwesomeIcon name={'search'} color={color} {...iconOptions} />
     ),
   },
   [TAB_BAR_STACK.CATEGORY]: {
@@ -36,7 +36,7 @@ const tabs: Record<
   },
   [TAB_BAR_STACK.PROFILE]: {
     icon: ({ color }) => (
-      <FontAwesomeIcon name="user" color={color} {...iconOptions} />
+      <FontAwesomeIcon name={'user'} color={color} {...iconOptions} />
     ),
   },
 };

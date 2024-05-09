@@ -1,1 +1,1 @@
-export { default as OnBoardingSvg } from "./OnBoardingSvg.svg";
+export { default as OnBoardingSvg } from './OnBoardingSvg.svg';

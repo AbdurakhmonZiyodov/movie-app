@@ -1,4 +1,4 @@
-import RN from "@/components/RN";
+import RN from '@/components/RN';
 
 export const CoreStyle = RN.StyleSheet.create({
   flex1: {

@@ -1,11 +1,11 @@
-import {useCallback, useMemo, useState} from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 const useVisibility = (initialState?: boolean) => {
   const [visible, setVisible] = useState(initialState || false);
 
   const show = useCallback(() => setVisible(true), []);
   const hide = useCallback(() => setVisible(false), []);
-  const toggle = useCallback(() => setVisible(prev => !prev), []);
+  const toggle = useCallback(() => setVisible((prev) => !prev), []);
   const set = useCallback((newValue: boolean) => setVisible(newValue), []);
 
   return useMemo(

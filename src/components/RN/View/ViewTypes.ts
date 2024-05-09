@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 type PartialKeys<T extends string> = Partial<Record<T, number | string>>;
 
 type common = 'pos' | 'bgColor' | 'bdrs' | 'op' | 'zI' | 'top';

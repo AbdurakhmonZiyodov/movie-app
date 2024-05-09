@@ -1,16 +1,16 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import "react-native-reanimated";
-import { ROOT_STACK } from "./(tabs)/routes";
-import { getAllFonts } from "@/shared/assets/fonts";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import 'react-native-reanimated';
+import { ROOT_STACK } from './(tabs)/routes';
+import { getAllFonts } from '@/shared/assets/fonts';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../shared/assets/fonts/SpaceMono-Regular.ttf"),
+    SpaceMono: require('../shared/assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
     ...getAllFonts(),
   });
@@ -38,7 +38,7 @@ function RootLayoutNav() {
     <Stack>
       <Stack.Screen
         name={ROOT_STACK.onboarding}
-        redirect
+        redirect={true}
         options={{ headerShown: false }}
       />
       <Stack.Screen name={ROOT_STACK.tabs} options={{ headerShown: false }} />

@@ -1,9 +1,9 @@
-import RN from "@/components/RN";
-import { PoppinsFonts } from "@/shared/assets/fonts/poppins.fonts";
-import { COLORS } from "@/shared/constants/colors";
-import { normalizeHeight, normalizeWidth } from "@/shared/constants/dimensions";
-import React, { FC, ReactNode } from "react";
-import { StyleProp, StyleSheet, TextStyle, ViewStyle } from "react-native";
+import RN from '@/components/RN';
+import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
+import { COLORS } from '@/shared/constants/colors';
+import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
+import React, { FC, ReactNode } from 'react';
+import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 interface Props {
   LeftElement?: ReactNode;
@@ -27,25 +27,23 @@ export const TextInput: FC<Props> = ({
   RightElement,
   numberOfLines = 1,
   secureTextEntry,
-}) => {
-  return (
-    <RN.View style={[styles.container, containerStyle]}>
-      {LeftElement}
-      <RN.TextInput
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
-        placeholderTextColor={COLORS.black3}
-        style={[styles.input, inputStyle]}
-        autoCapitalize="none"
-        autoCorrect={false}
-        numberOfLines={numberOfLines}
-        secureTextEntry={secureTextEntry}
-      />
-      {RightElement}
-    </RN.View>
-  );
-};
+}) => (
+  <RN.View style={[styles.container, containerStyle]}>
+    {LeftElement}
+    <RN.TextInput
+      placeholder={placeholder}
+      value={value}
+      onChangeText={onChangeText}
+      placeholderTextColor={COLORS.black3}
+      style={[styles.input, inputStyle]}
+      autoCapitalize={'none'}
+      autoCorrect={false}
+      numberOfLines={numberOfLines}
+      secureTextEntry={secureTextEntry}
+    />
+    {RightElement}
+  </RN.View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -53,8 +51,8 @@ const styles = StyleSheet.create({
     borderRadius: normalizeHeight(10),
     borderWidth: 1,
     borderColor: COLORS.black2,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     minHeight: normalizeHeight(50),
     backgroundColor: COLORS.black2,
   },

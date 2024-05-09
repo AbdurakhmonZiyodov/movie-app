@@ -16,9 +16,9 @@ import {
   Share,
   TouchableWithoutFeedback,
   Text,
-} from "react-native";
-import { Image } from "expo-image";
-import View from "./View";
+} from 'react-native';
+import { Image } from 'expo-image';
+import View from './View';
 
 export default {
   TouchableOpacity,

@@ -4,14 +4,14 @@ import {
   Montserrat_500Medium,
   Montserrat_600SemiBold,
   Montserrat_700Bold,
-} from "@expo-google-fonts/montserrat";
+} from '@expo-google-fonts/montserrat';
 
 export enum MontserratFonts {
-  Montserrat_300 = "Montserrat_300Light",
-  Montserrat_400 = "Montserrat_400Regular",
-  Montserrat_500 = "Montserrat_500Medium",
-  Montserrat_600 = "Montserrat_600SemiBold",
-  Montserrat_700 = "Montserrat_700Bold",
+  Montserrat_300 = 'Montserrat_300Light',
+  Montserrat_400 = 'Montserrat_400Regular',
+  Montserrat_500 = 'Montserrat_500Medium',
+  Montserrat_600 = 'Montserrat_600SemiBold',
+  Montserrat_700 = 'Montserrat_700Bold',
 }
 export function getMontserratFonts() {
   return {

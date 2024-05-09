@@ -1,5 +1,5 @@
-import {ViewStyle} from 'react-native';
-import {StylePropsKeys, styleProps} from './ViewTypes';
+import { ViewStyle } from 'react-native';
+import { StylePropsKeys, styleProps } from './ViewTypes';
 
 export class ViewHelper {
   static getStyles = (props?: StylePropsKeys): ViewStyle => {

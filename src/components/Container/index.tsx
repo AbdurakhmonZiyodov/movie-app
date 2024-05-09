@@ -1,11 +1,11 @@
-import { COLORS } from "@/shared/constants/colors";
-import RN from "../RN";
+import { COLORS } from '@/shared/constants/colors';
+import RN from '../RN';
 import {
   SafeAreaView,
   SafeAreaViewProps,
-} from "react-native-safe-area-context";
-import { FC, ReactNode } from "react";
-import { normalizeWidth } from "@/shared/constants/dimensions";
+} from 'react-native-safe-area-context';
+import { FC, ReactNode } from 'react';
+import { normalizeWidth } from '@/shared/constants/dimensions';
 
 interface ContainerProps extends SafeAreaViewProps {
   backgroundColor?: string;

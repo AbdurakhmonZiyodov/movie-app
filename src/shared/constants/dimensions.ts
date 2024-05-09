@@ -1,8 +1,8 @@
-import { PixelRatio } from "react-native";
-import { isIOS } from "./platform";
-import RN from "@/components/RN";
+import { PixelRatio } from 'react-native';
+import { isIOS } from './platform';
+import RN from '@/components/RN';
 
-const { width, height } = RN.Dimensions.get("window");
+const { width, height } = RN.Dimensions.get('window');
 
 const SIZES = {
   width,

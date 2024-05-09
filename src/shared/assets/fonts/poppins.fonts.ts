@@ -4,14 +4,14 @@ import {
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
-} from "@expo-google-fonts/poppins";
+} from '@expo-google-fonts/poppins';
 
 export enum PoppinsFonts {
-  Poppins_300 = "Poppins_300Light",
-  Poppins_400 = "Poppins_400Regular",
-  Poppins_500 = "Poppins_500Medium",
-  Poppins_600 = "Poppins_600SemiBold",
-  Poppins_700 = "Poppins_700Bold",
+  Poppins_300 = 'Poppins_300Light',
+  Poppins_400 = 'Poppins_400Regular',
+  Poppins_500 = 'Poppins_500Medium',
+  Poppins_600 = 'Poppins_600SemiBold',
+  Poppins_700 = 'Poppins_700Bold',
 }
 export function getPoppinsFonts() {
   return {

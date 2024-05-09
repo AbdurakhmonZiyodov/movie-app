@@ -1,1 +1,1 @@
-export { default as MockUserImagePng } from "./movie.png";
+export { default as MockUserImagePng } from './movie.png';
