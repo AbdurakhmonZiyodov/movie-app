@@ -5,20 +5,20 @@ import { isEqual } from 'lodash';
 import { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
 
-const filers = ['Abdurakhmon', 'Alisher'];
+const filers = ['Anime film', 'Anime serial', 'Ongoin'];
 export default function CardHorizantalFilter() {
   const activeFilter = filers[0];
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: filter }) => (
-      <RN.TouchableOpacity>
+      <RN.TouchableOpacity style={styles.filterButton}>
         <RN.Text
           style={[
             styles.filterText,
             isEqual(activeFilter, filter) && styles.activeFilterText,
           ]}
         >
-          {filers}
+          {filter}
         </RN.Text>
       </RN.TouchableOpacity>
     ),
@@ -28,6 +28,7 @@ export default function CardHorizantalFilter() {
     <RN.View>
       <RN.FlatList
         horizontal={true}
+        contentContainerStyle={styles.flatList}
         keyExtractor={(_, key) => key.toString()}
         data={filers}
         renderItem={renderItem}
@@ -43,7 +44,13 @@ const styles = RN.StyleSheet.create({
     color: COLORS.white,
     textTransform: 'uppercase',
   },
+  filterButton: {
+    paddingVertical: 5,
+  },
   activeFilterText: {
     color: COLORS.orange,
+  },
+  flatList: {
+    gap: 20,
   },
 });
