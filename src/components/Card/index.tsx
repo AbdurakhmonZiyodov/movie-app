@@ -22,6 +22,13 @@ export default function Card({ isPremium = false }: CardProps) {
       {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}
+
+
+
+
+
+
+
       <RN.Image source={MockUserImagePng} style={styles.movieImage} />
       <RN.Text style={styles.movieName}>{'Jujutsu Kaisen'}</RN.Text>
       <RN.Text style={styles.movieCategories}>
