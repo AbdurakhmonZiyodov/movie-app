@@ -16,7 +16,7 @@ export default function Card({ isPremium = false }: CardProps) {
     if (isPremium) {
       console.log({ isPremium });
     }
-  }, []);
+  }, [isPremium]);
   return (
     <RN.TouchableOpacity activeOpacity={0.5}>
       {isPremium && (
@@ -25,6 +25,7 @@ export default function Card({ isPremium = false }: CardProps) {
 
       <RN.Image source={MockUserImagePng} style={styles.movieImage} />
       <RN.Text style={styles.movieName}>{'Jujutsu Kaisen'}</RN.Text>
+
       <RN.Text style={styles.movieCategories}>
         {'Maktab / Romantik / drama'}
       </RN.Text>
