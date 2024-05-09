@@ -10,7 +10,7 @@
     "test": "jest --watchAll",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "jest": {
     "preset": "jest-expo"
@@ -40,12 +40,6 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "^15.2.0",
     "react-native-web": "~0.19.10"
-  },
-  "lint-staged": {
-    "./src/**/*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ]
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
