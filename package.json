@@ -62,6 +62,9 @@
   },
   "private": true,
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "prettier --write"
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "npm run lint:fix"
+    ]
   }
 }
