@@ -16,7 +16,7 @@ export default function Card({ isPremium = false }: CardProps) {
     if (isPremium) {
       console.log({ isPremium });
     }
-  }, [isPremium]);
+  }, []);
   return (
     <RN.TouchableOpacity activeOpacity={0.5}>
       {isPremium && (

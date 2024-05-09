@@ -1,7 +1,7 @@
 // https://docs.expo.dev/guides/using-eslint/
 module.exports = {
   extends: ['expo', 'prettier'],
-  plugins: ['prettier'],
+  plugins: ['prettier', 'react-hooks'],
   rules: {
     'prettier/prettier': 'error',
     'arrow-body-style': ['error', 'as-needed'],
@@ -12,5 +12,7 @@ module.exports = {
     ],
     'import/newline-after-import': 1,
     'import/no-duplicates': ['error'],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error',
   },
 };
