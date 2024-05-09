@@ -1,31 +1,23 @@
-import { MockUserImagePng } from '@/shared/assets/mock/images';
-import RN from '../RN';
-import { SIZES, normalizeWidth } from '@/shared/constants/dimensions';
-import { COLORS } from '@/shared/constants/colors';
-import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { MontserratFonts } from '@/shared/assets/fonts/montserrat.fonts';
+import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { PremiumImagePng } from '@/shared/assets/images';
-import { useEffect } from 'react';
+import { MockUserImagePng } from '@/shared/assets/mock/images';
+import { COLORS } from '@/shared/constants/colors';
+import { SIZES, normalizeWidth } from '@/shared/constants/dimensions';
+import RN from '../RN';
 
 export interface CardProps {
   isPremium?: boolean;
 }
 
 export default function Card({ isPremium = false }: CardProps) {
-  useEffect(() => {
-    if (isPremium) {
-      console.log({ isPremium });
-    }
-  }, [isPremium]);
   return (
     <RN.TouchableOpacity activeOpacity={0.5}>
       {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}
-
       <RN.Image source={MockUserImagePng} style={styles.movieImage} />
       <RN.Text style={styles.movieName}>{'Jujutsu Kaisen'}</RN.Text>
-
       <RN.Text style={styles.movieCategories}>
         {'Maktab / Romantik / drama'}
       </RN.Text>
