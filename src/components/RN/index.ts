@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Platform,
   TextInput,
-  Image,
   ImageBackground,
   FlatList,
   Animated,
@@ -16,9 +15,10 @@ import {
   Alert,
   Share,
   TouchableWithoutFeedback,
-} from 'react-native';
-import View from './View';
-import Text from './Text';
+  Text,
+} from "react-native";
+import { Image } from "expo-image";
+import View from "./View";
 
 export default {
   TouchableOpacity,

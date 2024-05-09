@@ -1,5 +1,7 @@
 export enum ROOT_STACK {
   tabs = "(tabs)",
+  onboarding = "index",
+  signIn = "sign-in",
 }
 
 export enum TAB_BAR_STACK {

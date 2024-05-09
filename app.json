@@ -26,22 +26,7 @@
       "output": "static",
       "favicon": "./src/shared/assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "node_modules/@expo-google-fonts/inter/Inter_100Thin.ttf",
-            "node_modules/@expo-google-fonts/inter/Inter_200ExtraLight.ttf",
-            "node_modules/@expo-google-fonts/inter/Inter_300Light.ttf",
-            "node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf",
-            "node_modules/@expo-google-fonts/inter/Inter_500Medium.ttf",
-            "node_modules/@expo-google-fonts/inter/Inter_600SemiBold.ttf"
-          ]
-        }
-      ]
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     }

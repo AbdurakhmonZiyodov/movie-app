@@ -5,19 +5,14 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { ROOT_STACK } from "./(tabs)/routes";
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
-
+import { getAllFonts } from "@/shared/assets/fonts";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
+function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../shared/assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
+    ...getAllFonts(),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -41,7 +36,15 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <Stack>
-      <Stack.Screen name={ROOT_STACK.tabs} options={{ headerShown: false }} />
+      <Stack.Screen
+        name={ROOT_STACK.onboarding}
+        redirect
+        options={{ headerShown: false }}
+      />
+      {/* <Stack.Screen name={ROOT_STACK.tabs} options={{ headerShown: false }} /> */}
+      <Stack.Screen name={ROOT_STACK.signIn} options={{ headerShown: false }} />
     </Stack>
   );
 }
+
+export default RootLayout;

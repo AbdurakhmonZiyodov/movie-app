@@ -71,7 +71,9 @@ const tabsStyles = RN.StyleSheet.create({
   },
   tabBarStyle: {
     backgroundColor: COLORS.black,
-    paddingVertical: 13,
+    paddingVertical: 20,
+    minHeight: 90,
+    // borderTopWidth: 0,
   },
 });
 
