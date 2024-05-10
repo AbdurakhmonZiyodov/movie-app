@@ -1,10 +1,11 @@
-import Card from '@/components/Card';
 import Carousel from '@/components/Carousel';
 import Container from '@/components/Container';
 import CardHorizantalFilter from '@/components/Filters/CardHorizantalFilter';
+import MovieList from '@/components/MovieList';
 import RN from '@/components/RN';
 import { MockUserImagePng } from '@/shared/assets/mock/images';
 import { SIZES } from '@/shared/constants/dimensions';
+import { useAllMoviesQuery } from '@/store/services/features/MovieApi';
 import React, { useCallback } from 'react';
 import type { CarouselRenderItem } from 'react-native-reanimated-carousel';
 
@@ -31,6 +32,8 @@ const sizes = {
   height: SIZES.width * 1 * 0.8,
 };
 export default function HomeScreen() {
+  const { data: allMovies, isLoading } = useAllMoviesQuery();
+
   const renderItem: CarouselRenderItem<(typeof data)[0]> = useCallback(
     ({ item: card }) => (
       <RN.View>
@@ -52,18 +55,7 @@ export default function HomeScreen() {
         height={SIZES.width * 0.8}
       />
       <CardHorizantalFilter />
-      <RN.View fd={'row'} g={15} jc={'space-between'}>
-        <Card isPremium={true} />
-        <Card />
-      </RN.View>
-      <RN.View fd={'row'} g={15} jc={'space-between'}>
-        <Card isPremium={true} />
-        <Card />
-      </RN.View>
-      <RN.View fd={'row'} g={15} jc={'space-between'}>
-        <Card isPremium={true} />
-        <Card />
-      </RN.View>
+      <MovieList data={allMovies || []} loading={isLoading} />
     </Container>
   );
 }

@@ -1,33 +1,38 @@
-import React from 'react';
-import { ActivityIndicator } from 'react-native';
-import RN from '../RN';
+import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
-import { InterFonts } from '@/shared/assets/fonts/inter.fonts';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
+import React, { ReactNode } from 'react';
+import { ActivityIndicator, ViewStyle, StyleProp } from 'react-native';
+import RN from '../RN';
 
 export function Button({
   title,
   onPress,
   disabled = false,
   loading = false,
+  RightSection,
+  style,
 }: {
   title: string;
   onPress?: () => void;
   disabled?: boolean;
   loading?: boolean;
+  RightSection?: ReactNode;
+  style?: StyleProp<ViewStyle>;
 }) {
   return (
     <RN.TouchableOpacity
       disabled={disabled || loading}
       onPress={onPress}
       activeOpacity={0.5}
-      style={[styles.button, disabled && styles.buttonDisabled]}
+      style={[styles.button, disabled && styles.buttonDisabled, style]}
     >
       {loading ? (
         <ActivityIndicator size={'small'} color={COLORS.white} />
       ) : (
         <RN.Text style={styles.buttonText}>{title}</RN.Text>
       )}
+      {RightSection}
     </RN.TouchableOpacity>
   );
 }
@@ -47,7 +52,7 @@ const styles = RN.StyleSheet.create({
   },
   buttonText: {
     fontSize: normalizeHeight(18),
-    fontFamily: InterFonts.Inter_300,
+    fontFamily: PoppinsFonts.Poppins_500,
     color: COLORS.white,
   },
 });

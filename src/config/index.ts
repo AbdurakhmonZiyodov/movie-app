@@ -1,3 +1,6 @@
+const defaultURL = 'https://api.tvtime.uz/api';
+
 export default {
-  BASE_URL: 'https://api.tvtime.uz/api/client',
+  BASE_URL: `${defaultURL}/client`,
+  IMAGE_URL: `${defaultURL}/image`,
 };

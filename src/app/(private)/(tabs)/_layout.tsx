@@ -8,7 +8,7 @@ import GirdsIcon from '@/shared/assets/icons/GirdsIcon';
 import { COLORS } from '@/shared/constants/colors';
 import { map } from 'lodash';
 
-const iconOptions = {
+export const iconOptions = {
   size: 25,
   style: {
     height: 25,
@@ -72,7 +72,7 @@ const tabsStyles = RN.StyleSheet.create({
   tabBarStyle: {
     backgroundColor: COLORS.black,
     paddingVertical: 20,
-    minHeight: 90,
+    minHeight: 60,
     // borderTopWidth: 0,
   },
 });
