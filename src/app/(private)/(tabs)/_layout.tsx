@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
-import { Tabs } from 'expo-router';
-import { TAB_BAR_STACK } from './routes';
 import { FontAwesome as FontAwesomeIcon } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import React, { ReactNode } from 'react';
+import { TAB_BAR_STACK } from './routes';
 
-import { map } from 'lodash';
-import { COLORS } from '@/shared/constants/colors';
-import GirdsIcon from '@/shared/assets/icons/GirdsIcon';
 import RN from '@/components/RN';
+import GirdsIcon from '@/shared/assets/icons/GirdsIcon';
+import { COLORS } from '@/shared/constants/colors';
+import { map } from 'lodash';
 
 const iconOptions = {
   size: 25,

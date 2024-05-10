@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { ROOT_STACK } from './(tabs)/routes';
+import { ROOT_STACK } from './(private)/(tabs)/routes';
 import { getAllFonts } from '@/shared/assets/fonts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CoreStyle } from '@/shared/styles/globalStyles';
@@ -46,15 +46,13 @@ function RootLayout() {
 function RootLayoutNav() {
   return (
     <Stack
-      initialRouteName={ROOT_STACK.onboarding}
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name={ROOT_STACK.onboarding} />
-      <Stack.Screen name={ROOT_STACK.tabs} />
-      <Stack.Screen name={ROOT_STACK.signIn} />
-      <Stack.Screen name={ROOT_STACK.signUp} />
+      <Stack.Screen name={ROOT_STACK.onboarding} redirect={true} />
+      <Stack.Screen name={ROOT_STACK.public} redirect={true} />
+      <Stack.Screen name={ROOT_STACK.private} />
     </Stack>
   );
 }

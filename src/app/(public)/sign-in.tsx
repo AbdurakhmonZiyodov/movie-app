@@ -5,9 +5,9 @@ import RN from '@/components/RN';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight } from '@/shared/constants/dimensions';
-import React, { useState } from 'react';
 import { Link } from 'expo-router';
-import { ROOT_STACK } from './(tabs)/routes';
+import React, { useState } from 'react';
+import { PUBLIC_STACK } from '../(private)/(tabs)/routes';
 
 export default function SignIn() {
   const [{ email, password }, setState] = useState({ email: '', password: '' });
@@ -32,7 +32,7 @@ export default function SignIn() {
 
         <RN.View fd={'row'} jc={'center'} g={5}>
           <RN.Text style={styles.warningText}>{"Hisobingiz yo'qmi?"}</RN.Text>
-          <Link href={ROOT_STACK.signUp} asChild={true}>
+          <Link href={PUBLIC_STACK.sign_up} asChild={true}>
             <RN.TouchableOpacity activeOpacity={0.5}>
               <RN.Text style={[styles.warningText, styles.signUpText]}>
                 {"Ro'yxatdan o'tish!"}
