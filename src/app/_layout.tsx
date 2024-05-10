@@ -6,6 +6,10 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { ROOT_STACK } from './(tabs)/routes';
 import { getAllFonts } from '@/shared/assets/fonts';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { CoreStyle } from '@/shared/styles/globalStyles';
+import { Provider } from 'react-redux';
+import store from '@/store/store';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 function RootLayout() {
@@ -30,20 +34,27 @@ function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <Provider store={store}>
+      <GestureHandlerRootView style={CoreStyle.flex1}>
+        <RootLayoutNav />
+      </GestureHandlerRootView>
+    </Provider>
+  );
 }
 
 function RootLayoutNav() {
   return (
-    <Stack>
-      <Stack.Screen
-        name={ROOT_STACK.onboarding}
-        redirect={true}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name={ROOT_STACK.tabs} options={{ headerShown: false }} />
-      {/* <Stack.Screen name={ROOT_STACK.signIn} options={{ headerShown: false }} /> */}
-      {/* <Stack.Screen name={ROOT_STACK.signUp} options={{ headerShown: false }} /> */}
+    <Stack
+      initialRouteName={ROOT_STACK.onboarding}
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name={ROOT_STACK.onboarding} />
+      <Stack.Screen name={ROOT_STACK.tabs} />
+      <Stack.Screen name={ROOT_STACK.signIn} />
+      <Stack.Screen name={ROOT_STACK.signUp} />
     </Stack>
   );
 }
