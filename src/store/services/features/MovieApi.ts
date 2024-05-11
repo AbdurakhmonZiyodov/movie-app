@@ -13,7 +13,18 @@ export const MovieApi = createApi({
         method: 'GET',
       }),
     }),
+    oneMovie: builder.query<MovieType, { id: string }>({
+      query: ({ id }) => ({
+        url: '/' + id,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useAllMoviesQuery, useLazyAllMoviesQuery } = MovieApi;
+export const {
+  useAllMoviesQuery,
+  useLazyAllMoviesQuery,
+  useOneMovieQuery,
+  useLazyOneMovieQuery,
+} = MovieApi;

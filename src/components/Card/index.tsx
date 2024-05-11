@@ -6,9 +6,10 @@ import { COLORS } from '@/shared/constants/colors';
 import { SIZES, normalizeWidth } from '@/shared/constants/dimensions';
 import { MovieType } from '@/shared/types';
 import { join, map } from 'lodash';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import Ripple from 'react-native-material-ripple';
 import RN from '../RN';
+import { router } from 'expo-router';
 
 export interface CardProps extends MovieType {}
 
@@ -17,14 +18,18 @@ export default function Card({
   images,
   name,
   movie_genre,
+  id,
 }: CardProps) {
   const [movieImageUrl, isPremium] = useMemo(
     () => [config.IMAGE_URL + `/${images[0]}`, status_type === 'premium'],
     [images, status_type],
   );
 
+  const navigateToMovie = useCallback(() => {
+    router.navigate(`/movie/${id}`);
+  }, [id]);
   return (
-    <Ripple>
+    <Ripple onPress={navigateToMovie}>
       {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}

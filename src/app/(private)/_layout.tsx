@@ -8,12 +8,7 @@ export default function PrivateLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen
-        name={PRIVATE_STACK.tab}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen name={PRIVATE_STACK.tab} />
     </Stack>
   );
 }
