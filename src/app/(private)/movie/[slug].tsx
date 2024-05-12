@@ -103,7 +103,7 @@ const MovieScreen = () => {
   };
 
   return (
-    <Container>
+    <Container isScroll={true}>
       {movieID && (
         <Video
           key={movieID}
@@ -170,7 +170,13 @@ const MovieScreen = () => {
           <RN.View fd={'row'} ai={'center'}>
             <RN.Text style={styles.body1Text}>{'Mamlakat: '}</RN.Text>
             <RN.Text style={[styles.body1Text, styles.body1TextOrange]}>
-              {fullMovieData?.year.year}
+              {fullMovieData?.country.name}
+            </RN.Text>
+          </RN.View>
+          <RN.View fd={'row'} ai={'center'}>
+            <RN.Text style={styles.body1Text}>{'Tarjima: '}</RN.Text>
+            <RN.Text style={[styles.body1Text, styles.body1TextOrange]}>
+              {fullMovieData?.language}
             </RN.Text>
           </RN.View>
         </RN.View>
