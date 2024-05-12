@@ -60,7 +60,6 @@ function RootLayoutNav() {
   const isOnboardingViewed = useAppSelector(selectIsOnboardingViewed);
   const redirectRootUrl = useAppSelector(selectRedirectRootUrl);
 
-  console.log({ authVisiblity, isOnboardingViewed, redirectRootUrl });
   return (
     <PortalProvider>
       <Stack
