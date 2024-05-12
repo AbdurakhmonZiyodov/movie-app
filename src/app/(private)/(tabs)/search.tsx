@@ -10,7 +10,7 @@ import { FontAwesome as FontAwesomeIcon } from '@expo/vector-icons';
 import React, { useState } from 'react';
 
 export default function SearchScreen() {
-  const { data: allMovies, isLoading } = useAllMoviesQuery();
+  const { data: allMovies, isLoading } = useAllMoviesQuery({});
   const [search, setSearch] = useState('');
   return (
     <Container>

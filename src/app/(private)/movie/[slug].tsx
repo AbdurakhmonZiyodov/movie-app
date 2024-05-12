@@ -29,7 +29,7 @@ function getMovieId(url: string): string {
   return movieId;
 }
 
-const MOVIE_FORMAT = {
+export const MOVIE_FORMAT = {
   [MovieQuality.hd_full]: 'Full HD',
   [MovieQuality.hd_720]: '720p',
   [MovieQuality.hd_420]: '420p',

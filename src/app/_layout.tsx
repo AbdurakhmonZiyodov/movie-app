@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import store from '@/store/store';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS } from '@/shared/constants/colors';
+import { PortalProvider } from '@gorhom/portal';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 function RootLayout() {
@@ -47,15 +48,17 @@ function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name={ROOT_STACK.onboarding} redirect={true} />
-      <Stack.Screen name={ROOT_STACK.public} redirect={true} />
-      <Stack.Screen name={ROOT_STACK.private} />
-    </Stack>
+    <PortalProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name={ROOT_STACK.onboarding} redirect={true} />
+        <Stack.Screen name={ROOT_STACK.public} redirect={true} />
+        <Stack.Screen name={ROOT_STACK.private} />
+      </Stack>
+    </PortalProvider>
   );
 }
 

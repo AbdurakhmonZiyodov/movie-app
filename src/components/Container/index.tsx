@@ -5,7 +5,7 @@ import {
   SafeAreaViewProps,
 } from 'react-native-safe-area-context';
 import { FC, ReactNode } from 'react';
-import { normalizeWidth } from '@/shared/constants/dimensions';
+import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
 
 interface ContainerProps extends SafeAreaViewProps {
   backgroundColor?: string;
@@ -38,6 +38,7 @@ const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: normalizeWidth(16),
+    paddingVertical: normalizeHeight(10),
   },
 });
 

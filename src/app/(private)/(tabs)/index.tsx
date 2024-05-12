@@ -32,7 +32,7 @@ const sizes = {
   height: SIZES.width * 1 * 0.8,
 };
 export default function HomeScreen() {
-  const { data: allMovies, isLoading } = useAllMoviesQuery();
+  const { data: allMovies, isLoading } = useAllMoviesQuery({});
 
   const renderItem: CarouselRenderItem<(typeof data)[0]> = useCallback(
     ({ item: card }) => (
