@@ -11,10 +11,10 @@ import { CoreStyle } from '@/shared/styles/globalStyles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Portal } from '@gorhom/portal';
 import Ripple from 'react-native-material-ripple';
-
-import { router } from 'expo-router';
 import React, { ReactNode, RefObject, useCallback, useRef } from 'react';
 import { ROOT_STACK } from './routes';
+import { useAppDispatch } from '@/store/hooks';
+import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 
 const config: any = {
   holderColor: 'white',
@@ -24,6 +24,7 @@ const config: any = {
 
 export default function ProfileScreen() {
   const premiumBottomSheetRef = useRef<BottomSheetRef>(null);
+  const dispatch = useAppDispatch();
   return (
     <Container
       edges={['top']}
@@ -34,7 +35,7 @@ export default function ProfileScreen() {
             title={'Kirish'}
             style={styles.loginButton}
             onPress={() => {
-              router.replace(ROOT_STACK.public);
+              dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.private }));
             }}
             RightSection={
               <RN.View pl={4}>

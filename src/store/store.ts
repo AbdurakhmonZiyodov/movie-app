@@ -4,11 +4,13 @@ import localStore from './LocalStore';
 import { AuthApi } from './services/features/AuthApi';
 import { MovieApi } from './services/features/MovieApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import navigationStore from './features/NavigationStore';
 
 const reducers = combineReducers({
   [AuthApi.reducerPath]: AuthApi.reducer,
   [MovieApi.reducerPath]: MovieApi.reducer,
   localStore: localStore.reducer,
+  navigationStore: navigationStore.reducer,
 });
 
 const persistConfig = {

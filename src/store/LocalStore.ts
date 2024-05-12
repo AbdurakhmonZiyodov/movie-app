@@ -28,12 +28,10 @@ const localStore = createSlice({
 });
 
 const selectLocalStore = (state: RootState) => state.localStore;
-
 export const selectAuthVisibility = createSelector(
   [selectLocalStore],
   (localStore) => localStore.authVisiblity,
 );
-
 export const selectIsOnboardingViewed = createSelector(
   [selectLocalStore],
   (localStore) => localStore.isOnboardingViewed,

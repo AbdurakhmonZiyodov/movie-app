@@ -19,6 +19,7 @@ import 'react-native-reanimated';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ROOT_STACK } from './(private)/(tabs)/routes';
+import { selectRedirectRootUrl } from '@/store/features/NavigationStore';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 function RootLayout() {
@@ -57,7 +58,9 @@ function RootLayout() {
 function RootLayoutNav() {
   const authVisiblity = useAppSelector(selectAuthVisibility);
   const isOnboardingViewed = useAppSelector(selectIsOnboardingViewed);
+  const redirectRootUrl = useAppSelector(selectRedirectRootUrl);
 
+  console.log({ authVisiblity, isOnboardingViewed, redirectRootUrl });
   return (
     <PortalProvider>
       <Stack
@@ -69,8 +72,14 @@ function RootLayoutNav() {
           name={ROOT_STACK.onboarding}
           redirect={!!isOnboardingViewed || !!authVisiblity}
         />
-        <Stack.Screen name={ROOT_STACK.private} />
-        <Stack.Screen name={ROOT_STACK.public} redirect={!!authVisiblity} />
+        <Stack.Screen
+          name={ROOT_STACK.private}
+          redirect={redirectRootUrl === ROOT_STACK.private}
+        />
+        <Stack.Screen
+          name={ROOT_STACK.public}
+          redirect={!!authVisiblity || redirectRootUrl === ROOT_STACK.public}
+        />
       </Stack>
     </PortalProvider>
   );
