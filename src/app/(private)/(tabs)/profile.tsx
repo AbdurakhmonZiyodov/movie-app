@@ -1,10 +1,179 @@
-import { View, Text } from 'react-native';
-import React from 'react';
+import BottomSheet, { BottomSheetRef } from '@/components/BottomSheet';
+import { Button } from '@/components/Button';
+import Container from '@/components/Container';
+import RN from '@/components/RN';
+import { Spacing } from '@/components/Spacing';
+import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
+import { PaymeSvg, PremiumCrownSvg, UserSvg } from '@/shared/assets/images/svg';
+import { COLORS } from '@/shared/constants/colors';
+import { normalizeHeight } from '@/shared/constants/dimensions';
+import { CoreStyle } from '@/shared/styles/globalStyles';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Portal } from '@gorhom/portal';
+import Ripple from 'react-native-material-ripple';
+
+import { router } from 'expo-router';
+import React, { ReactNode, RefObject, useCallback, useRef } from 'react';
+import { ROOT_STACK } from './routes';
+
+const config: any = {
+  holderColor: 'white',
+  fromZero: true,
+  backgroundColor: 'dark',
+};
 
 export default function ProfileScreen() {
+  const premiumBottomSheetRef = useRef<BottomSheetRef>(null);
   return (
-    <View>
-      <Text>{'ProfileScreen'}</Text>
-    </View>
+    <Container
+      edges={['top']}
+      Footer={
+        <>
+          <RN.View style={CoreStyle.flex1} />
+          <Button
+            title={'Kirish'}
+            style={styles.loginButton}
+            onPress={() => {
+              router.replace(ROOT_STACK.public);
+            }}
+            RightSection={
+              <RN.View pl={4}>
+                <MaterialIcons name={'login'} size={24} color={COLORS.white} />
+              </RN.View>
+            }
+          />
+        </>
+      }
+    >
+      <ProfileHeader />
+
+      <Spacing steps={4} />
+      <Button
+        title={'Premium sotib olish'}
+        onPress={() => {
+          premiumBottomSheetRef?.current?.onShow();
+        }}
+      />
+      <PremiumBottomSheet bottomSheetRef={premiumBottomSheetRef} />
+    </Container>
   );
 }
+
+const ProfileHeader = () => (
+  <RN.View as={'center'}>
+    <UserSvg />
+  </RN.View>
+);
+
+export const PremiumBottomSheet = ({
+  bottomSheetRef,
+}: {
+  bottomSheetRef?: RefObject<BottomSheetRef>;
+}) => {
+  const renderChild = useCallback(
+    (child: ReactNode) => (
+      <RN.View style={styles.wrapper}>
+        {child}
+        <RN.View ai={'center'} pr={10} pb={20}>
+          <PremiumCrownSvg width={100} height={100} />
+          <PaymeSvg width={70} height={30} />
+        </RN.View>
+
+        <RN.FlatList
+          data={[1, 2, 3, 4, 5]}
+          numColumns={2}
+          columnWrapperStyle={{
+            gap: 6,
+            justifyContent: 'space-between',
+          }}
+          contentContainerStyle={{
+            gap: 6,
+          }}
+          keyExtractor={(_, key) => key.toString()}
+          renderItem={() => (
+            <Ripple
+              style={[
+                styles.preModalPaymentButton,
+                styles.activePreModalPaymentButton,
+              ]}
+            >
+              <RN.Text style={styles.preModalPaymentButtonTitle}>
+                {'Standart'}
+              </RN.Text>
+              <RN.Text style={styles.preModalPaymentButtonSubTitle}>
+                {'20 kun'}
+              </RN.Text>
+            </Ripple>
+          )}
+        />
+
+        <RN.View style={CoreStyle.flex1} />
+        <Button title={'Premium sotib olish'} onPress={() => {}} />
+      </RN.View>
+    ),
+    [],
+  );
+
+  return (
+    <Portal>
+      <BottomSheet
+        {...config}
+        maxYPosition={0}
+        bottomSheetRef={bottomSheetRef}
+        containerStyle={
+          {
+            // maxHeight: SIZES.height * 0.9,
+          }
+        }
+      >
+        {renderChild}
+      </BottomSheet>
+    </Portal>
+  );
+};
+
+const styles = RN.StyleSheet.create({
+  loginButton: {
+    flexDirection: 'row',
+  },
+  wrapper: {
+    paddingHorizontal: 20,
+    backgroundColor: COLORS.dark,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  title: {
+    fontSize: normalizeHeight(28),
+    fontFamily: PoppinsFonts.Poppins_600,
+    textAlign: 'center',
+    paddingTop: 10,
+    color: COLORS.white,
+  },
+  preModalPaymentButton: {
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    backgroundColor: COLORS.black2,
+    width: '47%',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.black2,
+  },
+  activePreModalPaymentButton: {
+    borderColor: COLORS.orange,
+  },
+  preModalPaymentButtonTitle: {
+    fontSize: normalizeHeight(17),
+    fontFamily: PoppinsFonts.Poppins_600,
+    color: COLORS.white,
+    textAlign: 'center',
+  },
+  preModalPaymentButtonSubTitle: {
+    fontSize: normalizeHeight(18),
+    fontFamily: PoppinsFonts.Poppins_300,
+    color: COLORS.white,
+    textAlign: 'center',
+  },
+});

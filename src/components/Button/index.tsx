@@ -30,9 +30,11 @@ export function Button({
       {loading ? (
         <ActivityIndicator size={'small'} color={COLORS.white} />
       ) : (
-        <RN.Text style={styles.buttonText}>{title}</RN.Text>
+        <>
+          <RN.Text style={styles.buttonText}>{title}</RN.Text>
+          {RightSection}
+        </>
       )}
-      {RightSection}
     </RN.TouchableOpacity>
   );
 }

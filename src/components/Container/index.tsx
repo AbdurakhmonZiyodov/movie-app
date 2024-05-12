@@ -10,6 +10,7 @@ import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
 interface ContainerProps extends SafeAreaViewProps {
   backgroundColor?: string;
   Header?: ReactNode;
+  Footer?: ReactNode;
   isScroll?: boolean;
 }
 
@@ -17,6 +18,7 @@ const Container: FC<ContainerProps> = ({
   backgroundColor = COLORS.black,
   isScroll = false,
   Header,
+  Footer,
   children,
   ...resOfProps
 }) => {
@@ -30,6 +32,7 @@ const Container: FC<ContainerProps> = ({
       <Main showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
         {children}
       </Main>
+      {Footer}
     </SafeAreaView>
   );
 };

@@ -1,34 +1,44 @@
-import { LoginResponse } from '@/shared/types';
-import { MMKV } from 'react-native-mmkv';
+import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
+import { RootState } from './store';
 
-export const storage = new MMKV();
-
-type User = LoginResponse['data']; // Assuming LoginResponse.data has user data structure
-
-export default class LocalStore {
-  user: User | null = null;
-
-  getUserFromDB = async () => {
-    try {
-      const userString = await storage.getString('@user');
-      if (userString) {
-        // Parse the stored JSON string back to a User object
-        this.setUser(JSON.parse(userString));
-      }
-    } catch (error) {
-      console.error('Error retrieving user from storage:', error);
-      // Handle potential errors gracefully (optional)
-    }
-  };
-
-  setUser = (user: User) => {
-    this.user = user;
-    // Stringify the User object before storing
-    storage.set('@user', JSON.stringify(user));
-  };
-
-  clear = async () => {
-    this.user = null;
-    await storage.delete('@user');
-  };
+interface LocalStoreState {
+  authVisiblity: boolean;
+  isOnboardingViewed: boolean;
 }
+
+const initialState: LocalStoreState = {
+  authVisiblity: false,
+  isOnboardingViewed: false,
+};
+
+const localStore = createSlice({
+  name: 'localStore',
+  initialState,
+  reducers: {
+    onChangeAuthVisiblity: (
+      state,
+      action: PayloadAction<{ visiblity: boolean }>,
+    ) => {
+      state.authVisiblity = action.payload.visiblity;
+    },
+    onForwardOnboarding: (state) => {
+      state.isOnboardingViewed = true;
+    },
+  },
+});
+
+const selectLocalStore = (state: RootState) => state.localStore;
+
+export const selectAuthVisibility = createSelector(
+  [selectLocalStore],
+  (localStore) => localStore.authVisiblity,
+);
+
+export const selectIsOnboardingViewed = createSelector(
+  [selectLocalStore],
+  (localStore) => localStore.isOnboardingViewed,
+);
+
+export const { onChangeAuthVisiblity, onForwardOnboarding } =
+  localStore.actions;
+export default localStore;
