@@ -10,11 +10,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CoreStyle } from '@/shared/styles/globalStyles';
 import { Provider } from 'react-redux';
 import store from '@/store/store';
+import { StatusBar } from 'expo-status-bar';
+import { COLORS } from '@/shared/constants/colors';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../shared/assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
     ...getAllFonts(),
   });
@@ -37,6 +38,7 @@ function RootLayout() {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={CoreStyle.flex1}>
+        <StatusBar animated={true} backgroundColor={COLORS.dark} />
         <RootLayoutNav />
       </GestureHandlerRootView>
     </Provider>

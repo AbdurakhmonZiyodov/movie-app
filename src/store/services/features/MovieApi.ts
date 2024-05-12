@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import ApiBaseQuery from '../ApiBaseQuery';
-import { MovieType } from '@/shared/types';
+import { MovieInfo, MovieType } from '@/shared/types';
 
 export const MovieApi = createApi({
   reducerPath: 'movieApi',
@@ -19,6 +19,12 @@ export const MovieApi = createApi({
         method: 'GET',
       }),
     }),
+    movieInfo: builder.query<MovieInfo, { id: string }>({
+      query: ({ id }) => ({
+        url: '/movie-info/' + id,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -27,4 +33,6 @@ export const {
   useLazyAllMoviesQuery,
   useOneMovieQuery,
   useLazyOneMovieQuery,
+  useMovieInfoQuery,
+  useLazyMovieInfoQuery,
 } = MovieApi;

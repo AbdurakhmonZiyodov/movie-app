@@ -7,7 +7,7 @@ export interface MovieType {
   images: string[];
   frame_images: string[];
   movie_type: string;
-  quality: string;
+  quality: MovieQuality;
   min_age: number;
   duration: any;
   language: string;
@@ -55,4 +55,31 @@ export interface ChildenMovie {
   video: string;
   name: string;
   movie_type: string;
+}
+
+export interface MovieInfo {
+  id: string;
+  video: any;
+  name: string;
+  movie_type: string;
+  movie_id: any;
+}
+
+export enum MovieStatusType {
+  movie = 'movie',
+  serial = 'serial',
+  serial_part = 'serial_part',
+}
+
+export enum MoviePaymentStatusType {
+  free = 'free',
+  premium = 'premium',
+}
+
+export enum MovieQuality {
+  hd_full = 'hd_full',
+  hd_720 = 'hd_720',
+  hd_420 = 'hd_420',
+  hd_360 = 'hd_360',
+  hd_244 = 'hd_244',
 }

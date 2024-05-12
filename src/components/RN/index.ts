@@ -15,11 +15,11 @@ import {
   Alert,
   Share,
   TouchableWithoutFeedback,
-  Text,
   ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
 import View from './View';
+import Text from './Text';
 
 export default {
   TouchableOpacity,
