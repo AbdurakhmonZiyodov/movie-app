@@ -15,6 +15,7 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<TextStyle>;
   secureTextEntry?: boolean;
+  multiline?: boolean;
 }
 
 export const TextInput: FC<Props> = ({
@@ -27,6 +28,7 @@ export const TextInput: FC<Props> = ({
   RightElement,
   numberOfLines = 1,
   secureTextEntry,
+  multiline = false,
 }) => (
   <RN.View style={[styles.container, containerStyle]}>
     {LeftElement}
@@ -40,6 +42,7 @@ export const TextInput: FC<Props> = ({
       autoCorrect={false}
       numberOfLines={numberOfLines}
       secureTextEntry={secureTextEntry}
+      multiline={multiline}
     />
     {RightElement}
   </RN.View>

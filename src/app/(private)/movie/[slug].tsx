@@ -1,7 +1,14 @@
+import BackButton from '@/components/BackButton';
+import { Button } from '@/components/Button';
+import Commit from '@/components/Commit';
 import Container from '@/components/Container';
+import { TextInput } from '@/components/Inputs/TextInput';
 import RN from '@/components/RN';
+import RenderHtml from '@/components/RenderHtml';
+import { Spacing } from '@/components/Spacing';
 import Video from '@/components/Video';
 import config from '@/config';
+import { OpenSansFonts } from '@/shared/assets/fonts/open-sans.fonts';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS, addAlpha } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
@@ -33,6 +40,7 @@ const MOVIE_FORMAT = {
 const MovieScreen = () => {
   const { slug } = useLocalSearchParams();
   const [movieId, setMovieId] = useState<string>(slug as string);
+  const [description, setDescription] = useState('');
   const { data: fullMovieData, isLoading: fullMovieLoading } = useOneMovieQuery(
     {
       id: slug as string,
@@ -103,7 +111,14 @@ const MovieScreen = () => {
   };
 
   return (
-    <Container isScroll={true}>
+    <Container
+      isScroll={true}
+      Header={
+        <RN.View pb={10}>
+          <BackButton />
+        </RN.View>
+      }
+    >
       {movieID && (
         <Video
           key={movieID}
@@ -152,13 +167,13 @@ const MovieScreen = () => {
           <RN.View fd={'row'} ai={'center'}>
             <RN.Text style={styles.body1Text}>{'Ovoz berdi: '}</RN.Text>
             <RN.Text style={[styles.body1Text, styles.body1TextOrange]}>
-              {fullMovieData?.sounder[0].name}
+              {fullMovieData?.sounder[0]?.name}
             </RN.Text>
           </RN.View>
           <RN.View fd={'row'} ai={'center'}>
             <RN.Text style={styles.body1Text}>{'Janr: '}</RN.Text>
             <RN.Text style={[styles.body1Text, styles.body1TextOrange]}>
-              {fullMovieData?.sounder[1].name}
+              {fullMovieData?.sounder[1]?.name}
             </RN.Text>
           </RN.View>
           <RN.View fd={'row'} ai={'center'}>
@@ -181,6 +196,28 @@ const MovieScreen = () => {
           </RN.View>
         </RN.View>
       </RN.View>
+      <Spacing height={11} />
+      <RN.View p={10} bgColor={COLORS.black2} bdrs={11}>
+        <RenderHtml children={fullMovieData?.descr} style={styles.body1Text} />
+      </RN.View>
+      <RN.Text style={styles.largeTitle}>{'IZohlar'}</RN.Text>
+      <RN.View style={styles.orangeLine} mb={12} />
+      <TextInput
+        placeholder={'Izoh yozing...'}
+        multiline={true}
+        inputStyle={styles.textAreaInput}
+        value={description}
+        onChangeText={setDescription}
+      />
+      <RN.View w={150} pt={10} pb={30}>
+        <Button title={'Yuborish'} />
+      </RN.View>
+
+      <Commit
+        commit={
+          "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!"
+        }
+      />
     </Container>
   );
 };
@@ -224,7 +261,7 @@ const styles = RN.StyleSheet.create({
   },
   subStatusText: {
     fontSize: normalizeHeight(12),
-    fontFamily: PoppinsFonts.Poppins_600,
+    fontFamily: OpenSansFonts.OpenSans_600,
     color: COLORS.darkwhite,
     paddingVertical: 4,
     paddingHorizontal: 8,
@@ -234,11 +271,25 @@ const styles = RN.StyleSheet.create({
   },
   body1Text: {
     fontSize: normalizeHeight(14),
-    fontFamily: PoppinsFonts.Poppins_400,
+    fontFamily: OpenSansFonts.OpenSans_400,
     color: COLORS.darkwhite,
   },
   body1TextOrange: {
     color: COLORS.orange,
+  },
+  largeTitle: {
+    fontSize: normalizeHeight(23),
+    fontFamily: PoppinsFonts.Poppins_600,
+    color: COLORS.white,
+    paddingVertical: 15,
+  },
+  orangeLine: {
+    borderBottomWidth: 3,
+    borderBottomColor: COLORS.orange,
+    width: '100%',
+  },
+  textAreaInput: {
+    minHeight: 130,
   },
 });
 export default MovieScreen;
