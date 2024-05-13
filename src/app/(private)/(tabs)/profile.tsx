@@ -15,6 +15,9 @@ import React, { ReactNode, RefObject, useCallback, useRef } from 'react';
 import { ROOT_STACK } from './routes';
 import { useAppDispatch } from '@/store/hooks';
 import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
+import { useLocalStore } from '@/store/hooks/useLocalStore';
+import { onUpdateTokens } from '@/store/LocalStore';
+import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
 
 const config: any = {
   holderColor: 'white',
@@ -25,6 +28,12 @@ const config: any = {
 export default function ProfileScreen() {
   const premiumBottomSheetRef = useRef<BottomSheetRef>(null);
   const dispatch = useAppDispatch();
+  const { isAuthenticated } = useLocalStore();
+
+  const { data, isLoading } = useProfileInfoQuery();
+
+  console.log({ profileData: data, isLoading });
+
   return (
     <Container
       edges={['top']}
@@ -32,14 +41,19 @@ export default function ProfileScreen() {
         <>
           <RN.View style={CoreStyle.flex1} />
           <Button
-            title={'Kirish'}
+            title={isAuthenticated ? 'Chiqish' : 'Kirish'}
             style={styles.loginButton}
             onPress={() => {
+              dispatch(onUpdateTokens({ tokens: null }));
               dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.private }));
             }}
             RightSection={
               <RN.View pl={4}>
-                <MaterialIcons name={'login'} size={24} color={COLORS.white} />
+                <MaterialIcons
+                  name={isAuthenticated ? 'logout' : 'login'}
+                  size={24}
+                  color={COLORS.white}
+                />
               </RN.View>
             }
           />

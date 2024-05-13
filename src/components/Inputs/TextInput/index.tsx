@@ -2,10 +2,23 @@ import RN from '@/components/RN';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
+import useVisibility from '@/shared/hooks/useVisibility';
+import { has } from 'lodash';
 import React, { FC, ReactNode } from 'react';
-import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { FieldError } from 'react-hook-form';
+import {
+  StyleProp,
+  StyleSheet,
+  TextInputProps,
+  TextStyle,
+  ViewStyle,
+  TextInput as RNTextInput,
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-interface Props {
+export type ITextInputProps = TextInputProps & {
   LeftElement?: ReactNode;
   RightElement?: ReactNode;
   numberOfLines?: number;
@@ -16,9 +29,14 @@ interface Props {
   inputStyle?: StyleProp<TextStyle>;
   secureTextEntry?: boolean;
   multiline?: boolean;
-}
+  error?: FieldError;
+  inputRef?: React.RefObject<RNTextInput>;
+  onChange?(val: string): void;
+  shouldTriggerError?: boolean;
+  name: string;
+};
 
-export const TextInput: FC<Props> = ({
+export const TextInput: FC<ITextInputProps> = ({
   value,
   onChangeText,
   placeholder,
@@ -29,24 +47,82 @@ export const TextInput: FC<Props> = ({
   numberOfLines = 1,
   secureTextEntry,
   multiline = false,
-}) => (
-  <RN.View style={[styles.container, containerStyle]}>
-    {LeftElement}
-    <RN.TextInput
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-      placeholderTextColor={COLORS.black3}
-      style={[styles.input, inputStyle]}
-      autoCapitalize={'none'}
-      autoCorrect={false}
-      numberOfLines={numberOfLines}
-      secureTextEntry={secureTextEntry}
-      multiline={multiline}
-    />
-    {RightElement}
-  </RN.View>
-);
+  error,
+  inputRef,
+  onChange,
+  shouldTriggerError = false,
+  onFocus,
+  onBlur,
+  name,
+  defaultValue,
+  ...resOfProps
+}) => {
+  const focusVisiblity = useVisibility();
+  const passwordVisiblity = useVisibility(true);
+  const shouldDisplayError = !!error && !!shouldTriggerError;
+  const isPasswordInput = name === 'password' || name === 'passwordConfirm';
+  const onInputChangeText = (text: string) => {
+    onChange?.(text);
+    onChangeText?.(text);
+  };
+
+  const onInputFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    focusVisiblity.show();
+    !!onFocus && onFocus(e);
+  };
+
+  const onInputBlur = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    focusVisiblity.hide();
+    !!onBlur && onBlur(e);
+  };
+
+  const renderEyeIcon = () => (
+    <RN.TouchableOpacity onPress={passwordVisiblity.toggle}>
+      <Ionicons
+        name={passwordVisiblity.visible ? 'eye' : 'eye-off'}
+        size={24}
+        color={COLORS.black3}
+      />
+    </RN.TouchableOpacity>
+  );
+  return (
+    <RN.View>
+      <RN.View
+        style={[
+          styles.container,
+          shouldDisplayError && styles.inputError,
+          containerStyle,
+        ]}
+      >
+        {LeftElement}
+        <RN.TextInput
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onInputChangeText}
+          placeholderTextColor={COLORS.black3}
+          style={[styles.input, inputStyle]}
+          autoCapitalize={'none'}
+          autoCorrect={false}
+          numberOfLines={numberOfLines}
+          {...(isPasswordInput && {
+            secureTextEntry: passwordVisiblity.visible,
+          })}
+          ref={inputRef}
+          multiline={multiline}
+          onFocus={onInputFocus}
+          onBlur={onInputBlur}
+          {...resOfProps}
+        />
+        {isPasswordInput ? renderEyeIcon() : RightElement}
+      </RN.View>
+      {!!error && has(error, 'message') && shouldDisplayError && (
+        <RN.View pl={3}>
+          <RN.Text style={styles.error}>{error.message}</RN.Text>
+        </RN.View>
+      )}
+    </RN.View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -64,6 +140,14 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     flex: 1,
     paddingVertical: normalizeHeight(14),
+    fontFamily: PoppinsFonts.Poppins_300,
+  },
+  inputError: {
+    borderColor: COLORS.error,
+  },
+  error: {
+    fontSize: normalizeHeight(13),
+    color: COLORS.error,
     fontFamily: PoppinsFonts.Poppins_300,
   },
 });

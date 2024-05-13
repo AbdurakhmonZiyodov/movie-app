@@ -7,6 +7,7 @@ export const COLORS = {
   darkwhite: '#C7C7C7',
   orange: '#FF3D00',
   gray: '#9DB2CE',
+  error: '#FB3F1C',
 };
 
 // hex's length should be 6 (#000000)

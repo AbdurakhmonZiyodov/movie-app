@@ -1,31 +1,22 @@
 import config from '@/config';
 import axios, {
   AxiosInstance,
-  InternalAxiosRequestConfig,
   AxiosResponse,
+  InternalAxiosRequestConfig,
 } from 'axios';
 
 const ApiClient: AxiosInstance = axios.create({
   baseURL: config.BASE_URL,
 });
 
-// Using the Request interceptor
 ApiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) =>
-    // All requests are accompanied by additional information
-    // config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-    config,
+  async (config: InternalAxiosRequestConfig) => config,
   (error) => Promise.reject(error),
 );
 
-// Using the Response interceptor
 ApiClient.interceptors.response.use(
-  (response: AxiosResponse) =>
-    // Check or return data for Response
-    response,
-  (error) =>
-    // Check or return data for error
-    Promise.reject(error),
+  (response: AxiosResponse) => response,
+  (err) => Promise.reject(err),
 );
 
 export default ApiClient;

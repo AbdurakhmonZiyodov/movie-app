@@ -6,12 +6,14 @@ import {
 } from 'react-native-safe-area-context';
 import { FC, ReactNode } from 'react';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
+import { StyleProp, ViewStyle } from 'react-native';
 
 interface ContainerProps extends SafeAreaViewProps {
   backgroundColor?: string;
   Header?: ReactNode;
   Footer?: ReactNode;
   isScroll?: boolean;
+  mainStyle?: StyleProp<ViewStyle>;
 }
 
 const Container: FC<ContainerProps> = ({
@@ -20,6 +22,7 @@ const Container: FC<ContainerProps> = ({
   Header,
   Footer,
   children,
+  mainStyle,
   ...resOfProps
 }) => {
   const Main = isScroll ? RN.ScrollView : RN.View;
@@ -29,7 +32,11 @@ const Container: FC<ContainerProps> = ({
       style={[styles.container, resOfProps.style, { backgroundColor }]}
     >
       {Header}
-      <Main showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+      <Main
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        style={mainStyle}
+      >
         {children}
       </Main>
       {Footer}

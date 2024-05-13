@@ -2,11 +2,11 @@ import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { ROOT_STACK } from '@/app/(private)/(tabs)/routes';
 import { RootState } from '../store';
 
-interface Navigation {
+interface NavigationStoreState {
   redirectRootUrl: ROOT_STACK | null;
 }
 
-const initialState: Navigation = {
+const initialState: NavigationStoreState = {
   redirectRootUrl: null,
 };
 
@@ -16,7 +16,7 @@ const navigationStore = createSlice({
   reducers: {
     onChangeRedirectRootUrl: (
       state,
-      action: PayloadAction<{ url: ROOT_STACK }>,
+      action: PayloadAction<{ url: ROOT_STACK | null }>,
     ) => {
       state.redirectRootUrl = action.payload.url;
     },

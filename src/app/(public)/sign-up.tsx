@@ -1,38 +1,87 @@
+import BackButton from '@/components/BackButton';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
-import { TextInput } from '@/components/Inputs/TextInput';
+import { FormInput } from '@/components/FormController/FormController';
 import RN from '@/components/RN';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight } from '@/shared/constants/dimensions';
+import {
+  emailFieldSchema,
+  nameFieldSchema,
+  passwordFieldSchema,
+} from '@/shared/utils/validation';
+import { useRegisterEmailMutation } from '@/store/services/features/AuthApi';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  name: nameFieldSchema,
+  email: emailFieldSchema,
+  password: passwordFieldSchema,
+});
+
+const initialValues = {
+  name: '',
+  email: '',
+  password: '',
+};
 
 export default function SignUp() {
-  const [{ email, password }, setState] = useState({ email: '', password: '' });
+  const [registerWithEmailSendCode, { isLoading }] = useRegisterEmailMutation();
+  const [shouldTriggerError, setShouldTriggerError] = useState(false);
+  const { control, handleSubmit, clearErrors, reset } = useForm({
+    defaultValues: initialValues,
+    mode: 'all',
+    reValidateMode: 'onBlur',
+    resolver: yupResolver(schema),
+  });
+
+  const allClear = useCallback(() => {
+    clearErrors();
+    reset();
+  }, [clearErrors, reset]);
+
+  const onSubmit = handleSubmit(
+    async (_data) => {
+      const response = await registerWithEmailSendCode(_data);
+      if (response.data?.success) {
+      }
+    },
+    async (_error) => setShouldTriggerError(true),
+  );
+
+  useEffect(() => () => allClear(), [allClear]);
+
   return (
-    <Container style={styles.container}>
+    <Container mainStyle={styles.container} Header={<BackButton />}>
       <RN.View g={16}>
-        <TextInput
+        <FormInput
+          name={'name'}
+          control={control}
           placeholder={'Ism'}
-          value={email}
-          onChangeText={(email) => setState((prev) => ({ ...prev, email }))}
+          shouldTriggerError={shouldTriggerError}
         />
-        <TextInput
+        <FormInput
+          name={'email'}
+          control={control}
           placeholder={'Email'}
-          value={password}
-          onChangeText={(password) =>
-            setState((prev) => ({ ...prev, password }))
-          }
+          shouldTriggerError={shouldTriggerError}
         />
-        <TextInput
+        <FormInput
+          name={'password'}
+          control={control}
           placeholder={'Parol'}
-          value={password}
-          onChangeText={(password) =>
-            setState((prev) => ({ ...prev, password }))
-          }
+          shouldTriggerError={shouldTriggerError}
         />
-        <Button title={'Ro’yxatdan o’tish'} />
+        <Button
+          title={'Ro’yxatdan o’tish'}
+          onPress={onSubmit}
+          loading={isLoading}
+        />
 
         <RN.View fd={'row'} jc={'center'} g={5}>
           <RN.Text style={styles.warningText}>{'Hisobingiz bormi?'}</RN.Text>
