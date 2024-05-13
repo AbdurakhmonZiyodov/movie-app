@@ -7,6 +7,7 @@ export enum ROOT_STACK {
 export enum PUBLIC_STACK {
   sign_in = 'sign-in',
   sign_up = 'sign-up',
+  otp = 'otp',
 }
 
 export enum PRIVATE_STACK {

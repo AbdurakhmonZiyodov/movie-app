@@ -107,6 +107,7 @@ export const PremiumBottomSheet = ({
           keyExtractor={(_, key) => key.toString()}
           renderItem={() => (
             <Ripple
+              rippleColor={COLORS.orange}
               style={[
                 styles.preModalPaymentButton,
                 styles.activePreModalPaymentButton,

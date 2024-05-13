@@ -38,6 +38,7 @@ function inController<V extends {}>(Component: any) {
             onChange={onChange}
             defaultValue={value}
             name={name}
+            value={value}
             error={error}
             {...props}
           />

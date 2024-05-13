@@ -10,6 +10,7 @@ export default function PublicLayout() {
     >
       <Stack.Screen name={PUBLIC_STACK.sign_in} />
       <Stack.Screen name={PUBLIC_STACK.sign_up} />
+      <Stack.Screen name={PUBLIC_STACK.otp} />
     </Stack>
   );
 }

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import ApiBaseQuery from '../ApiBaseQuery';
-import { LoginResponse, ProfileInfoResponse } from '@/shared/types';
+import { LoginResponse, ProfileInfoResponse, Tokens } from '@/shared/types';
 
 export const AuthApi = createApi({
   reducerPath: 'authApi',
@@ -23,6 +23,16 @@ export const AuthApi = createApi({
         url: '/login/email',
         method: 'POST',
         data: user,
+      }),
+    }),
+    registerEmailVerification: builder.mutation<
+      { success: boolean; message: string; data: Tokens },
+      { email: string; code: string }
+    >({
+      query: (data) => ({
+        url: '/login/email/verify',
+        method: 'POST',
+        data,
       }),
     }),
     refresh: builder.mutation({
@@ -53,4 +63,5 @@ export const {
   useProfileInfoQuery,
   useLazyProfileInfoQuery,
   useRegisterEmailMutation,
+  useRegisterEmailVerificationMutation,
 } = AuthApi;

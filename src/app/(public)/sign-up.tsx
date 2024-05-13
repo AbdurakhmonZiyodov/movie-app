@@ -6,6 +6,7 @@ import RN from '@/components/RN';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight } from '@/shared/constants/dimensions';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   emailFieldSchema,
   nameFieldSchema,
@@ -17,6 +18,8 @@ import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { PUBLIC_STACK } from '../(private)/(tabs)/routes';
+import { CoreStyle } from '@/shared/styles/globalStyles';
 
 const schema = yup.object({
   name: nameFieldSchema,
@@ -49,6 +52,12 @@ export default function SignUp() {
     async (_data) => {
       const response = await registerWithEmailSendCode(_data);
       if (response.data?.success) {
+        router.push({
+          pathname: PUBLIC_STACK.otp,
+          params: {
+            email: _data.email,
+          },
+        });
       }
     },
     async (_error) => setShouldTriggerError(true),
@@ -57,45 +66,47 @@ export default function SignUp() {
   useEffect(() => () => allClear(), [allClear]);
 
   return (
-    <Container mainStyle={styles.container} Header={<BackButton />}>
-      <RN.View g={16}>
-        <FormInput
-          name={'name'}
-          control={control}
-          placeholder={'Ism'}
-          shouldTriggerError={shouldTriggerError}
-        />
-        <FormInput
-          name={'email'}
-          control={control}
-          placeholder={'Email'}
-          shouldTriggerError={shouldTriggerError}
-        />
-        <FormInput
-          name={'password'}
-          control={control}
-          placeholder={'Parol'}
-          shouldTriggerError={shouldTriggerError}
-        />
-        <Button
-          title={'Ro’yxatdan o’tish'}
-          onPress={onSubmit}
-          loading={isLoading}
-        />
+    <KeyboardAwareScrollView contentContainerStyle={CoreStyle.flexGrow1}>
+      <Container mainStyle={styles.container} Header={<BackButton />}>
+        <RN.View g={16}>
+          <FormInput
+            name={'name'}
+            control={control}
+            placeholder={'Ism'}
+            shouldTriggerError={shouldTriggerError}
+          />
+          <FormInput
+            name={'email'}
+            control={control}
+            placeholder={'Email'}
+            shouldTriggerError={shouldTriggerError}
+          />
+          <FormInput
+            name={'password'}
+            control={control}
+            placeholder={'Parol'}
+            shouldTriggerError={shouldTriggerError}
+          />
+          <Button
+            title={'Ro’yxatdan o’tish'}
+            onPress={onSubmit}
+            loading={isLoading}
+          />
 
-        <RN.View fd={'row'} jc={'center'} g={5}>
-          <RN.Text style={styles.warningText}>{'Hisobingiz bormi?'}</RN.Text>
-          <RN.TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => router.back()}
-          >
-            <RN.Text style={[styles.warningText, styles.signUpText]}>
-              {'Kirish!'}
-            </RN.Text>
-          </RN.TouchableOpacity>
+          <RN.View fd={'row'} jc={'center'} g={5}>
+            <RN.Text style={styles.warningText}>{'Hisobingiz bormi?'}</RN.Text>
+            <RN.TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => router.back()}
+            >
+              <RN.Text style={[styles.warningText, styles.signUpText]}>
+                {'Kirish!'}
+              </RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>
         </RN.View>
-      </RN.View>
-    </Container>
+      </Container>
+    </KeyboardAwareScrollView>
   );
 }
 

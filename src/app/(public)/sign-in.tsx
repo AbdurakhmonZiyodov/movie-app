@@ -6,6 +6,7 @@ import RN from '@/components/RN';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight } from '@/shared/constants/dimensions';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   emailFieldSchema,
   passwordFieldSchema,
@@ -20,6 +21,7 @@ import { PUBLIC_STACK, ROOT_STACK } from '../(private)/(tabs)/routes';
 import { router } from 'expo-router';
 import { useLoginMutation } from '@/store/services/features/AuthApi';
 import { onUpdateTokens } from '@/store/LocalStore';
+import { CoreStyle } from '@/shared/styles/globalStyles';
 
 const schema = yup.object({
   email: emailFieldSchema,
@@ -65,47 +67,49 @@ export default function SignIn() {
   );
 
   return (
-    <Container
-      Header={<BackButton onGoBack={goBack} />}
-      mainStyle={styles.container}
-    >
-      <RN.View g={16}>
-        <FormInput
-          control={control}
-          name={'email'}
-          placeholder={'Email'}
-          {...fieldProps}
-        />
-        <FormInput
-          control={control}
-          name={'password'}
-          placeholder={'Parol'}
-          secureTextEntry={true}
-          {...fieldProps}
-        />
-        <Button
-          title={'Kirish'}
-          loading={isLoading}
-          onPress={onSubmitHandler}
-        />
+    <KeyboardAwareScrollView contentContainerStyle={CoreStyle.flexGrow1}>
+      <Container
+        Header={<BackButton onGoBack={goBack} />}
+        mainStyle={styles.container}
+      >
+        <RN.View g={16}>
+          <FormInput
+            control={control}
+            name={'email'}
+            placeholder={'Email'}
+            {...fieldProps}
+          />
+          <FormInput
+            control={control}
+            name={'password'}
+            placeholder={'Parol'}
+            secureTextEntry={true}
+            {...fieldProps}
+          />
+          <Button
+            title={'Kirish'}
+            loading={isLoading}
+            onPress={onSubmitHandler}
+          />
 
-        <RN.View fd={'row'} jc={'center'} g={5}>
-          <RN.Text style={styles.warningText}>{"Hisobingiz yo'qmi?"}</RN.Text>
-          <RN.TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => {
-              router.push(PUBLIC_STACK.sign_up);
-              clearErrors();
-              reset();
-            }}
-          >
-            <RN.Text style={[styles.warningText, styles.signUpText]}>
-              {"Ro'yxatdan o'tish!"}
-            </RN.Text>
-          </RN.TouchableOpacity>
+          <RN.View fd={'row'} jc={'center'} g={5}>
+            <RN.Text style={styles.warningText}>{"Hisobingiz yo'qmi?"}</RN.Text>
+            <RN.TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                router.push(PUBLIC_STACK.sign_up);
+                clearErrors();
+                reset();
+              }}
+            >
+              <RN.Text style={[styles.warningText, styles.signUpText]}>
+                {"Ro'yxatdan o'tish!"}
+              </RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>
         </RN.View>
-      </RN.View>
-    </Container>
+      </Container>
+    </KeyboardAwareScrollView>
   );
 }
 
