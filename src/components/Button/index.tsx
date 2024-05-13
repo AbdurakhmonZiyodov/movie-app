@@ -2,7 +2,12 @@ import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
 import React, { ReactNode } from 'react';
-import { ActivityIndicator, ViewStyle, StyleProp } from 'react-native';
+import {
+  ActivityIndicator,
+  ViewStyle,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 import RN from '../RN';
 
 export function Button({
@@ -12,6 +17,8 @@ export function Button({
   loading = false,
   RightSection,
   style,
+  titleStyle,
+  loadingColor = COLORS.white,
 }: {
   title: string;
   onPress?: () => void;
@@ -19,6 +26,8 @@ export function Button({
   loading?: boolean;
   RightSection?: ReactNode;
   style?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  loadingColor?: string;
 }) {
   return (
     <RN.TouchableOpacity
@@ -28,10 +37,10 @@ export function Button({
       style={[styles.button, disabled && styles.buttonDisabled, style]}
     >
       {loading ? (
-        <ActivityIndicator size={'small'} color={COLORS.white} />
+        <ActivityIndicator size={'small'} color={loadingColor} />
       ) : (
         <>
-          <RN.Text style={styles.buttonText}>{title}</RN.Text>
+          <RN.Text style={[styles.buttonText, titleStyle]}>{title}</RN.Text>
           {RightSection}
         </>
       )}

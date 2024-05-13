@@ -15,6 +15,16 @@ export const AuthApi = createApi({
         }),
       },
     ),
+    loginWithGoogle: builder.mutation<
+      { data: Tokens; success: boolean; message: string },
+      { google_token: string }
+    >({
+      query: (data) => ({
+        url: '/google',
+        method: 'POST',
+        data,
+      }),
+    }),
     registerEmail: builder.mutation<
       { success: boolean; message: string },
       { name: string; email: string; password: string }
@@ -64,4 +74,5 @@ export const {
   useLazyProfileInfoQuery,
   useRegisterEmailMutation,
   useRegisterEmailVerificationMutation,
+  useLoginWithGoogleMutation,
 } = AuthApi;

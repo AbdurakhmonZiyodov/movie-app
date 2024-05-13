@@ -14,13 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "bundleIdentifier": "com.anonymous.movieapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/shared/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.movieapp"
     },
     "web": {
       "bundler": "metro",
