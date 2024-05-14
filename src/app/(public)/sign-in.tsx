@@ -68,9 +68,9 @@ export default function SignIn() {
       try {
         const response = await loginWithGoogle({ google_token });
         if (response.data) {
-          goBack();
           setTimeout(() => {
             dispatch(onUpdateTokens({ tokens: response?.data.data }));
+            goBack();
           }, 100);
         }
       } catch (err) {

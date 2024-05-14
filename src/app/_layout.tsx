@@ -64,15 +64,12 @@ function RootLayoutNav() {
       >
         <Stack.Screen
           name={ROOT_STACK.onboarding}
-          redirect={!!isOnboardingViewed || !!isAuthenticated}
+          redirect={isOnboardingViewed}
         />
-        <Stack.Screen
-          name={ROOT_STACK.private}
-          redirect={redirectRootUrl === ROOT_STACK.private}
-        />
+        <Stack.Screen name={ROOT_STACK.private} redirect={!isAuthenticated} />
         <Stack.Screen
           name={ROOT_STACK.public}
-          redirect={!!isAuthenticated || redirectRootUrl === ROOT_STACK.public}
+          redirect={redirectRootUrl === ROOT_STACK.public}
         />
       </Stack>
     </PortalProvider>

@@ -18,6 +18,7 @@ import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 import { useLocalStore } from '@/store/hooks/useLocalStore';
 import { onUpdateTokens } from '@/store/LocalStore';
 import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
+import { MontserratFonts } from '@/shared/assets/fonts/montserrat.fonts';
 
 const config: any = {
   holderColor: 'white',
@@ -30,9 +31,7 @@ export default function ProfileScreen() {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useLocalStore();
 
-  const { data, isLoading } = useProfileInfoQuery();
-
-  console.log({ profileData: data, isLoading });
+  const { data } = useProfileInfoQuery();
 
   return (
     <Container
@@ -60,7 +59,7 @@ export default function ProfileScreen() {
         </>
       }
     >
-      <ProfileHeader />
+      <ProfileHeader name={data?.data?.name} email={data?.data?.email} />
 
       <Spacing steps={4} />
       <Button
@@ -74,9 +73,12 @@ export default function ProfileScreen() {
   );
 }
 
-const ProfileHeader = () => (
-  <RN.View as={'center'}>
+const ProfileHeader = ({ name, email }: { name?: string; email?: string }) => (
+  <RN.View as={'center'} ai={'center'}>
     <UserSvg />
+    <Spacing height={10} />
+    <RN.Text style={styles.preModalPaymentButtonTitle}>{name}</RN.Text>
+    <RN.Text style={styles.headerSubTitle}>{email}</RN.Text>
   </RN.View>
 );
 
@@ -191,5 +193,10 @@ const styles = RN.StyleSheet.create({
     fontFamily: PoppinsFonts.Poppins_300,
     color: COLORS.white,
     textAlign: 'center',
+  },
+  headerSubTitle: {
+    fontSize: normalizeHeight(12),
+    fontFamily: MontserratFonts.Montserrat_500,
+    color: COLORS.white,
   },
 });
