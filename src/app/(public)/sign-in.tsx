@@ -109,7 +109,10 @@ export default function SignIn() {
 
   return (
     <>
-      <KeyboardAwareScrollView contentContainerStyle={CoreStyle.flexGrow1}>
+      <KeyboardAwareScrollView
+        bounces={false}
+        contentContainerStyle={CoreStyle.flexGrow1}
+      >
         <Container
           Header={<BackButton onGoBack={goBack} />}
           mainStyle={styles.container}

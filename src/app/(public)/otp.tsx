@@ -35,7 +35,10 @@ export default function OtpScreen() {
     }
   }, [code, dispatch, email, verificationCode]);
   return (
-    <KeyboardAwareScrollView contentContainerStyle={CoreStyle.flexGrow1}>
+    <KeyboardAwareScrollView
+      bounces={false}
+      contentContainerStyle={CoreStyle.flexGrow1}
+    >
       <Container mainStyle={styles.container} Header={<BackButton />}>
         <AnimatedNumCodeInput
           email={email as string}

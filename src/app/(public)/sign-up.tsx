@@ -66,7 +66,10 @@ export default function SignUp() {
   useEffect(() => () => allClear(), [allClear]);
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={CoreStyle.flexGrow1}>
+    <KeyboardAwareScrollView
+      bounces={false}
+      contentContainerStyle={CoreStyle.flexGrow1}
+    >
       <Container mainStyle={styles.container} Header={<BackButton />}>
         <RN.View g={16}>
           <FormInput
