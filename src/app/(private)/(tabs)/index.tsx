@@ -7,6 +7,7 @@ import config from '@/config';
 import { InterFonts } from '@/shared/assets/fonts/inter.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { SIZES } from '@/shared/constants/dimensions';
+import { CoreStyle } from '@/shared/styles/globalStyles';
 import {
   useAllMoviesQuery,
   useMovieCategoriesQuery,
@@ -36,12 +37,13 @@ export default function HomeScreen() {
     return params;
   }, [selectedCategoryId]);
 
-  const { data: allMovies, isLoading } = useAllMoviesQuery({
+  const { data: allMovies, isLoading: allMovieLoading } = useAllMoviesQuery({
     params: filterParams,
   });
-  const { data: sliders } = useMovieSlidesQuery();
+  const { data: sliders, isLoading: slidersLoading } = useMovieSlidesQuery();
 
-  const { data: categoriesList } = useMovieCategoriesQuery();
+  const { data: categoriesList, isLoading: categoriesLoading } =
+    useMovieCategoriesQuery();
 
   const slidersData = useMemo(
     () =>
@@ -51,6 +53,11 @@ export default function HomeScreen() {
         source: { uri: config.IMAGE_URL + '/' + slide.images[0] },
       })),
     [sliders],
+  );
+
+  const allLoading = useMemo(
+    () => slidersLoading || categoriesLoading || allMovieLoading,
+    [allMovieLoading, categoriesLoading, slidersLoading],
   );
 
   const navigateToMovie = useCallback((id: string) => {
@@ -75,6 +82,14 @@ export default function HomeScreen() {
     ),
     [navigateToMovie],
   );
+
+  if (allLoading) {
+    return (
+      <Container style={CoreStyle.center}>
+        <RN.ActivityIndicator size={'large'} color={COLORS.white} />
+      </Container>
+    );
+  }
   return (
     <Container isScroll={true}>
       <Carousel
@@ -98,7 +113,7 @@ export default function HomeScreen() {
         selectedCategoryId={selectedCategoryId}
         updateSelectedCategoryId={setSelectedCategoryId}
       />
-      <MovieList data={allMovies || []} loading={isLoading} />
+      <MovieList data={allMovies || []} loading={allMovieLoading} />
     </Container>
   );
 }

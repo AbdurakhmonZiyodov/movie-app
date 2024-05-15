@@ -5,11 +5,13 @@ import { SourceSansProFonts } from '@/shared/assets/fonts/source-sans-pro.fonts'
 import { AntDesign as AntDesignIcon } from '@expo/vector-icons';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { CommitType } from '../Video/types';
+import { getTimeAgoString } from '@/shared/utils/date';
 
 export default function Commit({
   message,
   count_dislike,
   count_like,
+  created_at,
 }: CommitType) {
   return (
     <RN.View p={10} bgColor={COLORS.black2} bdrs={11} mv={10}>
@@ -17,7 +19,7 @@ export default function Commit({
         <RN.Image source={require('./image.png')} style={styles.image} />
         <RN.View>
           <RN.Text style={styles.username}>{'Jane Doe'}</RN.Text>
-          <RN.Text style={styles.date}>{'5 min ago'}</RN.Text>
+          <RN.Text style={styles.date}>{getTimeAgoString(created_at)}</RN.Text>
         </RN.View>
       </RN.View>
       <RN.Text style={styles.commit}>{message}</RN.Text>

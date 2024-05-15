@@ -84,6 +84,7 @@ const MovieScreen = () => {
       if (fullMovieData.movie_type === MovieStatusType.serial) {
         setMovieId(fullMovieData.childen_movie[serialIndex].id);
       }
+      console.log({ gooooo: true });
       id = movieInfo?.video;
     }
     return id;
@@ -139,6 +140,7 @@ const MovieScreen = () => {
     );
   };
 
+  console.log({ movieID });
   return (
     <Container
       isScroll={true}
