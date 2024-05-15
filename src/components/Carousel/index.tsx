@@ -1,5 +1,5 @@
 import { COLORS, addAlpha } from '@/shared/constants/colors';
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, memo } from 'react';
 import Animated, {
   Extrapolation,
   SharedValue,
@@ -23,6 +23,7 @@ type Props<T> = {
   fistImage?: ReactNode;
 };
 
+export const MemorizedCarousel = memo(Carousel);
 export default function Carousel<T>({
   data = [],
   renderItem,
@@ -58,8 +59,8 @@ export default function Carousel<T>({
           mode={'parallax'}
           modeConfig={{
             parallaxScrollingScale: 0.95,
-            parallaxScrollingOffset: 150,
-            parallaxAdjacentItemScale: 0.8,
+            parallaxScrollingOffset: 170,
+            parallaxAdjacentItemScale: 0.74,
           }}
           data={data}
           renderItem={renderItem}

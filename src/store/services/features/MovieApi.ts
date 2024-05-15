@@ -5,7 +5,7 @@ import { MovieInfo, MovieType } from '@/shared/types';
 export const MovieApi = createApi({
   reducerPath: 'movieApi',
   baseQuery: ApiBaseQuery({ baseUrl: '' }),
-  tagTypes: ['movies'],
+  tagTypes: ['movies', 'slider'],
   endpoints: (builder) => ({
     allMovies: builder.query<MovieType[], { params?: any }>({
       query: ({ params }) => ({
@@ -45,6 +45,20 @@ export const MovieApi = createApi({
         method: 'GET',
       }),
     }),
+    movieSlides: builder.query<
+      {
+        id: string;
+        name: string;
+        images: string[];
+      }[],
+      void
+    >({
+      query: () => ({
+        url: '/movie/slider',
+        method: 'GET',
+        providesTags: ['slider'],
+      }),
+    }),
   }),
 });
 
@@ -61,4 +75,6 @@ export const {
   useLazyMovieYearListQuery,
   useMovieCountryListQuery,
   useLazyMovieCountryListQuery,
+  useMovieSlidesQuery,
+  useLazyMovieSlidesQuery,
 } = MovieApi;

@@ -7,7 +7,6 @@ import { SIZES, normalizeWidth } from '@/shared/constants/dimensions';
 import { MovieType } from '@/shared/types';
 import { join, map } from 'lodash';
 import { useCallback, useMemo } from 'react';
-import Ripple from 'react-native-material-ripple';
 import RN from '../RN';
 import { router } from 'expo-router';
 
@@ -29,7 +28,7 @@ export default function Card({
     router.navigate(`/movie/${id}`);
   }, [id]);
   return (
-    <Ripple onPress={navigateToMovie}>
+    <RN.TouchableOpacity activeOpacity={0.5} onPress={navigateToMovie}>
       {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}
@@ -49,7 +48,7 @@ export default function Card({
           )}
         </RN.Text>
       )}
-    </Ripple>
+    </RN.TouchableOpacity>
   );
 }
 

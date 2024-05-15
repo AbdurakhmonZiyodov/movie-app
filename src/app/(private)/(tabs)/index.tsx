@@ -3,29 +3,18 @@ import Container from '@/components/Container';
 import CardHorizantalFilter from '@/components/Filters/CardHorizantalFilter';
 import MovieList from '@/components/MovieList';
 import RN from '@/components/RN';
-import { MockUserImagePng } from '@/shared/assets/mock/images';
+import config from '@/config';
+import { InterFonts } from '@/shared/assets/fonts/inter.fonts';
+import { COLORS } from '@/shared/constants/colors';
 import { SIZES } from '@/shared/constants/dimensions';
-import { useAllMoviesQuery } from '@/store/services/features/MovieApi';
-import React, { useCallback } from 'react';
+import {
+  useAllMoviesQuery,
+  useMovieSlidesQuery,
+} from '@/store/services/features/MovieApi';
+import { router } from 'expo-router';
+import { map } from 'lodash';
+import React, { useCallback, useMemo } from 'react';
 import type { CarouselRenderItem } from 'react-native-reanimated-carousel';
-
-const data = [
-  {
-    id: 1,
-    source: MockUserImagePng,
-    name: 'Jujutsu Kaisen',
-  },
-  {
-    id: 2,
-    source: MockUserImagePng,
-    name: 'Solo Spdsa',
-  },
-  {
-    id: 3,
-    source: MockUserImagePng,
-    name: 'Something',
-  },
-];
 
 const sizes = {
   width: SIZES.width * 1,
@@ -33,26 +22,57 @@ const sizes = {
 };
 export default function HomeScreen() {
   const { data: allMovies, isLoading } = useAllMoviesQuery({});
+  const { data: sliders } = useMovieSlidesQuery();
 
-  const renderItem: CarouselRenderItem<(typeof data)[0]> = useCallback(
+  const slidersData = useMemo(
+    () =>
+      map(sliders || [], (slide) => ({
+        id: slide.id,
+        name: slide.name,
+        source: { uri: config.IMAGE_URL + '/' + slide.images[0] },
+      })),
+    [sliders],
+  );
+
+  const navigateToMovie = useCallback((id: string) => {
+    router.navigate(`/movie/${id}`);
+  }, []);
+
+  const renderItem: CarouselRenderItem<(typeof slidersData)[0]> = useCallback(
     ({ item: card }) => (
-      <RN.View>
-        <RN.Image
-          source={MockUserImagePng}
-          style={styles.movieImage}
-          contentFit={'contain'}
-        />
-      </RN.View>
+      <RN.TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => navigateToMovie(card.id)}
+      >
+        <RN.View w={sizes.width * 0.87} h={sizes.width * 0.8} ai={'center'}>
+          <RN.Image
+            source={card.source}
+            style={styles.movieImage}
+            contentFit={'cover'}
+          />
+          <RN.Text style={styles.cardName}>{card.name}</RN.Text>
+        </RN.View>
+      </RN.TouchableOpacity>
     ),
-    [],
+    [navigateToMovie],
   );
   return (
     <Container isScroll={true}>
       <Carousel
-        data={data}
+        data={slidersData}
         renderItem={renderItem}
+        fistImage={
+          <RN.View w={sizes.width * 0.87} h={sizes.width * 0.8} ai={'center'}>
+            <RN.Image
+              source={slidersData[0].source}
+              style={styles.movieImage}
+              contentFit={'cover'}
+            />
+            <RN.Text style={styles.cardName}>{slidersData[0].name}</RN.Text>
+          </RN.View>
+        }
         width={SIZES.width}
-        height={SIZES.width * 0.8}
+        height={SIZES.width * 0.85}
       />
       <CardHorizantalFilter />
       <MovieList data={allMovies || []} loading={isLoading} />
@@ -62,9 +82,17 @@ export default function HomeScreen() {
 
 const styles = RN.StyleSheet.create({
   movieImage: {
-    ...sizes,
     borderRadius: 11,
-    overflow: 'hidden',
-    width: sizes.width * 0.9,
+    width: sizes.width * 0.6,
+    height: sizes.height * 1,
+  },
+  cardName: {
+    fontSize: 17,
+    fontFamily: InterFonts.Inter_600,
+    color: COLORS.white2,
+    position: 'absolute',
+    zIndex: 2,
+    bottom: -30,
+    textAlign: 'center',
   },
 });

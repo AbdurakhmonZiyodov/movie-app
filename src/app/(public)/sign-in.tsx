@@ -84,8 +84,10 @@ export default function SignIn() {
     async (formValues) => {
       await login(formValues).then(({ data }) => {
         if (data?.success) {
-          goBack();
-          dispatch(onUpdateTokens({ tokens: data?.data }));
+          setTimeout(() => {
+            dispatch(onUpdateTokens({ tokens: data?.data }));
+            goBack();
+          }, 100);
         }
       });
     },

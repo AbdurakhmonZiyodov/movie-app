@@ -12,20 +12,24 @@ const ApiClient: AxiosInstance = axios.create({
 
 ApiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // Parse the JSON string stored in AsyncStorage
-    const storedData = await AsyncStorage.getItem('persist:root');
-    const parsedData = storedData && (await JSON.parse(storedData));
+    try {
+      // Parse the JSON string stored in AsyncStorage
+      const storedData = await AsyncStorage.getItem('persist:root');
+      const parsedData = storedData && (await JSON.parse(storedData));
 
-    // Access the access_token from the parsed data
-    const accessToken = parsedData.localStore
-      ? JSON.parse(parsedData.localStore).tokens.access_token
-      : null;
+      // Access the access_token from the parsed data
+      const accessToken = parsedData.localStore
+        ? JSON.parse(parsedData.localStore).tokens.access_token
+        : null;
 
-    // Log the access token
-    console.log('Access Token:', accessToken);
+      // Log the access token
+      console.log('Access Token:', accessToken);
 
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    } catch (err) {
+      console.log('Error', err);
     }
 
     return config;
