@@ -183,7 +183,7 @@ const styles = RN.StyleSheet.create({
     borderColor: COLORS.orange,
   },
   preModalPaymentButtonTitle: {
-    fontSize: normalizeHeight(17),
+    fontSize: normalizeHeight(20),
     fontFamily: PoppinsFonts.Poppins_600,
     color: COLORS.white,
     textAlign: 'center',
@@ -195,7 +195,7 @@ const styles = RN.StyleSheet.create({
     textAlign: 'center',
   },
   headerSubTitle: {
-    fontSize: normalizeHeight(12),
+    fontSize: normalizeHeight(14),
     fontFamily: MontserratFonts.Montserrat_500,
     color: COLORS.white,
   },
