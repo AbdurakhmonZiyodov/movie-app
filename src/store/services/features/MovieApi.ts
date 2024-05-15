@@ -1,19 +1,20 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import ApiBaseQuery from '../ApiBaseQuery';
 import { MovieInfo, MovieType } from '@/shared/types';
+import { CommitType } from '@/components/Video/types';
 
 export const MovieApi = createApi({
   reducerPath: 'movieApi',
   baseQuery: ApiBaseQuery({ baseUrl: '' }),
-  tagTypes: ['movies', 'slider'],
+  tagTypes: ['movies', 'slider', 'commits'],
   endpoints: (builder) => ({
     allMovies: builder.query<MovieType[], { params?: any }>({
       query: ({ params }) => ({
         url: '/movie/',
         method: 'GET',
-        providesTags: ['movies'],
         params,
       }),
+      providesTags: ['movies'],
     }),
     oneMovie: builder.query<MovieType, { id: string }>({
       query: ({ id }) => ({
@@ -59,6 +60,26 @@ export const MovieApi = createApi({
         providesTags: ['slider'],
       }),
     }),
+    getAllCommitsFromTheMovie: builder.query<CommitType[], { id: string }>({
+      query: (_data) => ({
+        url: `/movie/${_data.id}/commit`,
+        method: 'GET',
+      }),
+      providesTags: ['commits'],
+    }),
+    addCommitToTheMovie: builder.mutation<
+      Omit<CommitType, 'count_like' | 'count_dislike'>,
+      { id: string; message: string }
+    >({
+      query: (_data) => ({
+        url: `/movie/${_data.id}/commit`,
+        method: 'POST',
+        data: {
+          message: _data.message,
+        },
+      }),
+      invalidatesTags: ['commits'],
+    }),
   }),
 });
 
@@ -77,4 +98,7 @@ export const {
   useLazyMovieCountryListQuery,
   useMovieSlidesQuery,
   useLazyMovieSlidesQuery,
+  useGetAllCommitsFromTheMovieQuery,
+  useLazyGetAllCommitsFromTheMovieQuery,
+  useAddCommitToTheMovieMutation,
 } = MovieApi;

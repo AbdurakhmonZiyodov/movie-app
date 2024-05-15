@@ -43,8 +43,6 @@ const RenderHtml: React.FC<TextProps> = (props) => {
     [TextRenderer],
   );
 
-  // console.log(JSON.stringify({ renderers }, null, 2));
-
   const processedChildren = useMemo(() => {
     if (typeof props.children === 'string') {
       const cleanedText = props.children.replace(

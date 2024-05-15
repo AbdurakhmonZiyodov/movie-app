@@ -93,7 +93,6 @@ const Video: FC<VideoProps> = ({ videoID, usePoster, posterSource }) => {
             <RN.TouchableOpacity
               onPress={() => {
                 playVisiblity.show();
-                console.log(playVisiblity.visible);
               }}
               style={styles.playerIcon}
             >

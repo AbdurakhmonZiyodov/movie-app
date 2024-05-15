@@ -75,3 +75,13 @@ export type ManifestEventsTypes = {
   onManifestLoad?: (manifest: ManifestEventLoadTypes) => void;
   onManifestError?: (error: unknown) => void;
 };
+
+export type CommitType = {
+  message: string;
+  movie_id: string;
+  user_id: string;
+  id: string;
+  created_at: string;
+  count_like: number;
+  count_dislike: number;
+};

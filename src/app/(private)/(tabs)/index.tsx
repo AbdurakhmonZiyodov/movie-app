@@ -64,11 +64,11 @@ export default function HomeScreen() {
         fistImage={
           <RN.View w={sizes.width * 0.87} h={sizes.width * 0.8} ai={'center'}>
             <RN.Image
-              source={slidersData[0].source}
+              source={slidersData[0]?.source}
               style={styles.movieImage}
               contentFit={'cover'}
             />
-            <RN.Text style={styles.cardName}>{slidersData[0].name}</RN.Text>
+            <RN.Text style={styles.cardName}>{slidersData[0]?.name}</RN.Text>
           </RN.View>
         }
         width={SIZES.width}

@@ -2,7 +2,7 @@ import BackButton from '@/components/BackButton';
 import { Button } from '@/components/Button';
 import Commit from '@/components/Commit';
 import Container from '@/components/Container';
-import { TextInput } from '@/components/Inputs/TextInput';
+import { FormInput } from '@/components/FormController/FormController';
 import RN from '@/components/RN';
 import RenderHtml from '@/components/RenderHtml';
 import { Spacing } from '@/components/Spacing';
@@ -14,12 +14,15 @@ import { COLORS, addAlpha } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
 import { MovieQuality, MovieStatusType } from '@/shared/types';
 import {
+  useAddCommitToTheMovieMutation,
+  useGetAllCommitsFromTheMovieQuery,
   useMovieInfoQuery,
   useOneMovieQuery,
 } from '@/store/services/features/MovieApi';
 import { useLocalSearchParams } from 'expo-router';
-import { findIndex, isEqual } from 'lodash';
+import { findIndex, isEqual, map } from 'lodash';
 import React, { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { ListRenderItem } from 'react-native';
 
 function getMovieId(url: string): string {
@@ -40,7 +43,11 @@ export const MOVIE_FORMAT = {
 const MovieScreen = () => {
   const { slug } = useLocalSearchParams();
   const [movieId, setMovieId] = useState<string>(slug as string);
-  const [description, setDescription] = useState('');
+  const { data: commitsData } = useGetAllCommitsFromTheMovieQuery({
+    id: movieId,
+  });
+  const [addNewCommitToTheMovie, { isLoading: addCommitLoading }] =
+    useAddCommitToTheMovieMutation();
   const { data: fullMovieData, isLoading: fullMovieLoading } = useOneMovieQuery(
     {
       id: slug as string,
@@ -63,6 +70,11 @@ const MovieScreen = () => {
     ],
     [fullMovieData?.images],
   );
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      commit: '',
+    },
+  });
 
   const movieID = useMemo<string | null>(() => {
     let id: string | null = null;
@@ -82,6 +94,22 @@ const MovieScreen = () => {
         <RN.ActivityIndicator size={'large'} color={COLORS.white} />
       </RN.View>
     );
+
+  const addNewCommit = handleSubmit(
+    async ({ commit }) => {
+      if (commit && movieId) {
+        const res = await addNewCommitToTheMovie({
+          id: movieId,
+          message: commit,
+        });
+
+        if (res.data) {
+          reset();
+        }
+      }
+    },
+    (_error) => {},
+  );
 
   const renderSmallButton: ListRenderItem<{
     id: string;
@@ -202,22 +230,24 @@ const MovieScreen = () => {
       </RN.View>
       <RN.Text style={styles.largeTitle}>{'IZohlar'}</RN.Text>
       <RN.View style={styles.orangeLine} mb={12} />
-      <TextInput
+      <FormInput
         placeholder={'Izoh yozing...'}
         multiline={true}
+        control={control}
+        name={'commit'}
         inputStyle={styles.textAreaInput}
-        value={description}
-        onChangeText={setDescription}
       />
       <RN.View w={150} pt={10} pb={30}>
-        <Button title={'Yuborish'} />
+        <Button
+          title={'Yuborish'}
+          onPress={addNewCommit}
+          loading={addCommitLoading}
+        />
       </RN.View>
 
-      <Commit
-        commit={
-          "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!"
-        }
-      />
+      {map(commitsData ?? [], (commit) => (
+        <Commit key={commit.id} {...commit} />
+      ))}
     </Container>
   );
 };
