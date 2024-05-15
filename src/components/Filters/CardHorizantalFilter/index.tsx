@@ -5,24 +5,49 @@ import { isEqual } from 'lodash';
 import { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
 
-const filers = ['Anime film', 'Anime serial', 'Ongoin'];
-export default function CardHorizantalFilter() {
-  const activeFilter = filers[0];
+const allMovieId = Symbol(
+  'This is a unique type for outputting all files, which will not be sent to the backend',
+).toString();
+export default function CardHorizantalFilter({
+  categories,
+  selectedCategoryId,
+  updateSelectedCategoryId,
+}: {
+  categories: {
+    id: string;
+    name: string;
+  }[];
+  selectedCategoryId: string | null;
+  updateSelectedCategoryId: React.Dispatch<React.SetStateAction<string | null>>;
+}) {
+  const onPressFilter = useCallback(
+    ({ id }: { id: string }) => {
+      if (id === allMovieId) {
+        updateSelectedCategoryId(null);
+      } else {
+        updateSelectedCategoryId(id);
+      }
+    },
+    [updateSelectedCategoryId],
+  );
 
-  const renderItem: ListRenderItem<string> = useCallback(
+  const renderItem: ListRenderItem<(typeof categories)[0]> = useCallback(
     ({ item: filter }) => (
-      <RN.TouchableOpacity style={styles.filterButton}>
+      <RN.TouchableOpacity
+        style={styles.filterButton}
+        onPress={() => onPressFilter({ id: filter.id })}
+      >
         <RN.Text
           style={[
             styles.filterText,
-            isEqual(activeFilter, filter) && styles.activeFilterText,
+            isEqual(selectedCategoryId, filter.id) && styles.activeFilterText,
           ]}
         >
-          {filter}
+          {filter.name}
         </RN.Text>
       </RN.TouchableOpacity>
     ),
-    [activeFilter],
+    [onPressFilter, selectedCategoryId],
   );
   return (
     <RN.View>
@@ -30,7 +55,7 @@ export default function CardHorizantalFilter() {
         horizontal={true}
         contentContainerStyle={styles.flatList}
         keyExtractor={(_, key) => key.toString()}
-        data={filers}
+        data={[{ name: 'All', id: allMovieId }, ...categories]}
         renderItem={renderItem}
       />
     </RN.View>

@@ -9,11 +9,12 @@ import { COLORS } from '@/shared/constants/colors';
 import { SIZES } from '@/shared/constants/dimensions';
 import {
   useAllMoviesQuery,
+  useMovieCategoriesQuery,
   useMovieSlidesQuery,
 } from '@/store/services/features/MovieApi';
 import { router } from 'expo-router';
 import { map } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import type { CarouselRenderItem } from 'react-native-reanimated-carousel';
 
 const sizes = {
@@ -21,8 +22,26 @@ const sizes = {
   height: SIZES.width * 1 * 0.8,
 };
 export default function HomeScreen() {
-  const { data: allMovies, isLoading } = useAllMoviesQuery({});
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null,
+  );
+
+  const filterParams = useMemo(() => {
+    const params: any = {};
+    if (selectedCategoryId) {
+      params['category_id'] = selectedCategoryId;
+    } else {
+      delete params['category_id'];
+    }
+    return params;
+  }, [selectedCategoryId]);
+
+  const { data: allMovies, isLoading } = useAllMoviesQuery({
+    params: filterParams,
+  });
   const { data: sliders } = useMovieSlidesQuery();
+
+  const { data: categoriesList } = useMovieCategoriesQuery();
 
   const slidersData = useMemo(
     () =>
@@ -74,7 +93,11 @@ export default function HomeScreen() {
         width={SIZES.width}
         height={SIZES.width * 0.85}
       />
-      <CardHorizantalFilter />
+      <CardHorizantalFilter
+        categories={categoriesList ?? []}
+        selectedCategoryId={selectedCategoryId}
+        updateSelectedCategoryId={setSelectedCategoryId}
+      />
       <MovieList data={allMovies || []} loading={isLoading} />
     </Container>
   );

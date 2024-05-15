@@ -6,7 +6,15 @@ import { CommitType } from '@/components/Video/types';
 export const MovieApi = createApi({
   reducerPath: 'movieApi',
   baseQuery: ApiBaseQuery({ baseUrl: '' }),
-  tagTypes: ['movies', 'slider', 'commits'],
+  tagTypes: [
+    'movies',
+    'slider',
+    'commits',
+    'category',
+    'country',
+    'years',
+    'movie-genre',
+  ],
   endpoints: (builder) => ({
     allMovies: builder.query<MovieType[], { params?: any }>({
       query: ({ params }) => ({
@@ -33,18 +41,28 @@ export const MovieApi = createApi({
         url: '/movie-genre/',
         method: 'GET',
       }),
+      providesTags: ['movie-genre'],
     }),
     movieYearList: builder.query<{ id: string; year: number }[], void>({
       query: () => ({
         url: '/year',
         method: 'GET',
       }),
+      providesTags: ['years'],
     }),
     movieCountryList: builder.query<{ id: string; name: string }[], void>({
       query: () => ({
         url: '/country',
         method: 'GET',
       }),
+      providesTags: ['country'],
+    }),
+    movieCategories: builder.query<{ id: string; name: string }[], void>({
+      query: () => ({
+        url: `/category`,
+        method: 'GET',
+      }),
+      providesTags: ['category'],
     }),
     movieSlides: builder.query<
       {
@@ -57,8 +75,8 @@ export const MovieApi = createApi({
       query: () => ({
         url: '/movie/slider',
         method: 'GET',
-        providesTags: ['slider'],
       }),
+      providesTags: ['slider'],
     }),
     getAllCommitsFromTheMovie: builder.query<CommitType[], { id: string }>({
       query: (_data) => ({
@@ -101,4 +119,6 @@ export const {
   useGetAllCommitsFromTheMovieQuery,
   useLazyGetAllCommitsFromTheMovieQuery,
   useAddCommitToTheMovieMutation,
+  useMovieCategoriesQuery,
+  useLazyMovieCategoriesQuery,
 } = MovieApi;

@@ -12,6 +12,7 @@ import { OpenSansFonts } from '@/shared/assets/fonts/open-sans.fonts';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS, addAlpha } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
+import { CoreStyle } from '@/shared/styles/globalStyles';
 import { MovieQuality, MovieStatusType } from '@/shared/types';
 import {
   useAddCommitToTheMovieMutation,
@@ -90,9 +91,9 @@ const MovieScreen = () => {
 
   if (isNotOk)
     return (
-      <RN.View flex={1} ai={'center'} jc={'center'}>
+      <Container style={CoreStyle.center}>
         <RN.ActivityIndicator size={'large'} color={COLORS.white} />
-      </RN.View>
+      </Container>
     );
 
   const addNewCommit = handleSubmit(
