@@ -85,3 +85,29 @@ export type CommitType = {
   count_like: number;
   count_dislike: number;
 };
+
+export type PremiumDiscountType = {
+  id: string;
+  name: string;
+  price: number;
+  premium_date: number;
+  is_active: boolean;
+  price_discount: number;
+  discount: number;
+};
+
+export interface OrderType {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    tid: any;
+    success: boolean;
+    price: any;
+    discount: number;
+    user_id: string;
+    plan_id: any;
+    promo_id: any;
+    promo: any;
+  };
+}

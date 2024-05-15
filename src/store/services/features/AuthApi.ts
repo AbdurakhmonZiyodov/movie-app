@@ -1,6 +1,6 @@
+import { LoginResponse, ProfileInfoResponse, Tokens } from '@/shared/types';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import ApiBaseQuery from '../ApiBaseQuery';
-import { LoginResponse, ProfileInfoResponse, Tokens } from '@/shared/types';
 
 export const AuthApi = createApi({
   reducerPath: 'authApi',

@@ -1,7 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import ApiBaseQuery from '../ApiBaseQuery';
 import { MovieInfo, MovieType } from '@/shared/types';
-import { CommitType } from '@/components/Video/types';
+import {
+  CommitType,
+  OrderType,
+  PremiumDiscountType,
+} from '@/components/Video/types';
 
 export const MovieApi = createApi({
   reducerPath: 'movieApi',
@@ -98,27 +102,31 @@ export const MovieApi = createApi({
       }),
       invalidatesTags: ['commits'],
     }),
+    allPremiumDiscount: builder.query<PremiumDiscountType[], void>({
+      query: () => ({
+        url: '/order/plan',
+        method: 'GET',
+      }),
+    }),
+    getOrders: builder.query<OrderType, void>({
+      query: () => ({
+        url: '/order',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
 export const {
   useAllMoviesQuery,
-  useLazyAllMoviesQuery,
   useOneMovieQuery,
-  useLazyOneMovieQuery,
   useMovieInfoQuery,
-  useLazyMovieInfoQuery,
   useMovieGanreListQuery,
-  useLazyMovieGanreListQuery,
   useMovieYearListQuery,
-  useLazyMovieYearListQuery,
   useMovieCountryListQuery,
-  useLazyMovieCountryListQuery,
   useMovieSlidesQuery,
-  useLazyMovieSlidesQuery,
   useGetAllCommitsFromTheMovieQuery,
-  useLazyGetAllCommitsFromTheMovieQuery,
   useAddCommitToTheMovieMutation,
   useMovieCategoriesQuery,
-  useLazyMovieCategoriesQuery,
+  useAllPremiumDiscountQuery,
 } = MovieApi;
