@@ -58,6 +58,7 @@ const TabLayout = () => (
         name={tabName}
         options={{
           tabBarIcon: tab.icon,
+          tabBarHideOnKeyboard: true,
         }}
       />
     ))}
