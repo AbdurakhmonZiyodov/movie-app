@@ -19,6 +19,10 @@ import { useLocalStore } from '@/store/hooks/useLocalStore';
 import { onUpdateTokens } from '@/store/LocalStore';
 import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
 import { MontserratFonts } from '@/shared/assets/fonts/montserrat.fonts';
+import { useAllPremiumDiscountQuery } from '@/store/services/features/MovieApi';
+import { ListRenderItem } from 'react-native';
+import { PremiumDiscountType } from '@/components/Video/types';
+import { formatPrice } from '@/shared/utils/number';
 
 const config: any = {
   holderColor: 'white',
@@ -87,6 +91,29 @@ export const PremiumBottomSheet = ({
 }: {
   bottomSheetRef?: RefObject<BottomSheetRef>;
 }) => {
+  const { data: allPremiumDiscount } = useAllPremiumDiscountQuery();
+  const renderPremiumItem: ListRenderItem<PremiumDiscountType> = useCallback(
+    ({ item }) => {
+      const price = formatPrice(item.price);
+      return (
+        <Ripple
+          rippleColor={COLORS.orange}
+          style={[
+            styles.preModalPaymentButton,
+            styles.activePreModalPaymentButton,
+          ]}
+        >
+          <RN.Text style={styles.preModalPaymentButtonTitle}>
+            {item.name}
+          </RN.Text>
+          <RN.Text style={styles.preModalPaymentButtonSubTitle}>
+            {price}
+          </RN.Text>
+        </Ripple>
+      );
+    },
+    [],
+  );
   const renderChild = useCallback(
     (child: ReactNode) => (
       <RN.View style={styles.wrapper}>
@@ -97,7 +124,7 @@ export const PremiumBottomSheet = ({
         </RN.View>
 
         <RN.FlatList
-          data={[1, 2, 3, 4, 5]}
+          data={allPremiumDiscount ?? []}
           numColumns={2}
           columnWrapperStyle={{
             gap: 6,
@@ -107,29 +134,14 @@ export const PremiumBottomSheet = ({
             gap: 6,
           }}
           keyExtractor={(_, key) => key.toString()}
-          renderItem={() => (
-            <Ripple
-              rippleColor={COLORS.orange}
-              style={[
-                styles.preModalPaymentButton,
-                styles.activePreModalPaymentButton,
-              ]}
-            >
-              <RN.Text style={styles.preModalPaymentButtonTitle}>
-                {'Standart'}
-              </RN.Text>
-              <RN.Text style={styles.preModalPaymentButtonSubTitle}>
-                {'20 kun'}
-              </RN.Text>
-            </Ripple>
-          )}
+          renderItem={renderPremiumItem}
         />
 
         <RN.View style={CoreStyle.flex1} />
         <Button title={'Premium sotib olish'} onPress={() => {}} />
       </RN.View>
     ),
-    [],
+    [allPremiumDiscount, renderPremiumItem],
   );
 
   return (
