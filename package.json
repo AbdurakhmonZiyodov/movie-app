@@ -51,6 +51,7 @@
     "react-native": "0.74.1",
     "react-native-confirmation-code-field": "^7.4.0",
     "react-native-gesture-handler": "^2.16.2",
+    "react-native-image-crop-picker": "^0.41.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-material-ripple": "^0.9.1",
     "react-native-reanimated": "~3.10.1",

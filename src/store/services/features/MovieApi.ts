@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import ApiBaseQuery from '../ApiBaseQuery';
-import { MovieInfo, MovieType } from '@/shared/types';
+import { MovieInfo, MovieType, PaymentOrderResponseType } from '@/shared/types';
 import {
   CommitType,
   OrderType,
@@ -18,6 +18,8 @@ export const MovieApi = createApi({
     'country',
     'years',
     'movie-genre',
+    'payment-status-list',
+    'my-payment-status',
   ],
   endpoints: (builder) => ({
     allMovies: builder.query<MovieType[], { params?: any }>({
@@ -107,12 +109,25 @@ export const MovieApi = createApi({
         url: '/order/plan',
         method: 'GET',
       }),
+      providesTags: ['payment-status-list'],
     }),
-    getOrders: builder.query<OrderType, void>({
+    getOrder: builder.query<OrderType, void>({
       query: () => ({
         url: '/order',
         method: 'GET',
       }),
+      providesTags: ['my-payment-status'],
+    }),
+    makePaymentOrder: builder.mutation<
+      PaymentOrderResponseType,
+      { premium_id: string }
+    >({
+      query: (data) => ({
+        url: '/order/payment',
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['my-payment-status'],
     }),
   }),
 });
@@ -129,4 +144,6 @@ export const {
   useAddCommitToTheMovieMutation,
   useMovieCategoriesQuery,
   useAllPremiumDiscountQuery,
+  useGetOrderQuery,
+  useMakePaymentOrderMutation,
 } = MovieApi;

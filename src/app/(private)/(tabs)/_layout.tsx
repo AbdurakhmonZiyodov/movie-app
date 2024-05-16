@@ -19,25 +19,30 @@ const tabs: Record<
   TAB_BAR_STACK,
   {
     icon: (props: { color: string }) => ReactNode;
+    label: string;
   }
 > = {
   [TAB_BAR_STACK.HOME]: {
     icon: ({ color }) => (
       <FontAwesomeIcon name={'home'} color={color} {...iconOptions} />
     ),
+    label: 'Bosh sahifa',
   },
   [TAB_BAR_STACK.SEARCH]: {
     icon: ({ color }) => (
       <FontAwesomeIcon name={'search'} color={color} {...iconOptions} />
     ),
+    label: 'Qidirish',
   },
   [TAB_BAR_STACK.CATEGORY]: {
     icon: ({ color }) => <GirdsIcon color={color} {...iconOptions} />,
+    label: 'Katalog',
   },
   [TAB_BAR_STACK.PROFILE]: {
     icon: ({ color }) => (
       <FontAwesomeIcon name={'user'} color={color} {...iconOptions} />
     ),
+    label: 'Profil',
   },
 };
 
@@ -59,6 +64,7 @@ const TabLayout = () => (
         options={{
           tabBarIcon: tab.icon,
           tabBarHideOnKeyboard: true,
+          tabBarLabel: tab.label,
         }}
       />
     ))}

@@ -83,3 +83,30 @@ export enum MovieQuality {
   hd_360 = 'hd_360',
   hd_244 = 'hd_244',
 }
+
+export interface PaymentOrderResponseType {
+  success: boolean;
+  message: string;
+  link: string;
+  order: Order;
+}
+
+export interface Order {
+  id: string;
+  tid: any;
+  success: boolean;
+  price: number;
+  discount: number;
+  user_id: string;
+  plan_id: string;
+  promo_id: any;
+  plan: Plan;
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  premium_date: number;
+  is_active: boolean;
+}
