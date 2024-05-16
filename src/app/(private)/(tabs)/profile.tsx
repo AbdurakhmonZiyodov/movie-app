@@ -12,7 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Portal } from '@gorhom/portal';
 import Ripple from 'react-native-material-ripple';
 import React, { ReactNode, RefObject, useCallback, useRef } from 'react';
-import { ROOT_STACK } from './routes';
+import { ROOT_STACK } from '../../../shared/routes';
 import { useAppDispatch } from '@/store/hooks';
 import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 import { useLocalStore } from '@/store/hooks/useLocalStore';

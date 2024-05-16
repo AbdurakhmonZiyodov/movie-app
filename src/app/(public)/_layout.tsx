@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { PUBLIC_STACK } from '../(private)/(tabs)/routes';
+import { PUBLIC_STACK } from '../../shared/routes';
 
 export default function PublicLayout() {
   return (

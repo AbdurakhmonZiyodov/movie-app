@@ -13,7 +13,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { ROOT_STACK } from './(private)/(tabs)/routes';
+import { ROOT_STACK } from '../shared/routes';
 import { useLocalStore } from '@/store/hooks/useLocalStore';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

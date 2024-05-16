@@ -18,7 +18,7 @@ import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { PUBLIC_STACK } from '../(private)/(tabs)/routes';
+import { PUBLIC_STACK } from '../../shared/routes';
 import { CoreStyle } from '@/shared/styles/globalStyles';
 
 const schema = yup.object({

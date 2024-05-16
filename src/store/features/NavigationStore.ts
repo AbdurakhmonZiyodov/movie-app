@@ -1,5 +1,5 @@
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
-import { ROOT_STACK } from '@/app/(private)/(tabs)/routes';
+import { ROOT_STACK } from '@/shared/routes';
 import { RootState } from '../store';
 
 interface NavigationStoreState {

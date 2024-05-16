@@ -13,7 +13,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback } from 'react';
-import { ROOT_STACK } from './(private)/(tabs)/routes';
+import { ROOT_STACK } from '../shared/routes';
 import useVisibility from '@/shared/hooks/useVisibility';
 
 const OnBoardingScreen = () => {

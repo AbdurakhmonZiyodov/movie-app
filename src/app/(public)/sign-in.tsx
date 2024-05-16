@@ -10,7 +10,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { PUBLIC_STACK, ROOT_STACK } from '../(private)/(tabs)/routes';
+import { PUBLIC_STACK, ROOT_STACK } from '../../shared/routes';
 import { router } from 'expo-router';
 import {
   useLoginMutation,

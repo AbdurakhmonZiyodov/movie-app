@@ -1,7 +1,7 @@
 import { FontAwesome as FontAwesomeIcon } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React, { ReactNode } from 'react';
-import { TAB_BAR_STACK } from './routes';
+import { TAB_BAR_STACK } from '../../../shared/routes';
 
 import RN from '@/components/RN';
 import GirdsIcon from '@/shared/assets/icons/GirdsIcon';

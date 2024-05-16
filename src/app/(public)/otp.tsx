@@ -12,7 +12,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useRegisterEmailVerificationMutation } from '@/store/services/features/AuthApi';
 import { useAppDispatch } from '@/store/hooks';
 import { onUpdateTokens } from '@/store/LocalStore';
-import { ROOT_STACK } from '../(private)/(tabs)/routes';
+import { ROOT_STACK } from '../../shared/routes';
 import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { CoreStyle } from '@/shared/styles/globalStyles';
