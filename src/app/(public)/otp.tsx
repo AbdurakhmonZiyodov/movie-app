@@ -30,8 +30,10 @@ export default function OtpScreen() {
   const onVerificationCode = useCallback(async () => {
     const response = await verificationCode({ code, email });
     if (response.data && response.data.success) {
-      dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.public }));
-      dispatch(onUpdateTokens({ tokens: response.data?.data }));
+      setTimeout(() => {
+        dispatch(onUpdateTokens({ tokens: response.data?.data }));
+        dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.public }));
+      }, 100);
     }
   }, [code, dispatch, email, verificationCode]);
   return (

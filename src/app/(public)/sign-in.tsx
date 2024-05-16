@@ -94,11 +94,11 @@ export default function SignIn() {
     (_error) => setShouldTriggerError(true),
   );
 
-  useEffect(() => {
-    if (response?.type === 'success' && response?.authentication?.idToken) {
-      onGoogleAuth(response.authentication.idToken);
-    }
-  }, [onGoogleAuth, response]);
+  // useEffect(() => {
+  //   if (response?.type === 'success' && response?.authentication?.idToken) {
+  //     onGoogleAuth(response.authentication.idToken);
+  //   }
+  // }, [onGoogleAuth, response]);
 
   const fieldProps = useMemo(
     () => ({
@@ -114,35 +114,35 @@ export default function SignIn() {
         contentContainerStyle={CoreStyle.flexGrow1}
       >
         <Container
-          Header={<BackButton onGoBack={goBack} />}
+          // Header={<BackButton onGoBack={goBack} />}
           mainStyle={styles.container}
-          Footer={
-            <>
-              <Button
-                title={'Google orqali kirish'}
-                loading={googleLoading}
-                onPress={() => promptAsync()}
-                loadingColor={COLORS.black}
-                style={{
-                  backgroundColor: COLORS.white,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 0,
-                }}
-                titleStyle={{
-                  color: COLORS.black,
-                }}
-                RightSection={
-                  <RN.Image
-                    source={GoogleImagePng}
-                    style={styles.googleImage}
-                    contentFit={'contain'}
-                  />
-                }
-              />
-              <Spacing />
-            </>
-          }
+          // Footer={
+          //   <>
+          //     <Button
+          //       title={'Google orqali kirish'}
+          //       loading={googleLoading}
+          //       onPress={() => promptAsync()}
+          //       loadingColor={COLORS.black}
+          //       style={{
+          //         backgroundColor: COLORS.white,
+          //         flexDirection: 'row',
+          //         alignItems: 'center',
+          //         paddingVertical: 0,
+          //       }}
+          //       titleStyle={{
+          //         color: COLORS.black,
+          //       }}
+          //       RightSection={
+          //         <RN.Image
+          //           source={GoogleImagePng}
+          //           style={styles.googleImage}
+          //           contentFit={'contain'}
+          //         />
+          //       }
+          //     />
+          //     <Spacing />
+          //   </>
+          // }
         >
           <RN.View g={16}>
             <FormInput
