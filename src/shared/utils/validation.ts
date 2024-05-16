@@ -13,7 +13,7 @@ export const passwordFieldSchema = yup
   .string()
   .required('Iltimos parolni kritish')
   .min(6, "parolingiz min 6 ta belgidan iborat bo'lishi shart")
-  .max(8, "parolingiz max 8 ta belgidan iborat bo'lishi shart");
+  .max(15, "parolingiz max 15 ta belgidan iborat bo'lishi shart");
 
 export const nameFieldSchema = yup
   .string()

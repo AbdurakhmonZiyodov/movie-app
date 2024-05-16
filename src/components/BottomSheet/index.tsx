@@ -22,6 +22,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import useVisibility from '@/shared/hooks/useVisibility';
 import RN from '../RN';
 import { HIT_SLOP } from '@/shared/styles/globalStyles';
+import { useBackHandler } from '@react-native-community/hooks';
 
 const { height: WINDOW_HEIGHT } = SIZES;
 
@@ -128,6 +129,15 @@ const BottomSheet: FC<BottomSheetProps> = ({
       scrollTo({ value: newValue });
     },
   }));
+
+  useBackHandler(() => {
+    if (darkBcVisiblity.visible) {
+      bottomSheetRef?.current?.onHide();
+      return true;
+    }
+    // let the default thing happen
+    return false;
+  });
 
   const pan = Gesture.Pan()
     .onChange((event) => {
