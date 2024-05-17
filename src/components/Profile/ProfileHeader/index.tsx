@@ -1,5 +1,6 @@
 import RN from '@/components/RN';
 import { Spacing } from '@/components/Spacing';
+import config from '@/config';
 import { MontserratFonts } from '@/shared/assets/fonts/montserrat.fonts';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { UserSvg } from '@/shared/assets/images/svg';
@@ -11,21 +12,32 @@ const ProfileHeader = ({
   name,
   email,
   isLoading,
+  imageUrl,
 }: {
   name?: string;
   email?: string;
   isLoading: boolean;
+  imageUrl: string | null;
 }) => {
   const renderChildren = useCallback(
     () => (
       <>
-        <UserSvg />
+        {imageUrl ? (
+          <RN.Image
+            source={{
+              uri: config.IMAGE_URL + '/' + imageUrl,
+            }}
+            style={styles.image}
+          />
+        ) : (
+          <UserSvg />
+        )}
         <Spacing height={10} />
         <RN.Text style={styles.preModalPaymentButtonTitle}>{name}</RN.Text>
         <RN.Text style={styles.headerSubTitle}>{email}</RN.Text>
       </>
     ),
-    [email, name],
+    [email, imageUrl, name],
   );
   return (
     <RN.View as={'center'} ai={'center'} minH={180} jc={'center'}>
@@ -49,6 +61,11 @@ const styles = RN.StyleSheet.create({
     fontSize: normalizeHeight(14),
     fontFamily: MontserratFonts.Montserrat_500,
     color: COLORS.white,
+  },
+  image: {
+    width: 81,
+    height: 81,
+    borderRadius: 81,
   },
 });
 

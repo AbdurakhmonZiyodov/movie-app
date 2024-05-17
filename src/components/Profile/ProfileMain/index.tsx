@@ -29,9 +29,14 @@ const profileData = [
 interface ProfileMainProps {
   onLogout(): void;
   onBuyPremium(): void;
+  onProfileEdit(): void;
 }
 
-const ProfileMain: FC<ProfileMainProps> = ({ onLogout, onBuyPremium }) => {
+const ProfileMain: FC<ProfileMainProps> = ({
+  onLogout,
+  onBuyPremium,
+  onProfileEdit,
+}) => {
   const onPressHandler = useCallback(
     ({ type }: { type: ProfileMenu }) => {
       if (type === ProfileMenu.LOG_OUT) {
@@ -40,8 +45,11 @@ const ProfileMain: FC<ProfileMainProps> = ({ onLogout, onBuyPremium }) => {
       if (type === ProfileMenu.PAYMENT) {
         return onBuyPremium();
       }
+      if (type === ProfileMenu.USER_EDIT) {
+        onProfileEdit();
+      }
     },
-    [onBuyPremium, onLogout],
+    [onBuyPremium, onLogout, onProfileEdit],
   );
 
   const renderItem: ListRenderItem<(typeof profileData)[0]> = useCallback(

@@ -20,5 +20,6 @@ export interface ProfileInfoResponse {
     is_success: boolean;
     premium_end_date: string;
     is_block: boolean;
+    image: string | null;
   };
 }

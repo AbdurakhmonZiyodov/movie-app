@@ -5,6 +5,7 @@ import ApiBaseQuery from '../ApiBaseQuery';
 export const AuthApi = createApi({
   reducerPath: 'authApi',
   baseQuery: ApiBaseQuery({ baseUrl: '/auth' }),
+  tagTypes: ['profile-info'],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, { email: string; password: string }>(
       {
@@ -62,6 +63,18 @@ export const AuthApi = createApi({
         url: '/profile',
         method: 'GET',
       }),
+      providesTags: ['profile-info'],
+    }),
+    updateProfileInfo: builder.mutation<
+      ProfileInfoResponse,
+      { name?: string; image?: string }
+    >({
+      query: (data) => ({
+        url: '/profile',
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['profile-info'],
     }),
   }),
 });
@@ -75,4 +88,5 @@ export const {
   useRegisterEmailMutation,
   useRegisterEmailVerificationMutation,
   useLoginWithGoogleMutation,
+  useUpdateProfileInfoMutation,
 } = AuthApi;

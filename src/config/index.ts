@@ -1,4 +1,4 @@
-const default_API_URL = 'https://api.tvtime.uz/api';
+export const default_API_URL = 'https://api.tvtime.uz/api';
 
 const GOOGLE = {
   android:

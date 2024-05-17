@@ -13,7 +13,14 @@ import {
 } from '@/store/services/features/MovieApi';
 import { Portal } from '@gorhom/portal';
 import { find, isEqual } from 'lodash';
-import { ReactNode, RefObject, useCallback, useMemo, useState } from 'react';
+import {
+  ReactNode,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Alert, ListRenderItem } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import { styles } from './styles';
@@ -61,16 +68,21 @@ const PremiumBottomSheet = ({
           [{ text: 'Tushunarli', style: 'cancel' }],
         );
       } else {
-        await makeOrderToPremium({ premium_id: selectedStatus.id });
-        if (isSuccess) {
-          Alert.alert(
-            'Tabriklayman 🥳',
-            'Siz mufaqiyatli premium sotib oldingiz! 🎉🎉',
-          );
-        }
+        await makeOrderToPremium({
+          premium_id: selectedStatus.id,
+        });
       }
     }
-  }, [isSuccess, makeOrderToPremium, paymentStatusInfo, selectedStatus]);
+  }, [makeOrderToPremium, paymentStatusInfo, selectedStatus]);
+
+  useEffect(() => {
+    if (isSuccess && paymentStatusInfo.isPremium) {
+      Alert.alert(
+        'Tabriklayman 🥳',
+        'Siz mufaqiyatli premium sotib oldingiz! 🎉🎉',
+      );
+    }
+  }, [isSuccess, paymentStatusInfo.isPremium]);
 
   const renderPremiumItem: ListRenderItem<PremiumDiscountType> = useCallback(
     ({ item }) => {
