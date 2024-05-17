@@ -5,25 +5,35 @@ import { onUpdateTokens } from '@/store/LocalStore';
 import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 import { useAppDispatch } from '@/store/hooks';
 import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { ROOT_STACK } from '../../../shared/routes';
 import PremiumBottomSheet from '@/components/BottomSheets/PremiumBottomSheet';
 import ProfileEditBottomSheet from '@/components/BottomSheets/ProfileEditBottomSheet';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
 import ProfileMain from '@/components/Profile/ProfileMain';
 import { Alert } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function ProfileScreen() {
   const premiumBottomSheetRef = useRef<BottomSheetRef>(null);
   const profileEditBottomSheetRef = useRef<BottomSheetRef>(null);
+  const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
-  const { data, isLoading: profileInfoLoading } = useProfileInfoQuery();
+  const {
+    data,
+    isLoading: profileInfoLoading,
+    refetch,
+  } = useProfileInfoQuery();
 
-  const onLogoutHandler = useCallback(() => {
-    dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.private }));
-    setTimeout(() => {
-      dispatch(onUpdateTokens({ tokens: null }));
-    }, 100);
+  const onLogoutHandler = useCallback(async () => {
+    try {
+      dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.private }));
+      setTimeout(() => {
+        dispatch(onUpdateTokens({ tokens: null }));
+      }, 100);
+    } catch (err) {
+      console.log(err);
+    }
   }, [dispatch]);
 
   const onLogoutPress = useCallback(() => {
@@ -51,6 +61,12 @@ export default function ProfileScreen() {
   const onEditProfilePress = useCallback(() => {
     profileEditBottomSheetRef.current?.onShow();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      refetch();
+    }
+  }, [isFocused, refetch]);
 
   return (
     <Container edges={['top']}>
