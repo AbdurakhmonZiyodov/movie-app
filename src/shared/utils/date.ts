@@ -1,9 +1,10 @@
 export function getTimeAgoString(previousTime: string): string {
   const currentTime = new Date();
   const previousDate = new Date(previousTime);
+  previousDate.setHours(previousDate.getHours() + 3); // @todo: it should be implemente on the backend
   const elapsedTime = currentTime.getTime() - previousDate.getTime();
 
-  const seconds = Math.floor(elapsedTime / 1000);
+  const seconds = Math.abs(Math.floor(elapsedTime / 1000));
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
