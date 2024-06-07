@@ -1,5 +1,5 @@
-export const default_API_URL = 'https://api.tvtime.uz/api';
-
+export const default_API_URL = 'https://bananatv.topsites.uz/api';
+export const default_API_URL_FOR_IMAGE = 'https://api.tvtime.uz/api';
 const GOOGLE = {
   android:
     '667089413459-udrimeg97qobaojvbff3f77vg1lrbq09.apps.googleusercontent.com',

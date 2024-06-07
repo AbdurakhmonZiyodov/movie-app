@@ -77,13 +77,20 @@ export type ManifestEventsTypes = {
 };
 
 export type CommitType = {
+  id: string;
   message: string;
+  created_at: string;
   movie_id: string;
   user_id: string;
-  id: string;
-  created_at: string;
   count_like: number;
   count_dislike: number;
+  is_like: boolean;
+  is_dislike: boolean;
+  user: {
+    id: string;
+    name: string;
+    image: null | string;
+  };
 };
 
 export type PremiumDiscountType = {

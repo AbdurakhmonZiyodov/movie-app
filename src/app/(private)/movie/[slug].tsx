@@ -21,7 +21,7 @@ import {
   useOneMovieQuery,
 } from '@/store/services/features/MovieApi';
 import { useLocalSearchParams } from 'expo-router';
-import { findIndex, isEqual, map } from 'lodash';
+import { findIndex, isEqual, map, orderBy } from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ListRenderItem } from 'react-native';
@@ -140,7 +140,6 @@ const MovieScreen = () => {
     );
   };
 
-  console.log({ movieID });
   return (
     <Container
       isScroll={true}
@@ -248,9 +247,15 @@ const MovieScreen = () => {
         />
       </RN.View>
 
-      {map(commitsData ?? [], (commit) => (
-        <Commit key={commit.id} {...commit} />
-      ))}
+      <RN.ScrollView
+        nestedScrollEnabled={true}
+        style={{ height: 300 }}
+        endFillColor={'red'}
+      >
+        {map(orderBy(commitsData, ['created_at']).reverse() ?? [], (commit) => (
+          <Commit key={commit.id} {...commit} />
+        ))}
+      </RN.ScrollView>
     </Container>
   );
 };

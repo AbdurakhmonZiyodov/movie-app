@@ -13,7 +13,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback } from 'react';
-import { ROOT_STACK } from '../shared/routes';
+import { PUBLIC_STACK } from '../shared/routes';
 import useVisibility from '@/shared/hooks/useVisibility';
 
 const OnBoardingScreen = () => {
@@ -24,7 +24,7 @@ const OnBoardingScreen = () => {
     loading.show();
     setTimeout(() => {
       dispatch(onForwardOnboarding());
-      router.replace(ROOT_STACK.private);
+      router.replace(PUBLIC_STACK.login);
       loading.hide();
     }, 350);
   }, [dispatch, loading]);

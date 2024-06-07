@@ -1,49 +1,55 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import RN from '@/components/RN';
+import { Button } from '@/components/Button';
 import Container from '@/components/Container';
-import BackButton from '@/components/BackButton';
-import { normalizeHeight } from '@/shared/constants/dimensions';
+import AnimatedNumCodeInput from '@/components/Inputs/NumCodeInput/AnimatedNumCodeInput';
+import RN from '@/components/RN';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
-import AnimatedNumCodeInput from '@/components/Inputs/NumCodeInput/AnimatedNumCodeInput';
-import { Ionicons } from '@expo/vector-icons';
-import { Button } from '@/components/Button';
-import { useLocalSearchParams } from 'expo-router';
-import { useRegisterEmailVerificationMutation } from '@/store/services/features/AuthApi';
-import { useAppDispatch } from '@/store/hooks';
-import { onUpdateTokens } from '@/store/LocalStore';
-import { ROOT_STACK } from '../../shared/routes';
-import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { normalizeHeight } from '@/shared/constants/dimensions';
 import { CoreStyle } from '@/shared/styles/globalStyles';
+import { onUpdateNewUser, onUpdateTokens } from '@/store/LocalStore';
+import { useAppDispatch } from '@/store/hooks';
+import { useLoginPhoneVerifyMutation } from '@/store/services/features/AuthApi';
+import { Ionicons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useCallback, useMemo, useState } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { PRIVATE_STACK, PUBLIC_STACK } from '../../shared/routes';
 
 export default function OtpScreen() {
   const dispatch = useAppDispatch();
 
   const params = useLocalSearchParams();
-  const email = useMemo(() => params?.email ?? '', [params]) as string;
+  const phone = useMemo(() => params?.phone ?? '', [params]) as string;
   const [code, setCode] = useState('');
 
-  const [verificationCode, { isLoading }] =
-    useRegisterEmailVerificationMutation();
+  const [verificationCode, { isLoading }] = useLoginPhoneVerifyMutation();
 
   const onVerificationCode = useCallback(async () => {
-    const response = await verificationCode({ code, email });
+    const response = await verificationCode({ code, phone: +phone });
     if (response.data && response.data.success) {
-      setTimeout(() => {
-        dispatch(onUpdateTokens({ tokens: response.data?.data }));
-        dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.public }));
-      }, 100);
+      if (response.data.data?.user?.is_success) {
+        setTimeout(() => {
+          dispatch(onUpdateNewUser(false));
+          dispatch(onUpdateTokens({ tokens: response.data?.data }));
+          router.push(PRIVATE_STACK.tab);
+        }, 100);
+      } else {
+        dispatch(onUpdateNewUser(true));
+        setTimeout(() => {
+          router.push(PUBLIC_STACK.profile);
+          dispatch(onUpdateTokens({ tokens: response.data?.data }));
+        }, 100);
+      }
     }
-  }, [code, dispatch, email, verificationCode]);
+  }, [code, dispatch, phone, verificationCode]);
   return (
     <KeyboardAwareScrollView
       bounces={false}
       contentContainerStyle={CoreStyle.flexGrow1}
     >
-      <Container mainStyle={styles.container} Header={<BackButton />}>
+      <Container mainStyle={styles.container}>
         <AnimatedNumCodeInput
-          email={email as string}
+          phone={phone as string}
           value={code}
           setValue={setCode}
         />

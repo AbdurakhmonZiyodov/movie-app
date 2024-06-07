@@ -8,9 +8,9 @@ export default function PublicLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name={PUBLIC_STACK.sign_in} />
-      <Stack.Screen name={PUBLIC_STACK.sign_up} />
+      <Stack.Screen name={PUBLIC_STACK.login} />
       <Stack.Screen name={PUBLIC_STACK.otp} />
+      <Stack.Screen name={PUBLIC_STACK.profile} />
     </Stack>
   );
 }

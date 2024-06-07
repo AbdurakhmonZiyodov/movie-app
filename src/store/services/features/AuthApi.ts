@@ -16,6 +16,26 @@ export const AuthApi = createApi({
         }),
       },
     ),
+    loginPhoneSendCode: builder.mutation<
+      { success: boolean; message: string },
+      { phone: number }
+    >({
+      query: (data) => ({
+        url: '/login/phone',
+        method: 'POST',
+        data,
+      }),
+    }),
+    loginPhoneVerify: builder.mutation<
+      LoginResponse,
+      { phone: number; code: string }
+    >({
+      query: (data) => ({
+        url: '/login/phone/verify',
+        method: 'POST',
+        data,
+      }),
+    }),
     loginWithGoogle: builder.mutation<
       { data: Tokens; success: boolean; message: string },
       { google_token: string }
@@ -89,4 +109,6 @@ export const {
   useRegisterEmailVerificationMutation,
   useLoginWithGoogleMutation,
   useUpdateProfileInfoMutation,
+  useLoginPhoneSendCodeMutation,
+  useLoginPhoneVerifyMutation,
 } = AuthApi;

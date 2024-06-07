@@ -2,17 +2,17 @@ import { BottomSheetRef } from '@/components/BottomSheet';
 import Container from '@/components/Container';
 import { Spacing } from '@/components/Spacing';
 import { onUpdateTokens } from '@/store/LocalStore';
-import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 import { useAppDispatch } from '@/store/hooks';
 import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ROOT_STACK } from '../../../shared/routes';
+import { PUBLIC_STACK } from '../../../shared/routes';
 import PremiumBottomSheet from '@/components/BottomSheets/PremiumBottomSheet';
 import ProfileEditBottomSheet from '@/components/BottomSheets/ProfileEditBottomSheet';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
 import ProfileMain from '@/components/Profile/ProfileMain';
 import { Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 export default function ProfileScreen() {
   const premiumBottomSheetRef = useRef<BottomSheetRef>(null);
@@ -27,8 +27,8 @@ export default function ProfileScreen() {
 
   const onLogoutHandler = useCallback(async () => {
     try {
-      dispatch(onChangeRedirectRootUrl({ url: ROOT_STACK.private }));
       setTimeout(() => {
+        router.replace(PUBLIC_STACK.login);
         dispatch(onUpdateTokens({ tokens: null }));
       }, 100);
     } catch (err) {

@@ -5,11 +5,13 @@ import { Tokens } from '@/shared/types';
 interface LocalStoreState {
   isOnboardingViewed: boolean;
   tokens: Tokens | null;
+  isNewUser: boolean;
 }
 
 const initialState: LocalStoreState = {
   isOnboardingViewed: false,
   tokens: null,
+  isNewUser: true,
 };
 
 const localStore = createSlice({
@@ -24,6 +26,9 @@ const localStore = createSlice({
       action: PayloadAction<{ tokens: Tokens | null }>,
     ) => {
       state.tokens = action.payload.tokens;
+    },
+    onUpdateNewUser: (state, action: PayloadAction<boolean>) => {
+      state.isNewUser = action.payload;
     },
   },
 });
@@ -40,5 +45,11 @@ export const selectTokens = createSelector(
   (localStore) => localStore.tokens,
 );
 
-export const { onForwardOnboarding, onUpdateTokens } = localStore.actions;
+export const selectIsNewUser = createSelector(
+  [selectLocalStore],
+  (localStore) => localStore.isNewUser,
+);
+
+export const { onForwardOnboarding, onUpdateTokens, onUpdateNewUser } =
+  localStore.actions;
 export default localStore;

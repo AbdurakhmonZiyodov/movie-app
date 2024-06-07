@@ -6,19 +6,40 @@ import { AntDesign as AntDesignIcon } from '@expo/vector-icons';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { CommitType } from '../Video/types';
 import { getTimeAgoString } from '@/shared/utils/date';
+import config from '@/config';
 
 export default function Commit({
   message,
   count_dislike,
   count_like,
   created_at,
+  user,
 }: CommitType) {
   return (
     <RN.View p={10} bgColor={COLORS.black2} bdrs={11} mv={10}>
       <RN.View fd={'row'} ai={'center'} g={8} pb={15}>
-        <RN.Image source={require('./image.png')} style={styles.image} />
+        {user.image ? (
+          <RN.Image
+            source={{ uri: config.IMAGE_URL + '/' + user.image }}
+            style={styles.image}
+          />
+        ) : (
+          <RN.View
+            style={[
+              styles.image,
+              {
+                borderWidth: 1,
+                borderColor: COLORS.white,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+            ]}
+          >
+            <RN.Text style={styles.firstLetter}>{user.name[0]}</RN.Text>
+          </RN.View>
+        )}
         <RN.View>
-          <RN.Text style={styles.username}>{'Jane Doe'}</RN.Text>
+          <RN.Text style={styles.username}>{user.name}</RN.Text>
           <RN.Text style={styles.date}>{getTimeAgoString(created_at)}</RN.Text>
         </RN.View>
       </RN.View>
@@ -48,6 +69,11 @@ const styles = RN.StyleSheet.create({
     fontSize: normalizeHeight(16),
     fontFamily: SourceSansProFonts.SourceSansPro_400,
     color: COLORS.darkwhite,
+  },
+  firstLetter: {
+    fontSize: normalizeHeight(22),
+    fontFamily: SourceSansProFonts.SourceSansPro_700,
+    color: COLORS.white,
   },
   username: {
     fontSize: normalizeHeight(18),

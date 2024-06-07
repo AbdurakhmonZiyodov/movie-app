@@ -52,9 +52,9 @@ function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { isAuthenticated, redirectRootUrl, isOnboardingViewed } =
-    useLocalStore();
+  const { isAuthenticated, isOnboardingViewed } = useLocalStore();
 
+  console.log({ isAuthenticated });
   return (
     <PortalProvider>
       <Stack
@@ -66,11 +66,12 @@ function RootLayoutNav() {
           name={ROOT_STACK.onboarding}
           redirect={isOnboardingViewed}
         />
-        <Stack.Screen name={ROOT_STACK.private} redirect={!isAuthenticated} />
-        <Stack.Screen
-          name={ROOT_STACK.public}
-          redirect={redirectRootUrl === ROOT_STACK.public}
-        />
+
+        {isAuthenticated ? (
+          <Stack.Screen name={ROOT_STACK.private} />
+        ) : (
+          <Stack.Screen name={ROOT_STACK.public} />
+        )}
       </Stack>
     </PortalProvider>
   );

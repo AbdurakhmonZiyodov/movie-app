@@ -6,6 +6,8 @@ import useVisibility from '@/shared/hooks/useVisibility';
 import { has } from 'lodash';
 import React, { FC, ReactNode } from 'react';
 import { FieldError } from 'react-hook-form';
+import MaskInput, { MaskInputProps } from 'react-native-mask-input';
+
 import {
   StyleProp,
   StyleSheet,
@@ -34,6 +36,8 @@ export type ITextInputProps = TextInputProps & {
   onChange?(val: string): void;
   shouldTriggerError?: boolean;
   name: string;
+  isMask?: boolean;
+  mask?: MaskInputProps['mask'];
 };
 
 export const TextInput: FC<ITextInputProps> = ({
@@ -55,12 +59,17 @@ export const TextInput: FC<ITextInputProps> = ({
   onBlur,
   name,
   defaultValue,
+  isMask = false,
+  mask,
   ...resOfProps
 }) => {
   const focusVisiblity = useVisibility();
   const passwordVisiblity = useVisibility(true);
   const shouldDisplayError = !!error && !!shouldTriggerError;
   const isPasswordInput = name === 'password' || name === 'passwordConfirm';
+
+  const Input = isMask ? MaskInput : RN.TextInput;
+
   const onInputChangeText = (text: string) => {
     onChange?.(text);
     onChangeText?.(text);
@@ -95,7 +104,8 @@ export const TextInput: FC<ITextInputProps> = ({
         ]}
       >
         {LeftElement}
-        <RN.TextInput
+        <Input
+          mask={mask}
           placeholder={placeholder}
           value={value}
           onChangeText={onInputChangeText}

@@ -47,11 +47,11 @@ const animateCell = ({ hasValue, index, isFocused }: any) => {
 };
 
 const AnimatedNumCodeInput = ({
-  email,
+  phone,
   value,
   setValue,
 }: {
-  email: string;
+  phone: string;
   value: string;
   setValue: (value: string) => void;
 }) => {
@@ -112,7 +112,7 @@ const AnimatedNumCodeInput = ({
       <Spacing steps={2} />
       <RN.Text style={styles.subTitle}>
         {'Tasdiqlash code '}
-        <RN.Text style={styles.subBoldTitle}>{email}</RN.Text>
+        <RN.Text style={styles.subBoldTitle}>{`+998${phone}`}</RN.Text>
         {' ga yuborildi'}
       </RN.Text>
 

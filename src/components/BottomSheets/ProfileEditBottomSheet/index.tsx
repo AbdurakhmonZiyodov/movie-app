@@ -26,10 +26,14 @@ const ProfileEditBottomSheet = ({
   bottomSheetRef,
   imageUrl,
   name,
+  isDrag = true,
+  callbackAfterSave,
 }: {
   bottomSheetRef?: RefObject<BottomSheetRef>;
   imageUrl: string | null;
   name: string;
+  isDrag?: boolean;
+  callbackAfterSave?: () => void;
 }) => {
   const isFocused = useIsFocused();
   const [updateProfile, { isLoading }] = useUpdateProfileInfoMutation();
@@ -72,11 +76,13 @@ const ProfileEditBottomSheet = ({
       await updateProfile({
         name: watchedName,
         image: watchedImageUrl!,
+      }).then(() => {
+        callbackAfterSave?.();
       });
     } catch (err) {
       console.log(err);
     }
-  }, [updateProfile, watchedImageUrl, watchedName]);
+  }, [callbackAfterSave, updateProfile, watchedImageUrl, watchedName]);
 
   const renderChild = useCallback(
     (child: ReactNode) => (
@@ -140,6 +146,7 @@ const ProfileEditBottomSheet = ({
     <Portal>
       <BottomSheet
         {...config}
+        isDrag={isDrag}
         bottomSheetRef={bottomSheetRef}
         onClose={() => {
           reset();

@@ -6,7 +6,11 @@ export type Tokens = {
 export interface LoginResponse {
   success: boolean;
   message: string;
-  data: Tokens;
+  data: Tokens & {
+    user: {
+      is_success: boolean;
+    };
+  };
 }
 
 export interface ProfileInfoResponse {

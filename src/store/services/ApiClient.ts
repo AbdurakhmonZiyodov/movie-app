@@ -19,7 +19,7 @@ ApiClient.interceptors.request.use(
 
       // Access the access_token from the parsed data
       const accessToken = parsedData.localStore
-        ? JSON.parse(parsedData.localStore).tokens.access_token
+        ? JSON.parse(parsedData.localStore)?.tokens?.access_token
         : null;
 
       // Log the access token
@@ -29,7 +29,7 @@ ApiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
     } catch (err) {
-      console.log('Error', err);
+      console.log('[Error:]:', err);
     }
 
     return config;
