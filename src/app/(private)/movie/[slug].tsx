@@ -230,7 +230,7 @@ const MovieScreen = () => {
       <RN.View p={10} bgColor={COLORS.black2} bdrs={11}>
         <RenderHtml children={fullMovieData?.descr} style={styles.body1Text} />
       </RN.View>
-      <RN.Text style={styles.largeTitle}>{'IZohlar'}</RN.Text>
+      <RN.Text style={styles.largeTitle}>{'Izohlar'}</RN.Text>
       <RN.View style={styles.orangeLine} mb={12} />
       <FormInput
         placeholder={'Izoh yozing...'}
@@ -249,7 +249,7 @@ const MovieScreen = () => {
 
       <RN.ScrollView
         nestedScrollEnabled={true}
-        style={{ height: 300 }}
+        style={{ height: 500 }}
         endFillColor={'red'}
       >
         {map(orderBy(commitsData, ['created_at']).reverse() ?? [], (commit) => (

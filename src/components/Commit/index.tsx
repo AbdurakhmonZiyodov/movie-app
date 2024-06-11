@@ -7,6 +7,8 @@ import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { CommitType } from '../Video/types';
 import { getTimeAgoString } from '@/shared/utils/date';
 import config from '@/config';
+import { useCallback } from 'react';
+import { useAddLikeOrDislikeMutation } from '@/store/services/features/MovieApi';
 
 export default function Commit({
   message,
@@ -14,7 +16,22 @@ export default function Commit({
   count_like,
   created_at,
   user,
+  is_dislike,
+  is_like,
+  id,
 }: CommitType) {
+  console.log({ is_dislike, is_like, name: user.name });
+  const [addLikeOrDislike] = useAddLikeOrDislikeMutation();
+
+  const onPressLikeOrDislike = useCallback(
+    (type: 'dislike' | 'like') => {
+      addLikeOrDislike({
+        type,
+        id,
+      });
+    },
+    [addLikeOrDislike, id],
+  );
   return (
     <RN.View p={10} bgColor={COLORS.black2} bdrs={11} mv={10}>
       <RN.View fd={'row'} ai={'center'} g={8} pb={15}>
@@ -45,16 +62,38 @@ export default function Commit({
       </RN.View>
       <RN.Text style={styles.commit}>{message}</RN.Text>
       <RN.View fd={'row'} ai={'center'} g={10} pv={7} pt={14}>
-        <RN.TouchableOpacity style={styles.fd}>
-          <AntDesignIcon name={'like1'} size={24} color={COLORS.orange} />
-          <RN.Text style={[styles.likeCount, styles.activeLinkeCount]}>
+        <RN.TouchableOpacity
+          style={styles.fd}
+          disabled={is_like}
+          onPress={() => onPressLikeOrDislike('like')}
+        >
+          <AntDesignIcon
+            name={'like1'}
+            size={24}
+            color={is_like ? COLORS.orange : COLORS.black}
+          />
+          <RN.Text
+            style={[styles.likeCount, is_like && styles.activeLinkeCount]}
+          >
             {`${count_like}`}
           </RN.Text>
         </RN.TouchableOpacity>
-        <RN.TouchableOpacity style={[styles.fd, { paddingTop: 3 }]}>
-          <AntDesignIcon name={'dislike1'} size={24} />
+        <RN.TouchableOpacity
+          style={[styles.fd, { paddingTop: 3 }]}
+          disabled={is_dislike}
+          onPress={() => onPressLikeOrDislike('dislike')}
+        >
+          <AntDesignIcon
+            name={'dislike1'}
+            size={24}
+            color={is_dislike ? COLORS.orange : COLORS.black}
+          />
           <RN.Text
-            style={[styles.likeCount, { transform: [{ translateY: -4 }] }]}
+            style={[
+              styles.likeCount,
+              is_dislike && styles.activeLinkeCount,
+              { transform: [{ translateY: -4 }] },
+            ]}
           >
             {`${count_dislike}`}
           </RN.Text>

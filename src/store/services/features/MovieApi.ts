@@ -118,6 +118,16 @@ export const MovieApi = createApi({
       }),
       providesTags: ['my-payment-status'],
     }),
+    addLikeOrDislike: builder.mutation<
+      { count_like: number; count_dislike: number },
+      { type: 'like' | 'dislike'; id: string }
+    >({
+      query: (data) => ({
+        url: `/movie/commit/${data.id}/${data.type}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['commits'],
+    }),
     makePaymentOrder: builder.mutation<
       PaymentOrderResponseType,
       { premium_id: string }
@@ -146,4 +156,5 @@ export const {
   useAllPremiumDiscountQuery,
   useGetOrderQuery,
   useMakePaymentOrderMutation,
+  useAddLikeOrDislikeMutation,
 } = MovieApi;
