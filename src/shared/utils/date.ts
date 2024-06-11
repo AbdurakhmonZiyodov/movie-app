@@ -1,3 +1,33 @@
+import { format } from 'date-fns';
+
+export const DAY = 1 * 24 * 60 * 60 * 1000;
+export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+export const MONTH_WITH_YEAR = 'MMMM, yyyy';
+export const US_DATE_TIME_FORMAT = 'MMM d, yyyy, hh:mm a';
+export const MM_DD_YYYY = 'MMM dd, yyyy';
+
+export const ISOToDate = (itc: string) => {
+  const converted = new Date(itc);
+  return converted;
+};
+
+export const dateToISO = (date: Date) => date.toISOString();
+
+export function convertToStandardFormat(date: string | number | Date): string {
+  return format(date, US_DATE_TIME_FORMAT);
+}
+
+export function convertToShortDate(date: string | number | Date): string {
+  if (!date) date = new Date();
+  return format(date, MM_DD_YYYY);
+}
+
+export function howManyDaysPremiumLeft(date: string): string {
+  const currentDate = new Date(date);
+  const today = new Date();
+  return `qolgan kun: ${Math.floor((currentDate.getTime() - today.getTime()) / DAY) + 1}`;
+}
+
 export function getTimeAgoString(previousTime: string): string {
   const currentTime = new Date();
   const previousDate = new Date(previousTime);

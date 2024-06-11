@@ -96,9 +96,7 @@ const ProfileEditBottomSheet = ({
             {watchedImageUrl ? (
               <RN.Image
                 source={{
-                  uri: profileImageUploader.data?.url
-                    ? profileImageUploader.data?.url
-                    : `${appConfig.IMAGE_URL}/${watchedImageUrl}`,
+                  uri: `${appConfig.IMAGE_URL}/${watchedImageUrl}`,
                 }}
                 style={styles.image}
               />

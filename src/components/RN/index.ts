@@ -16,6 +16,7 @@ import {
   Share,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import { Image } from 'expo-image';
 import View from './View';
@@ -42,4 +43,5 @@ export default {
   Share,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  Linking,
 };

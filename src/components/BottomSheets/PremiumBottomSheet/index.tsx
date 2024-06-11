@@ -5,23 +5,22 @@ import { PremiumDiscountType } from '@/components/Video/types';
 import { PaymeSvg, PremiumCrownSvg } from '@/shared/assets/images/svg';
 import { COLORS } from '@/shared/constants/colors';
 import { CoreStyle } from '@/shared/styles/globalStyles';
+import { MoviePaymentStatusType } from '@/shared/types';
+import {
+  convertToShortDate,
+  howManyDaysPremiumLeft,
+} from '@/shared/utils/date';
 import { formatPrice } from '@/shared/utils/number';
+import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
 import {
   useAllPremiumDiscountQuery,
-  useGetOrderQuery,
+  // useGetOrderQuery,
   useMakePaymentOrderMutation,
 } from '@/store/services/features/MovieApi';
 import { Portal } from '@gorhom/portal';
-import { find, isEqual } from 'lodash';
-import {
-  ReactNode,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { Alert, ListRenderItem } from 'react-native';
+import { isEqual } from 'lodash';
+import { ReactNode, RefObject, useCallback, useState } from 'react';
+import { ListRenderItem } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import { styles } from './styles';
 
@@ -37,23 +36,17 @@ const PremiumBottomSheet = ({
   bottomSheetRef?: RefObject<BottomSheetRef>;
 }) => {
   const { data: allPremiumDiscount } = useAllPremiumDiscountQuery();
-  const { data: order } = useGetOrderQuery();
-  const [makeOrderToPremium, { isLoading, isSuccess }] =
-    useMakePaymentOrderMutation();
+  // const { data: order } = useGetOrderQuery();
+  const { data: profileInfoData } = useProfileInfoQuery();
+  const [makeOrderToPremium, { isLoading }] = useMakePaymentOrderMutation();
+
+  const isPremium =
+    profileInfoData?.data.status_type === MoviePaymentStatusType.premium;
+
+  console.log(profileInfoData?.data);
+
   const [selectedStatus, setSelectedStatus] =
     useState<PremiumDiscountType | null>(null);
-
-  const paymentStatusInfo = useMemo(() => {
-    if (order?.data.plan_id) {
-      const item = find(allPremiumDiscount ?? [], { id: order.data.plan_id });
-      return { message: item?.name, price: item?.price, isPremium: true };
-    }
-    return {
-      message: "Sizda xali premium tarif yo'q",
-      price: 0,
-      isPremium: false,
-    };
-  }, [allPremiumDiscount, order]);
 
   const onReset = useCallback(() => {
     setSelectedStatus(null);
@@ -61,28 +54,41 @@ const PremiumBottomSheet = ({
 
   const onBuyPremium = useCallback(async () => {
     if (selectedStatus) {
-      if (paymentStatusInfo.isPremium) {
-        Alert.alert(
-          'Xatolik',
-          'Sizda xali premium bor, vaqti tugamasidan boshqasini sotib ololmaysiz',
-          [{ text: 'Tushunarli', style: 'cancel' }],
+      if (isPremium) {
+        return RN.Alert.alert(
+          'Kechirasiz 😕',
+          'Siz premium sotib olgansiz! Premium vaqtiz tugamanguncha yana premium sotib ololmaysiz!',
+          [
+            {
+              text: 'Tushundim',
+              style: 'cancel',
+            },
+          ],
         );
-      } else {
-        await makeOrderToPremium({
-          premium_id: selectedStatus.id,
-        });
       }
-    }
-  }, [makeOrderToPremium, paymentStatusInfo, selectedStatus]);
 
-  useEffect(() => {
-    if (isSuccess && paymentStatusInfo.isPremium) {
-      Alert.alert(
-        'Tabriklayman 🥳',
-        'Siz mufaqiyatli premium sotib oldingiz! 🎉🎉',
-      );
+      await makeOrderToPremium({
+        premium_id: selectedStatus.id,
+      }).then((res) => {
+        if (res.data?.success) {
+          RN.Linking.canOpenURL(res.data.link).then(() => {
+            RN.Linking.openURL(res.data.link);
+          });
+        }
+      });
     }
-  }, [isSuccess, paymentStatusInfo.isPremium]);
+  }, [isPremium, makeOrderToPremium, selectedStatus]);
+
+  // useEffect(() => {
+  //   if (isSuccess && paymentStatusInfo.isPremium) {
+  //     Alert.alert(
+  //       'Tabriklayman 🥳',
+  //       'Siz mufaqiyatli premium sotib oldingiz! 🎉🎉',
+  //     );
+  //   }
+  // }, [isSuccess, paymentStatusInfo.isPremium]);
+
+  console.log({ isPremium });
 
   const renderPremiumItem: ListRenderItem<PremiumDiscountType> = useCallback(
     ({ item }) => {
@@ -107,6 +113,7 @@ const PremiumBottomSheet = ({
     },
     [selectedStatus],
   );
+
   const renderChild = useCallback(
     (child: ReactNode) => (
       <RN.View style={styles.wrapper}>
@@ -119,15 +126,23 @@ const PremiumBottomSheet = ({
         <RN.View
           style={[
             styles.header,
-            paymentStatusInfo.isPremium && styles.activePreModalPaymentButton,
+            isPremium && styles.activePreModalPaymentButton,
           ]}
         >
-          <RN.Text style={styles.preModalPaymentButtonTitle}>
-            {paymentStatusInfo.message}
-          </RN.Text>
-          {!!paymentStatusInfo?.price && (
-            <RN.Text style={styles.preModalPaymentButtonSubTitle}>
-              {formatPrice(paymentStatusInfo.price)}
+          {!!isPremium ? (
+            <>
+              <RN.Text style={styles.preModalPaymentButtonTitle}>
+                {howManyDaysPremiumLeft(
+                  profileInfoData?.data?.premium_end_date as string,
+                )}
+              </RN.Text>
+              <RN.Text style={styles.preModalPaymentButtonSubTitle}>
+                {convertToShortDate(profileInfoData?.data.premium_end_date)}
+              </RN.Text>
+            </>
+          ) : (
+            <RN.Text style={styles.preModalPaymentButtonTitle}>
+              {'Sizda xali premium yuq!'}
             </RN.Text>
           )}
         </RN.View>
@@ -153,7 +168,8 @@ const PremiumBottomSheet = ({
       </RN.View>
     ),
     [
-      paymentStatusInfo,
+      isPremium,
+      profileInfoData,
       allPremiumDiscount,
       renderPremiumItem,
       onBuyPremium,

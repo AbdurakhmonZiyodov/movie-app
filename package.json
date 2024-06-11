@@ -29,6 +29,7 @@
     "@react-navigation/native": "^6.0.2",
     "@reduxjs/toolkit": "^2.2.4",
     "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
     "expo": "~51.0.4",
     "expo-auth-session": "^5.5.2",
     "expo-av": "^14.0.4",

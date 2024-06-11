@@ -1,11 +1,42 @@
 import { useCallback, useState } from 'react';
 import { pickImageFromDevice } from '../utils/image-picker';
 import ApiClient from '@/store/services/ApiClient';
-import { default_API_URL_FOR_IMAGE } from '@/config';
+import { default_API_URL } from '@/config';
 import { AxiosResponse } from 'axios';
 
 export const getFileNameFromPath = (path: string) =>
   path.substring(path.lastIndexOf('/') + 1, path.length);
+
+export const getMimeType = (filePath: string): string => {
+  const extension = filePath.split('.').pop()?.toLowerCase();
+  let mimeType = 'application/octet-stream'; // Default to a binary file type
+
+  switch (extension) {
+    case 'jpg':
+      mimeType = 'image/jpg';
+      break;
+    case 'jpeg':
+      mimeType = 'image/jpeg';
+      break;
+    case 'png':
+      mimeType = 'image/png';
+      break;
+    case 'gif':
+      mimeType = 'image/gif';
+      break;
+    case 'bmp':
+      mimeType = 'image/bmp';
+      break;
+    case 'webp':
+      mimeType = 'image/webp';
+      break;
+    case 'heic':
+      mimeType = 'image/heic';
+      break;
+  }
+
+  return mimeType;
+};
 
 const useImageUpload = (props: {
   height: number;
@@ -26,7 +57,7 @@ const useImageUpload = (props: {
       try {
         const res: AxiosResponse<{ filename: string; url: string }, {}> =
           await ApiClient({
-            baseURL: default_API_URL_FOR_IMAGE + '/image/upload',
+            baseURL: default_API_URL + '/image/upload',
             method: 'POST',
             data: formData,
             headers: {
@@ -36,6 +67,7 @@ const useImageUpload = (props: {
 
         return res.data;
       } catch (err) {
+        console.log(JSON.stringify(err, null, 2));
         err && setError(err);
         return null;
       }
@@ -49,7 +81,7 @@ const useImageUpload = (props: {
       if (asset) {
         const response = await uploadImageApi({
           name: asset.filename || getFileNameFromPath(asset.path),
-          type: asset.mime,
+          type: getMimeType(asset.path),
           uri: asset.path,
         });
 
