@@ -46,7 +46,7 @@ const Video: FC<VideoProps> = ({ videoID, usePoster, posterSource }) => {
   return (
     <RN.View style={styles.video}>
       <Vimeo
-        videoId={'952041996'}
+        videoId={'957186378'}
         style={{ backgroundColor: COLORS.black }}
         containerStyle={{ backgroundColor: COLORS.black }}
         handlers={videoCallbacks}
