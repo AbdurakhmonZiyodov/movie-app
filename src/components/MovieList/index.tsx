@@ -29,6 +29,7 @@ const MovieList: FC<MovieListProps> = ({ data = [], loading }) => {
       numColumns={2}
       scrollEnabled={false}
       keyExtractor={(_, key) => key.toString()}
+      contentContainerStyle={styles.flatlistContainer}
       columnWrapperStyle={{
         justifyContent: 'space-between',
       }}
@@ -36,4 +37,10 @@ const MovieList: FC<MovieListProps> = ({ data = [], loading }) => {
   );
 };
 
+const styles = RN.StyleSheet.create({
+  flatlistContainer: {
+    gap: 15,
+    paddingTop: 20,
+  },
+});
 export default MovieList;

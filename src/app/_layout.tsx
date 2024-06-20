@@ -43,7 +43,11 @@ function RootLayout() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <GestureHandlerRootView style={CoreStyle.flex1}>
-          <StatusBar animated={true} backgroundColor={COLORS.dark} />
+          <StatusBar
+            animated={true}
+            backgroundColor={COLORS.dark}
+            style={'dark'}
+          />
           <RootLayoutNav />
         </GestureHandlerRootView>
       </PersistGate>

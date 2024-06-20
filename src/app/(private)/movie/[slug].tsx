@@ -44,7 +44,7 @@ export const MOVIE_FORMAT = {
 const MovieScreen = () => {
   const { slug } = useLocalSearchParams();
   const [movieId, setMovieId] = useState<string>(slug as string);
-  const { data: commitsData } = useGetAllCommitsFromTheMovieQuery({
+  const { data: commitsData = [] } = useGetAllCommitsFromTheMovieQuery({
     id: movieId,
   });
   const [addNewCommitToTheMovie, { isLoading: addCommitLoading }] =
@@ -247,15 +247,16 @@ const MovieScreen = () => {
         />
       </RN.View>
 
-      <RN.ScrollView
-        nestedScrollEnabled={true}
-        style={{ height: 500 }}
-        endFillColor={'red'}
-      >
-        {map(orderBy(commitsData, ['created_at']).reverse() ?? [], (commit) => (
-          <Commit key={commit.id} {...commit} />
-        ))}
-      </RN.ScrollView>
+      {commitsData?.length > 0 && (
+        <RN.ScrollView nestedScrollEnabled={true} style={{ height: 500 }}>
+          {map(
+            orderBy(commitsData, ['created_at']).reverse() ?? [],
+            (commit) => (
+              <Commit key={commit.id} {...commit} />
+            ),
+          )}
+        </RN.ScrollView>
+      )}
     </Container>
   );
 };
@@ -327,7 +328,7 @@ const styles = RN.StyleSheet.create({
     width: '100%',
   },
   textAreaInput: {
-    minHeight: 130,
+    minHeight: 60,
   },
 });
 export default MovieScreen;
