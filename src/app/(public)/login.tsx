@@ -52,6 +52,7 @@ export default function Login() {
     useLoginWithGoogleMutation();
 
   const [_, response, promptAsync] = Google.useAuthRequest({
+    webClientId: config.GOOGLE.web,
     androidClientId: config.GOOGLE.android,
     iosClientId: config.GOOGLE.ios,
   });

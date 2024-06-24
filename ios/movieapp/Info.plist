@@ -55,6 +55,10 @@
     </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
+   <key>NSCameraUsageDescription</key>
+  	<string>$(PRODUCT_NAME) needs access to your Camera to scan QR codes</string>
+    	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This is required so that you can share media content.</string>
     <key>UIRequiredDeviceCapabilities</key>
     <array>
       <string>arm64</string>
