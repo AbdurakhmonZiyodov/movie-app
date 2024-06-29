@@ -25,14 +25,14 @@ import RN from '../RN';
 
 interface VideoProps {
   uri: string;
+  loading?: boolean;
 }
 
 const CLOSING_TIME_OF_CONTROLLER = 5_000;
 
-export const Video: FC<VideoProps> = memo(({ uri }) => {
+export const Video: FC<VideoProps> = memo(({ uri, loading }) => {
   const videoRef = useRef<ExpoVideo>(null);
   const [status, setStatus] = useState<any>({});
-  // const [loadedPercent, setLoadedPercent] = useState<number>(0);
   const playVisiblity = useVisibility();
   const controllerVisiblity = useVisibility(true);
   const loadingVisiblity = useVisibility(true);
@@ -111,7 +111,7 @@ export const Video: FC<VideoProps> = memo(({ uri }) => {
     >
       <RN.View style={styles.container}>
         {/* loading... */}
-        {loadingVisiblity.visible && (
+        {(loadingVisiblity.visible || loading) && (
           <RN.View style={[RN.StyleSheet.absoluteFill, styles.loading]}>
             <ActivityIndicator size={'small'} color={COLORS.white} />
             {/* <RN.Text style={styles.loadingText}>{`${loadedPercent}%`}</RN.Text> */}

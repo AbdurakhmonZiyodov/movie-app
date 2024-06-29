@@ -13,15 +13,20 @@ import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS, addAlpha } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
 import { CoreStyle } from '@/shared/styles/globalStyles';
-import { MovieQuality, MovieStatusType } from '@/shared/types';
+import {
+  MoviePaymentStatusType,
+  MovieQuality,
+  MovieStatusType,
+} from '@/shared/types';
+import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
 import {
   useAddCommitToTheMovieMutation,
   useGetAllCommitsFromTheMovieQuery,
   useOneMovieQuery,
 } from '@/store/services/features/MovieApi';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { findIndex, isEqual, map, orderBy } from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ListRenderItem } from 'react-native';
 
@@ -36,12 +41,14 @@ export const MOVIE_FORMAT = {
 const MovieScreen = () => {
   const { slug: movieId } = useLocalSearchParams();
 
+  const navigation = useNavigation();
   const { data: commitsData = [] } = useGetAllCommitsFromTheMovieQuery({
     // @ts-expect-error
     id: movieId,
   });
   const [addNewCommitToTheMovie, { isLoading: addCommitLoading }] =
     useAddCommitToTheMovieMutation();
+  const { data: userInfoData } = useProfileInfoQuery();
   const { data: fullMovieData, isLoading: fullMovieLoading } = useOneMovieQuery(
     {
       id: movieId as any,
@@ -57,8 +64,6 @@ const MovieScreen = () => {
     [fullMovieData, fullMovieLoading],
   );
 
-  console.log({ movieId });
-
   const [movieVerticalImageUrl] = useMemo(
     () => [
       config.IMAGE_URL + `/${fullMovieData?.images[0]}`,
@@ -71,6 +76,29 @@ const MovieScreen = () => {
       commit: '',
     },
   });
+
+  const NO_PERMISSION_TO_WATCH_IT =
+    fullMovieData?.status_type === MoviePaymentStatusType.premium &&
+    userInfoData?.data.status_type === MoviePaymentStatusType.free;
+
+  useEffect(() => {
+    ((status) => {
+      if (status) {
+        RN.Alert.alert(
+          'Ogohlantirish!',
+          'Kechirasiz, bu video faqat Premium account lar uchun!',
+          [
+            {
+              text: 'Tushundim',
+              onPress: () => {
+                navigation.goBack();
+              },
+            },
+          ],
+        );
+      }
+    })(NO_PERMISSION_TO_WATCH_IT);
+  }, [NO_PERMISSION_TO_WATCH_IT, navigation]);
 
   if (isNotOk)
     return (
@@ -132,12 +160,12 @@ const MovieScreen = () => {
         </RN.View>
       }
     >
-      {(movieId || fullMovieData?.childen_movie[serialIndex].id) && (
+      {(!!movieId || fullMovieData?.childen_movie[serialIndex]?.id) && (
         <RNVideo
           id={
             fullMovieData?.movie_type === MovieStatusType.movie
               ? movieId
-              : fullMovieData?.childen_movie[serialIndex].id
+              : fullMovieData?.childen_movie[serialIndex]?.id
           }
         />
       )}

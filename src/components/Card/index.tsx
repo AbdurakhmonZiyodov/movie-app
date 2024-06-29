@@ -83,7 +83,7 @@ const styles = RN.StyleSheet.create({
     position: 'absolute',
     width: normalizeWidth(65),
     height: normalizeWidth(25),
-    zIndex: 1,
+    zIndex: 2,
     left: 4,
     top: 4,
   },
