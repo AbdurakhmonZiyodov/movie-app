@@ -57,8 +57,6 @@ function RootLayout() {
 
 function RootLayoutNav() {
   const { isAuthenticated, isOnboardingViewed } = useLocalStore();
-
-  console.log({ isAuthenticated });
   return (
     <PortalProvider>
       <Stack

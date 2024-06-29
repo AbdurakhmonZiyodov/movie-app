@@ -32,7 +32,7 @@ export default function ProfileScreen() {
         dispatch(onUpdateTokens({ tokens: null }));
       }, 100);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }, [dispatch]);
 

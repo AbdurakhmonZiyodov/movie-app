@@ -67,7 +67,7 @@ const useImageUpload = (props: {
 
         return res.data;
       } catch (err) {
-        console.log(JSON.stringify(err, null, 2));
+        console.error(err);
         err && setError(err);
         return null;
       }

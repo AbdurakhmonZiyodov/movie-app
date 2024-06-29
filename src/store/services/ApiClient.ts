@@ -23,13 +23,13 @@ ApiClient.interceptors.request.use(
         : null;
 
       // Log the access token
-      console.log('Access Token:', accessToken);
+      console.info('Access Token:', accessToken);
 
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
     } catch (err) {
-      console.log('[Error:]:', err);
+      console.error('[Error:]:', err);
     }
 
     return config;

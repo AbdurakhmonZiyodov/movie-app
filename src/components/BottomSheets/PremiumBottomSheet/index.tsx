@@ -43,8 +43,6 @@ const PremiumBottomSheet = ({
   const isPremium =
     profileInfoData?.data.status_type === MoviePaymentStatusType.premium;
 
-  console.log(profileInfoData?.data);
-
   const [selectedStatus, setSelectedStatus] =
     useState<PremiumDiscountType | null>(null);
 
@@ -87,8 +85,6 @@ const PremiumBottomSheet = ({
   //     );
   //   }
   // }, [isSuccess, paymentStatusInfo.isPremium]);
-
-  console.log({ isPremium });
 
   const renderPremiumItem: ListRenderItem<PremiumDiscountType> = useCallback(
     ({ item }) => {

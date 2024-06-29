@@ -104,7 +104,7 @@ export default function Login() {
           }
         })
         .catch((err) => {
-          console.log({ err });
+          console.error({ err });
         });
     },
     (_error) => setShouldTriggerError(true),

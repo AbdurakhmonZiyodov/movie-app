@@ -4,9 +4,9 @@ import Commit from '@/components/Commit';
 import Container from '@/components/Container';
 import { FormInput } from '@/components/FormController/FormController';
 import RN from '@/components/RN';
+import RNVideo from '@/components/RNVideo';
 import RenderHtml from '@/components/RenderHtml';
 import { Spacing } from '@/components/Spacing';
-import Video from '@/components/Video';
 import config from '@/config';
 import { OpenSansFonts } from '@/shared/assets/fonts/open-sans.fonts';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
@@ -17,7 +17,6 @@ import { MovieQuality, MovieStatusType } from '@/shared/types';
 import {
   useAddCommitToTheMovieMutation,
   useGetAllCommitsFromTheMovieQuery,
-  useMovieInfoQuery,
   useOneMovieQuery,
 } from '@/store/services/features/MovieApi';
 import { useLocalSearchParams } from 'expo-router';
@@ -25,13 +24,6 @@ import { findIndex, isEqual, map, orderBy } from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ListRenderItem } from 'react-native';
-
-function getMovieId(url: string): string {
-  if (!url) return '';
-  var splitUrl = url.split('/');
-  var movieId = splitUrl[splitUrl.length - 1];
-  return movieId;
-}
 
 export const MOVIE_FORMAT = {
   [MovieQuality.hd_full]: 'Full HD',
@@ -42,29 +34,32 @@ export const MOVIE_FORMAT = {
 };
 
 const MovieScreen = () => {
-  const { slug } = useLocalSearchParams();
-  const [movieId, setMovieId] = useState<string>(slug as string);
+  const { slug: movieId } = useLocalSearchParams();
+
   const { data: commitsData = [] } = useGetAllCommitsFromTheMovieQuery({
+    // @ts-expect-error
     id: movieId,
   });
   const [addNewCommitToTheMovie, { isLoading: addCommitLoading }] =
     useAddCommitToTheMovieMutation();
   const { data: fullMovieData, isLoading: fullMovieLoading } = useOneMovieQuery(
     {
-      id: slug as string,
+      id: movieId as any,
     },
     {
       refetchOnMountOrArgChange: true,
     },
   );
-  const { data: movieInfo } = useMovieInfoQuery({ id: movieId });
+
   const [serialIndex, setSerialIndex] = useState(0);
   const isNotOk = useMemo(
     () => !fullMovieData || fullMovieLoading,
     [fullMovieData, fullMovieLoading],
   );
 
-  const [movieVerticalImageUrl, movieHorizantalImageUrl] = useMemo(
+  console.log({ movieId });
+
+  const [movieVerticalImageUrl] = useMemo(
     () => [
       config.IMAGE_URL + `/${fullMovieData?.images[0]}`,
       config.IMAGE_URL + `/${fullMovieData?.images[1]}`,
@@ -77,19 +72,6 @@ const MovieScreen = () => {
     },
   });
 
-  const movieID = useMemo<string | null>(() => {
-    let id: string | null = null;
-
-    if (fullMovieData) {
-      if (fullMovieData.movie_type === MovieStatusType.serial) {
-        setMovieId(fullMovieData.childen_movie[serialIndex].id);
-      }
-      console.log({ gooooo: true });
-      id = movieInfo?.video;
-    }
-    return id;
-  }, [fullMovieData, movieInfo, serialIndex]);
-
   if (isNotOk)
     return (
       <Container style={CoreStyle.center}>
@@ -101,6 +83,7 @@ const MovieScreen = () => {
     async ({ commit }) => {
       if (commit && movieId) {
         const res = await addNewCommitToTheMovie({
+          // @ts-expect-error
           id: movieId,
           message: commit,
         });
@@ -149,14 +132,13 @@ const MovieScreen = () => {
         </RN.View>
       }
     >
-      {movieID && (
-        <Video
-          key={movieID}
-          videoID={getMovieId(movieID)}
-          usePoster={true}
-          posterSource={{
-            uri: movieHorizantalImageUrl,
-          }}
+      {(movieId || fullMovieData?.childen_movie[serialIndex].id) && (
+        <RNVideo
+          id={
+            fullMovieData?.movie_type === MovieStatusType.movie
+              ? movieId
+              : fullMovieData?.childen_movie[serialIndex].id
+          }
         />
       )}
       {fullMovieData?.movie_type === MovieStatusType.serial &&
@@ -172,11 +154,6 @@ const MovieScreen = () => {
         )}
       <RN.Text style={styles.movieName}>{fullMovieData?.name}</RN.Text>
       <RN.View fd={'row'} ai={'flex-start'} pt={4} pb={18} g={10}>
-        {!!fullMovieData?.quality && (
-          <RN.Text style={styles.subStatusText}>
-            {MOVIE_FORMAT[fullMovieData?.quality]}
-          </RN.Text>
-        )}
         <RN.Text style={styles.subStatusText}>
           {fullMovieData?.min_age}
           {'+'}

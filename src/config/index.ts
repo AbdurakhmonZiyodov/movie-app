@@ -1,5 +1,8 @@
 export const default_API_URL = 'https://bananatv.topsites.uz/api';
 export const default_API_URL_FOR_IMAGE = 'https://api.tvtime.uz/api';
+
+export const VIDEO_BASE_URL = `${default_API_URL}/video-stream/watch`;
+
 const GOOGLE = {
   android:
     '622012536210-t8vlj88apopk6tfkeumum8grpamj1t4j.apps.googleusercontent.com',

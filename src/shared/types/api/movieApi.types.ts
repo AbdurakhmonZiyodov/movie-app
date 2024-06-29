@@ -1,51 +1,79 @@
 export interface MovieType {
   id: string;
-  video: any;
+  video: string;
   treyler: string;
   name: string;
   descr: string;
   images: string[];
   frame_images: string[];
   movie_type: string;
-  quality: MovieQuality;
+  video_type: string;
+  quality: string;
+  format: number[];
   min_age: number;
-  duration: any;
+  duration: number;
   language: string;
   status_type: string;
   is_slider: boolean;
   country_id: string;
   year_id: string;
   movie_id: any;
+  video_id: string;
+  created_at: string;
+  updated_at: string;
+  video_file: VideoFile;
   country: Country;
   year: Year;
-  category: Category[];
+  category: any[];
   sounder: Sounder[];
   movie_genre: MovieGenre[];
   parent_movie: any;
-  childen_movie: ChildenMovie[];
+  childen_movie: any[];
+}
+
+export interface VideoFile {
+  id: string;
+  folder_name: string;
+  used: boolean;
+  file_name: string;
+  default_format: any;
+  file_size: any;
+  format: number[];
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Country {
   id: string;
   name: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Year {
   id: string;
   year: number;
-}
-
-export interface Category {
-  id: string;
-  name: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Sounder {
   id: string;
   name: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface MovieGenre {
+  id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// __________
+
+export interface Category {
   id: string;
   name: string;
 }
@@ -59,9 +87,11 @@ export interface ChildenMovie {
 
 export interface MovieInfo {
   id: string;
-  video: any;
+  video: string;
   name: string;
   movie_type: string;
+  video_type: string;
+  format: number[];
   movie_id: any;
 }
 
