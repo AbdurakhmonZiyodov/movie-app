@@ -29,7 +29,7 @@ export default function SearchScreen() {
   });
 
   return (
-    <Container>
+    <Container isScroll={true}>
       <FormInput
         control={control}
         name={'searchValue'}

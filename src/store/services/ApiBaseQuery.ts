@@ -1,5 +1,5 @@
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
-import type { AxiosRequestConfig, AxiosError } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import ApiClient from './ApiClient';
 
 const ApiBaseQuery =
@@ -17,25 +17,15 @@ const ApiBaseQuery =
     unknown
   > =>
   async ({ url, method, data, params, headers }) => {
-    try {
-      const result = await ApiClient({
-        url: baseUrl + url,
-        method,
-        data,
-        params,
-        headers,
-      });
-      return { data: result.data };
-    } catch (axiosError) {
-      const err = axiosError as AxiosError;
+    const result = await ApiClient({
+      url: baseUrl + url,
+      method,
+      data,
+      params,
+      headers,
+    });
 
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
-        },
-      };
-    }
+    return { data: result.data };
   };
 
 export default ApiBaseQuery;

@@ -78,7 +78,7 @@ export default function CategoryScreen() {
   }, []);
 
   return (
-    <Container>
+    <Container isScroll={true}>
       <Button
         title={'FILTER'}
         style={styles.button}

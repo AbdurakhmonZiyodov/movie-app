@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { pickImageFromDevice } from '../utils/image-picker';
 import ApiClient from '@/store/services/ApiClient';
-import { default_API_URL } from '@/config';
+import { BASE_URL } from '@/config';
 import { AxiosResponse } from 'axios';
 
 export const getFileNameFromPath = (path: string) =>
@@ -57,7 +57,7 @@ const useImageUpload = (props: {
       try {
         const res: AxiosResponse<{ filename: string; url: string }, {}> =
           await ApiClient({
-            baseURL: default_API_URL + '/image/upload',
+            baseURL: BASE_URL + '/image/upload',
             method: 'POST',
             data: formData,
             headers: {
