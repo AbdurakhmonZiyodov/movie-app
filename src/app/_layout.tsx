@@ -35,15 +35,19 @@ function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  // if (!loaded) {
+  //   return null;
+  // }
 
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <GestureHandlerRootView style={CoreStyle.flex1}>
-          <StatusBar animated={true} backgroundColor={COLORS.dark} />
+          <StatusBar
+            animated={true}
+            backgroundColor={COLORS.dark}
+            style={'dark'}
+          />
           <RootLayoutNav />
         </GestureHandlerRootView>
       </PersistGate>
@@ -53,8 +57,6 @@ function RootLayout() {
 
 function RootLayoutNav() {
   const { isAuthenticated, isOnboardingViewed } = useLocalStore();
-
-  console.log({ isAuthenticated });
   return (
     <PortalProvider>
       <Stack

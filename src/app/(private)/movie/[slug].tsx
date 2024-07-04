@@ -4,34 +4,31 @@ import Commit from '@/components/Commit';
 import Container from '@/components/Container';
 import { FormInput } from '@/components/FormController/FormController';
 import RN from '@/components/RN';
+import RNVideo from '@/components/RNVideo';
 import RenderHtml from '@/components/RenderHtml';
 import { Spacing } from '@/components/Spacing';
-import Video from '@/components/Video';
 import config from '@/config';
 import { OpenSansFonts } from '@/shared/assets/fonts/open-sans.fonts';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS, addAlpha } from '@/shared/constants/colors';
 import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
 import { CoreStyle } from '@/shared/styles/globalStyles';
-import { MovieQuality, MovieStatusType } from '@/shared/types';
+import {
+  MoviePaymentStatusType,
+  MovieQuality,
+  MovieStatusType,
+} from '@/shared/types';
+import { useProfileInfoQuery } from '@/store/services/features/AuthApi';
 import {
   useAddCommitToTheMovieMutation,
   useGetAllCommitsFromTheMovieQuery,
-  useMovieInfoQuery,
   useOneMovieQuery,
 } from '@/store/services/features/MovieApi';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { findIndex, isEqual, map, orderBy } from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ListRenderItem } from 'react-native';
-
-function getMovieId(url: string): string {
-  if (!url) return '';
-  var splitUrl = url.split('/');
-  var movieId = splitUrl[splitUrl.length - 1];
-  return movieId;
-}
 
 export const MOVIE_FORMAT = {
   [MovieQuality.hd_full]: 'Full HD',
@@ -42,29 +39,32 @@ export const MOVIE_FORMAT = {
 };
 
 const MovieScreen = () => {
-  const { slug } = useLocalSearchParams();
-  const [movieId, setMovieId] = useState<string>(slug as string);
-  const { data: commitsData } = useGetAllCommitsFromTheMovieQuery({
+  const { slug: movieId } = useLocalSearchParams();
+
+  const navigation = useNavigation();
+  const { data: commitsData = [] } = useGetAllCommitsFromTheMovieQuery({
+    // @ts-expect-error
     id: movieId,
   });
   const [addNewCommitToTheMovie, { isLoading: addCommitLoading }] =
     useAddCommitToTheMovieMutation();
+  const { data: userInfoData } = useProfileInfoQuery();
   const { data: fullMovieData, isLoading: fullMovieLoading } = useOneMovieQuery(
     {
-      id: slug as string,
+      id: movieId as any,
     },
     {
       refetchOnMountOrArgChange: true,
     },
   );
-  const { data: movieInfo } = useMovieInfoQuery({ id: movieId });
+
   const [serialIndex, setSerialIndex] = useState(0);
   const isNotOk = useMemo(
     () => !fullMovieData || fullMovieLoading,
     [fullMovieData, fullMovieLoading],
   );
 
-  const [movieVerticalImageUrl, movieHorizantalImageUrl] = useMemo(
+  const [movieVerticalImageUrl] = useMemo(
     () => [
       config.IMAGE_URL + `/${fullMovieData?.images[0]}`,
       config.IMAGE_URL + `/${fullMovieData?.images[1]}`,
@@ -77,18 +77,28 @@ const MovieScreen = () => {
     },
   });
 
-  const movieID = useMemo<string | null>(() => {
-    let id: string | null = null;
+  const NO_PERMISSION_TO_WATCH_IT =
+    fullMovieData?.status_type === MoviePaymentStatusType.premium &&
+    userInfoData?.data.status_type === MoviePaymentStatusType.free;
 
-    if (fullMovieData) {
-      if (fullMovieData.movie_type === MovieStatusType.serial) {
-        setMovieId(fullMovieData.childen_movie[serialIndex].id);
+  useEffect(() => {
+    ((status) => {
+      if (status) {
+        RN.Alert.alert(
+          'Ogohlantirish!',
+          'Kechirasiz, bu video faqat Premium account lar uchun!',
+          [
+            {
+              text: 'Tushundim',
+              onPress: () => {
+                navigation.goBack();
+              },
+            },
+          ],
+        );
       }
-      console.log({ gooooo: true });
-      id = movieInfo?.video;
-    }
-    return id;
-  }, [fullMovieData, movieInfo, serialIndex]);
+    })(NO_PERMISSION_TO_WATCH_IT);
+  }, [NO_PERMISSION_TO_WATCH_IT, navigation]);
 
   if (isNotOk)
     return (
@@ -101,6 +111,7 @@ const MovieScreen = () => {
     async ({ commit }) => {
       if (commit && movieId) {
         const res = await addNewCommitToTheMovie({
+          // @ts-expect-error
           id: movieId,
           message: commit,
         });
@@ -149,14 +160,13 @@ const MovieScreen = () => {
         </RN.View>
       }
     >
-      {movieID && (
-        <Video
-          key={movieID}
-          videoID={getMovieId(movieID)}
-          usePoster={true}
-          posterSource={{
-            uri: movieHorizantalImageUrl,
-          }}
+      {(!!movieId || fullMovieData?.childen_movie[serialIndex]?.id) && (
+        <RNVideo
+          id={
+            fullMovieData?.movie_type === MovieStatusType.movie
+              ? movieId
+              : fullMovieData?.childen_movie[serialIndex]?.id
+          }
         />
       )}
       {fullMovieData?.movie_type === MovieStatusType.serial &&
@@ -172,11 +182,6 @@ const MovieScreen = () => {
         )}
       <RN.Text style={styles.movieName}>{fullMovieData?.name}</RN.Text>
       <RN.View fd={'row'} ai={'flex-start'} pt={4} pb={18} g={10}>
-        {!!fullMovieData?.quality && (
-          <RN.Text style={styles.subStatusText}>
-            {MOVIE_FORMAT[fullMovieData?.quality]}
-          </RN.Text>
-        )}
         <RN.Text style={styles.subStatusText}>
           {fullMovieData?.min_age}
           {'+'}
@@ -247,15 +252,16 @@ const MovieScreen = () => {
         />
       </RN.View>
 
-      <RN.ScrollView
-        nestedScrollEnabled={true}
-        style={{ height: 500 }}
-        endFillColor={'red'}
-      >
-        {map(orderBy(commitsData, ['created_at']).reverse() ?? [], (commit) => (
-          <Commit key={commit.id} {...commit} />
-        ))}
-      </RN.ScrollView>
+      {commitsData?.length > 0 && (
+        <RN.ScrollView nestedScrollEnabled={true} style={{ height: 500 }}>
+          {map(
+            orderBy(commitsData, ['created_at']).reverse() ?? [],
+            (commit) => (
+              <Commit key={commit.id} {...commit} />
+            ),
+          )}
+        </RN.ScrollView>
+      )}
     </Container>
   );
 };
@@ -327,7 +333,7 @@ const styles = RN.StyleSheet.create({
     width: '100%',
   },
   textAreaInput: {
-    minHeight: 130,
+    minHeight: 60,
   },
 });
 export default MovieScreen;

@@ -9,6 +9,7 @@ import { join, map } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import RN from '../RN';
 import { router } from 'expo-router';
+import { CoreStyle } from '@/shared/styles/globalStyles';
 
 export interface CardProps extends MovieType {}
 
@@ -28,7 +29,11 @@ export default function Card({
     router.navigate(`/movie/${id}`);
   }, [id]);
   return (
-    <RN.TouchableOpacity activeOpacity={0.5} onPress={navigateToMovie}>
+    <RN.TouchableOpacity
+      activeOpacity={0.5}
+      style={CoreStyle.flex1}
+      onPress={navigateToMovie}
+    >
       {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}
@@ -65,18 +70,20 @@ const styles = RN.StyleSheet.create({
     fontFamily: PoppinsFonts.Poppins_500,
     paddingVertical: 3,
     paddingTop: 5,
+    // flexWrap: 'wrap',
   },
   movieCategories: {
     color: COLORS.orange,
     fontSize: 10,
     textTransform: 'uppercase',
     fontFamily: MontserratFonts.Montserrat_500,
+    // flexWrap: 'wrap',
   },
   premiumImage: {
     position: 'absolute',
     width: normalizeWidth(65),
     height: normalizeWidth(25),
-    zIndex: 1,
+    zIndex: 2,
     left: 4,
     top: 4,
   },

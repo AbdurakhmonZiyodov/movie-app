@@ -85,24 +85,31 @@ export const MovieApi = createApi({
       providesTags: ['slider'],
     }),
     getAllCommitsFromTheMovie: builder.query<CommitType[], { id: string }>({
-      query: (_data) => ({
-        url: `/movie/${_data.id}/commit`,
+      query: ({ id }) => ({
+        url: `/movie/${id}/commit`,
         method: 'GET',
       }),
-      providesTags: ['commits'],
+      providesTags: (result, error, { id }) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'commits', id }) as const),
+              { type: 'commits', id: 'LIST' },
+            ]
+          : [{ type: 'commits', id: 'LIST' }],
     }),
+
     addCommitToTheMovie: builder.mutation<
       Omit<CommitType, 'count_like' | 'count_dislike'>,
       { id: string; message: string }
     >({
-      query: (_data) => ({
-        url: `/movie/${_data.id}/commit`,
+      query: ({ id, message }) => ({
+        url: `/movie/${id}/commit`,
         method: 'POST',
         data: {
-          message: _data.message,
+          message,
         },
       }),
-      invalidatesTags: ['commits'],
+      invalidatesTags: [{ type: 'commits', id: 'LIST' }],
     }),
     allPremiumDiscount: builder.query<PremiumDiscountType[], void>({
       query: () => ({
@@ -126,7 +133,7 @@ export const MovieApi = createApi({
         url: `/movie/commit/${data.id}/${data.type}`,
         method: 'POST',
       }),
-      invalidatesTags: ['commits'],
+      invalidatesTags: (result, error, { id }) => [{ type: 'commits', id }],
     }),
     makePaymentOrder: builder.mutation<
       PaymentOrderResponseType,

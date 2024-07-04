@@ -3,6 +3,7 @@ import Container from '@/components/Container';
 import CardHorizantalFilter from '@/components/Filters/CardHorizantalFilter';
 import MovieList from '@/components/MovieList';
 import RN from '@/components/RN';
+import { Spacing } from '@/components/Spacing';
 import config from '@/config';
 import { InterFonts } from '@/shared/assets/fonts/inter.fonts';
 import { COLORS } from '@/shared/constants/colors';
@@ -108,6 +109,8 @@ export default function HomeScreen() {
         width={SIZES.width}
         height={SIZES.width * 0.85}
       />
+
+      <Spacing steps={4} />
       <CardHorizantalFilter
         categories={categoriesList ?? []}
         selectedCategoryId={selectedCategoryId}

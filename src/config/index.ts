@@ -1,13 +1,15 @@
-export const default_API_URL = 'https://bananatv.topsites.uz/api';
-export const default_API_URL_FOR_IMAGE = 'https://api.tvtime.uz/api';
+export const BASE_URL = 'https://api.bananatv.uz/api';
+export const VIDEO_BASE_URL = `${BASE_URL}/video-stream/watch`;
+
 const GOOGLE = {
   android:
-    '667089413459-udrimeg97qobaojvbff3f77vg1lrbq09.apps.googleusercontent.com',
-  ios: '667089413459-42iave9i4aighvr3uind6qehp74kqj01.apps.googleusercontent.com',
+    '622012536210-t8vlj88apopk6tfkeumum8grpamj1t4j.apps.googleusercontent.com',
+  ios: '622012536210-95iakmt1ncea65ourkk96ofbgef738gb.apps.googleusercontent.com',
+  web: '622012536210-7qjb208n14o4qvk6mojoq31gf7014p4c.apps.googleusercontent.com',
 };
 
 export default {
-  BASE_URL: `${default_API_URL}/client`,
-  IMAGE_URL: `${default_API_URL}/image`,
+  BASE_URL: `${BASE_URL}/client`,
+  IMAGE_URL: `${BASE_URL}/image`,
   GOOGLE,
 };

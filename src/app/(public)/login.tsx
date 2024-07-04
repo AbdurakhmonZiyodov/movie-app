@@ -52,6 +52,7 @@ export default function Login() {
     useLoginWithGoogleMutation();
 
   const [_, response, promptAsync] = Google.useAuthRequest({
+    webClientId: config.GOOGLE.web,
     androidClientId: config.GOOGLE.android,
     iosClientId: config.GOOGLE.ios,
   });
@@ -103,7 +104,7 @@ export default function Login() {
           }
         })
         .catch((err) => {
-          console.log({ err });
+          console.error({ err });
         });
     },
     (_error) => setShouldTriggerError(true),

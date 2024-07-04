@@ -20,7 +20,6 @@ export default function Commit({
   is_like,
   id,
 }: CommitType) {
-  console.log({ is_dislike, is_like, name: user.name });
   const [addLikeOrDislike] = useAddLikeOrDislikeMutation();
 
   const onPressLikeOrDislike = useCallback(
