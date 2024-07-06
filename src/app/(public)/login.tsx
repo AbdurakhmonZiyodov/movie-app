@@ -19,18 +19,11 @@ import { useForm } from 'react-hook-form';
 import { PRIVATE_STACK, PUBLIC_STACK, ROOT_STACK } from '../../shared/routes';
 import { router } from 'expo-router';
 import {
-  useLoginMutation,
   useLoginPhoneSendCodeMutation,
   useLoginWithGoogleMutation,
 } from '@/store/services/features/AuthApi';
 import { onUpdateNewUser, onUpdateTokens } from '@/store/LocalStore';
 import { CoreStyle, HIT_SLOP } from '@/shared/styles/globalStyles';
-import * as Google from 'expo-auth-session/providers/google';
-import config from '@/config';
-import {
-  emailFieldSchema,
-  passwordFieldSchema,
-} from '@/shared/utils/validation';
 import * as yup from 'yup';
 import { normalizeHeight } from '@/shared/constants/dimensions';
 import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
@@ -62,12 +55,6 @@ export default function Login() {
     useLoginWithGoogleMutation();
 
   const privatePoliceModalRef = useRef<BottomSheetRef>(null);
-
-  const [_, response, promptAsync] = Google.useAuthRequest({
-    webClientId: config.GOOGLE.web,
-    androidClientId: config.GOOGLE.android,
-    iosClientId: config.GOOGLE.ios,
-  });
 
   const googleAuth = useGoogleAuth();
 
@@ -128,7 +115,7 @@ export default function Login() {
     if (googleAuth.idToken) {
       onGoogleAuth(googleAuth.idToken);
     }
-  }, [googleAuth.idToken, onGoogleAuth, response]);
+  }, [googleAuth.idToken, onGoogleAuth]);
 
   const fieldProps = useMemo(
     () => ({

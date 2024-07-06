@@ -1,3 +1,3 @@
 // If DEBUG is true, We can see all console logs
 // DEBUG must be false before a new release!!!
-export const DEBUG = true; // @TODO: it should be improved
+export const DEBUG = false; // @TODO: it should be improved
