@@ -8,7 +8,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { onChangeRedirectRootUrl } from '@/store/features/NavigationStore';
 import { useAppDispatch } from '@/store/hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import { PRIVATE_STACK, PUBLIC_STACK, ROOT_STACK } from '../../shared/routes';
 import { router } from 'expo-router';
@@ -18,7 +24,7 @@ import {
   useLoginWithGoogleMutation,
 } from '@/store/services/features/AuthApi';
 import { onUpdateNewUser, onUpdateTokens } from '@/store/LocalStore';
-import { CoreStyle } from '@/shared/styles/globalStyles';
+import { CoreStyle, HIT_SLOP } from '@/shared/styles/globalStyles';
 import * as Google from 'expo-auth-session/providers/google';
 import config from '@/config';
 import {
@@ -38,6 +44,8 @@ import {
 } from '@/components/Inputs/utils';
 import { DEBUG } from '@/shared/constants/global';
 import { useGoogleAuth } from '@/shared/hooks/useGoogleAuth';
+import PrivatePoliceBottomSheet from '@/components/BottomSheets/PrivatePoliceBottomSheet';
+import { BottomSheetRef } from '@/components/BottomSheet';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -52,6 +60,8 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const [loginWithGoogle, { isLoading: googleLoading }] =
     useLoginWithGoogleMutation();
+
+  const privatePoliceModalRef = useRef<BottomSheetRef>(null);
 
   const [_, response, promptAsync] = Google.useAuthRequest({
     webClientId: config.GOOGLE.web,
@@ -179,9 +189,24 @@ export default function Login() {
               loading={isLoading}
               onPress={onSubmitHandler}
             />
+            <RN.View fd={'row'}>
+              <RN.Text style={{ color: COLORS.white2 }}>{'Ilovadan '}</RN.Text>
+              <RN.TouchableOpacity
+                hitSlop={HIT_SLOP}
+                onPress={() => {
+                  privatePoliceModalRef.current?.onShow();
+                }}
+              >
+                <RN.Text style={{ color: COLORS.orange }}>
+                  {' foydalanish qoidalariga '}
+                </RN.Text>
+              </RN.TouchableOpacity>
+              <RN.Text style={{ color: COLORS.white2 }}>{' roziman'}</RN.Text>
+            </RN.View>
           </RN.View>
         </Container>
       </KeyboardAwareScrollView>
+      <PrivatePoliceBottomSheet bottomSheetRef={privatePoliceModalRef} />
     </>
   );
 }
