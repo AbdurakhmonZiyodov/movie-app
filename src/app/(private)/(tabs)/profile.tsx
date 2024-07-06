@@ -17,6 +17,7 @@ import { router } from 'expo-router';
 import useVisibility from '@/shared/hooks/useVisibility';
 import { COLORS } from '@/shared/constants/colors';
 import { DEBUG } from '@/shared/constants/global';
+import { useGoogleAuth } from '@/shared/hooks/useGoogleAuth';
 
 export default function ProfileScreen() {
   const premiumBottomSheetRef = useRef<BottomSheetRef>(null);
@@ -29,6 +30,7 @@ export default function ProfileScreen() {
     refetch,
   } = useProfileInfoQuery();
   const refreshControlVisible = useVisibility();
+  const googleAuth = useGoogleAuth();
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
@@ -43,6 +45,7 @@ export default function ProfileScreen() {
     try {
       setTimeout(() => {
         router.replace(PUBLIC_STACK.login);
+        googleAuth.logout();
         dispatch(onUpdateTokens({ tokens: null }));
       }, 100);
     } catch (err) {

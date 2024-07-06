@@ -37,6 +37,7 @@ import {
   uzbekistanPhoneNumberMask,
 } from '@/components/Inputs/utils';
 import { DEBUG } from '@/shared/constants/global';
+import { useGoogleAuth } from '@/shared/hooks/useGoogleAuth';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -57,6 +58,8 @@ export default function Login() {
     androidClientId: config.GOOGLE.android,
     iosClientId: config.GOOGLE.ios,
   });
+
+  const googleAuth = useGoogleAuth();
 
   const [shouldTriggerError, setShouldTriggerError] = useState(false);
   const [loginWithPhoneSendCode, { isLoading }] =
@@ -112,10 +115,10 @@ export default function Login() {
   );
 
   useEffect(() => {
-    if (response?.type === 'success' && response?.authentication?.idToken) {
-      onGoogleAuth(response.authentication.idToken);
+    if (googleAuth.idToken) {
+      onGoogleAuth(googleAuth.idToken);
     }
-  }, [onGoogleAuth, response]);
+  }, [googleAuth.idToken, onGoogleAuth, response]);
 
   const fieldProps = useMemo(
     () => ({
@@ -137,8 +140,8 @@ export default function Login() {
             <>
               <Button
                 title={'Google orqali kirish'}
-                loading={googleLoading}
-                onPress={() => promptAsync()}
+                loading={googleAuth.isLoading}
+                onPress={googleAuth.login || googleLoading}
                 loadingColor={COLORS.black}
                 style={{
                   backgroundColor: COLORS.white,

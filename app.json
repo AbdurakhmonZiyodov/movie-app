@@ -15,14 +15,16 @@
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true,
-      "bundleIdentifier": "com.anonymous.movieapp"
+      "bundleIdentifier": "com.anonymous.movieapp",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/shared/assets/images/adaptive-icon.png",
         "backgroundColor": "#000002"
       },
-      "package": "com.anonymous.movieapp"
+      "package": "com.anonymous.movieapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -30,6 +32,7 @@
       "favicon": "./src/shared/assets/images/favicon.png"
     },
     "plugins": [
+      "@react-native-google-signin/google-signin",
       "expo-router",
       "expo-font",
       [
