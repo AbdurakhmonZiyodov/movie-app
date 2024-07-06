@@ -26,18 +26,11 @@ const styles = StyleSheet.create({
   },
   cell: {
     marginHorizontal: 8,
-    backgroundColor: COLORS.black2,
-    // IOS
-    shadowColor: COLORS.orange,
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    backgroundColor: COLORS.dark,
+    borderRadius: 8,
 
     // Android
-    elevation: 3,
+    elevation: 0,
   },
   title: {
     fontSize: normalizeHeight(22),

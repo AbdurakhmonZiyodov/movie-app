@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
 
 Concept: https://dribbble.com/shots/5476562-Forgot-Password-Verification/attachments
@@ -63,30 +64,6 @@ const AnimatedNumCodeInput = ({
 
   const renderCell = ({ index, symbol, isFocused }: RenderCellOptions) => {
     const hasValue = Boolean(symbol);
-    const animatedCellStyle = {
-      backgroundColor: hasValue
-        ? animationsScale[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [NOT_EMPTY_CELL_BG_COLOR, ACTIVE_CELL_BG_COLOR],
-          })
-        : animationsColor[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [DEFAULT_CELL_BG_COLOR, ACTIVE_CELL_BG_COLOR],
-          }),
-
-      transform: [
-        {
-          scale: animationsScale[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.2, 1],
-          }),
-        },
-      ],
-      borderRadius: animationsScale[index].interpolate({
-        inputRange: [0, 1],
-        outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],
-      }),
-    };
 
     // Run animation on nex
     // Because we need first return new style prop and then animate this value
@@ -95,7 +72,7 @@ const AnimatedNumCodeInput = ({
     }, 0);
 
     return (
-      <Animated.View key={index} style={[styles.cell, animatedCellStyle]}>
+      <Animated.View key={index} style={[styles.cell]}>
         <Animated.Text
           style={styles.cellText}
           onLayout={getCellOnLayoutHandler(index)}
