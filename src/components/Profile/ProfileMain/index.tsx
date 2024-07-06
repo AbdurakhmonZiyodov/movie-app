@@ -75,6 +75,7 @@ const ProfileMain: FC<ProfileMainProps> = ({
       data={profileData}
       keyExtractor={(_, key) => `key - ${key}`}
       renderItem={renderItem}
+      scrollEnabled={false}
       contentContainerStyle={{
         gap: 2,
         backgroundColor: COLORS.black2,

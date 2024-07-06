@@ -6,20 +6,14 @@ import { COLORS } from '@/shared/constants/colors';
 import { SIZES, normalizeWidth } from '@/shared/constants/dimensions';
 import { MovieType } from '@/shared/types';
 import { join, map } from 'lodash';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import RN from '../RN';
 import { router } from 'expo-router';
 import { CoreStyle } from '@/shared/styles/globalStyles';
 
 export interface CardProps extends MovieType {}
 
-export default function Card({
-  status_type,
-  images,
-  name,
-  movie_genre,
-  id,
-}: CardProps) {
+function Card({ status_type, images, name, movie_genre, id }: CardProps) {
   const [movieImageUrl, isPremium] = useMemo(
     () => [config.IMAGE_URL + `/${images[0]}`, status_type === 'premium'],
     [images, status_type],
@@ -31,7 +25,7 @@ export default function Card({
   return (
     <RN.TouchableOpacity
       activeOpacity={0.5}
-      style={CoreStyle.flex1}
+      style={[CoreStyle.flex1, { maxWidth: '50%' }]}
       onPress={navigateToMovie}
     >
       {isPremium && (
@@ -56,6 +50,9 @@ export default function Card({
     </RN.TouchableOpacity>
   );
 }
+
+const MemorizedCard = memo(Card);
+export default MemorizedCard;
 
 const styles = RN.StyleSheet.create({
   movieImage: {

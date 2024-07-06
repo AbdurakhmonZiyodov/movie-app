@@ -36,6 +36,7 @@ import {
   phoneNumberSchema,
   uzbekistanPhoneNumberMask,
 } from '@/components/Inputs/utils';
+import { DEBUG } from '@/shared/constants/global';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -79,11 +80,11 @@ export default function Login() {
           setTimeout(() => {
             dispatch(onUpdateTokens({ tokens: response?.data.data }));
             dispatch(onUpdateNewUser(false));
-            router.push(PRIVATE_STACK.tab);
+            router.replace(PRIVATE_STACK.tab);
           }, 100);
         }
       } catch (err) {
-        console.error(err);
+        if (DEBUG) console.error(err);
       }
     },
     [dispatch, loginWithGoogle],
@@ -95,7 +96,7 @@ export default function Login() {
       await loginWithPhoneSendCode({ phone })
         .then((response) => {
           if (response.data?.success) {
-            router.push({
+            router.replace({
               pathname: PUBLIC_STACK.otp,
               params: {
                 phone,
@@ -104,7 +105,7 @@ export default function Login() {
           }
         })
         .catch((err) => {
-          console.error({ err });
+          if (DEBUG) console.error({ err });
         });
     },
     (_error) => setShouldTriggerError(true),

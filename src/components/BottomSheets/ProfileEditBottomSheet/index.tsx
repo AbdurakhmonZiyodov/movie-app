@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import appConfig from '@/config';
 import { useUpdateProfileInfoMutation } from '@/store/services/features/AuthApi';
+import { DEBUG } from '@/shared/constants/global';
 
 const config: any = {
   holderColor: 'white',
@@ -80,7 +81,7 @@ const ProfileEditBottomSheet = ({
         callbackAfterSave?.();
       });
     } catch (err) {
-      console.log(err);
+      if (DEBUG) console.log(err);
     }
   }, [callbackAfterSave, updateProfile, watchedImageUrl, watchedName]);
 

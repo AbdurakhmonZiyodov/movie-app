@@ -8,6 +8,8 @@ import config from '@/config';
 import { InterFonts } from '@/shared/assets/fonts/inter.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { SIZES } from '@/shared/constants/dimensions';
+import { DEBUG } from '@/shared/constants/global';
+import useVisibility from '@/shared/hooks/useVisibility';
 import { CoreStyle } from '@/shared/styles/globalStyles';
 import {
   useAllMoviesQuery,
@@ -17,6 +19,7 @@ import {
 import { router } from 'expo-router';
 import { map } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
+import { RefreshControl } from 'react-native';
 import type { CarouselRenderItem } from 'react-native-reanimated-carousel';
 
 const sizes = {
@@ -27,6 +30,7 @@ export default function HomeScreen() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null,
   );
+  const refreshControlVisible = useVisibility();
 
   const filterParams = useMemo(() => {
     const params: any = {};
@@ -38,13 +42,24 @@ export default function HomeScreen() {
     return params;
   }, [selectedCategoryId]);
 
-  const { data: allMovies, isLoading: allMovieLoading } = useAllMoviesQuery({
+  const {
+    data: allMovies,
+    isLoading: allMovieLoading,
+    refetch: refetchOfAllMovies,
+  } = useAllMoviesQuery({
     params: filterParams,
   });
-  const { data: sliders, isLoading: slidersLoading } = useMovieSlidesQuery();
+  const {
+    data: sliders,
+    isLoading: slidersLoading,
+    refetch: refetchOfSliders,
+  } = useMovieSlidesQuery();
 
-  const { data: categoriesList, isLoading: categoriesLoading } =
-    useMovieCategoriesQuery();
+  const {
+    data: categoriesList,
+    isLoading: categoriesLoading,
+    refetch: refetchOfCategories,
+  } = useMovieCategoriesQuery();
 
   const slidersData = useMemo(
     () =>
@@ -55,6 +70,26 @@ export default function HomeScreen() {
       })),
     [sliders],
   );
+
+  const onRefresh = useCallback(async () => {
+    try {
+      refreshControlVisible.show();
+      await Promise.allSettled([
+        refetchOfAllMovies(),
+        refetchOfCategories(),
+        refetchOfSliders(),
+      ]).then(() => {
+        setTimeout(refreshControlVisible.hide, 400);
+      });
+    } catch (err) {
+      if (DEBUG) console.error(err);
+    }
+  }, [
+    refetchOfAllMovies,
+    refetchOfCategories,
+    refetchOfSliders,
+    refreshControlVisible,
+  ]);
 
   const allLoading = useMemo(
     () => slidersLoading || categoriesLoading || allMovieLoading,
@@ -92,7 +127,18 @@ export default function HomeScreen() {
     );
   }
   return (
-    <Container isScroll={true}>
+    <Container
+      isScroll={true}
+      style={{ padding: 0, margin: 0, paddingVertical: 0, marginVertical: 0 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshControlVisible.visible}
+          onRefresh={onRefresh}
+          tintColor={COLORS.white}
+          colors={[COLORS.black, COLORS.orange, COLORS.black]}
+        />
+      }
+    >
       <Carousel
         data={slidersData}
         renderItem={renderItem}

@@ -1,3 +1,4 @@
+import { DEBUG } from '@/shared/constants/global';
 import { Tokens } from '@/shared/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -9,7 +10,7 @@ export async function getTokens(): Promise<Tokens | null> {
       tokens = await JSON.parse(await JSON.parse(data).localStore).tokens;
     }
   } catch (err) {
-    console.log(err);
+    if (DEBUG) console.log(err);
   }
 
   return tokens;

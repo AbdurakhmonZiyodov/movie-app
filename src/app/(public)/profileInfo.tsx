@@ -28,7 +28,7 @@ export default function ProfileUpdateScreen() {
   const onHide = useCallback(() => {
     setTimeout(() => {
       profileModalRef.current?.onHide();
-      router.push(PRIVATE_STACK.tab);
+      router.replace(PRIVATE_STACK.tab);
       dispatch(onUpdateNewUser(false));
     }, 0);
   }, [dispatch]);

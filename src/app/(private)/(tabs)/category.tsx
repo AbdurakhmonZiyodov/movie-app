@@ -8,6 +8,8 @@ import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import SliderIcon from '@/shared/assets/icons/SliderIcon';
 import { COLORS } from '@/shared/constants/colors';
 import { normalizeHeight } from '@/shared/constants/dimensions';
+import { DEBUG } from '@/shared/constants/global';
+import useVisibility from '@/shared/hooks/useVisibility';
 import {
   useAllMoviesQuery,
   useMovieCountryListQuery,
@@ -24,6 +26,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { RefreshControl } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const config: any = {
   holderColor: 'white',
@@ -68,17 +72,30 @@ export default function CategoryScreen() {
     data: allMovies,
     isLoading,
     isFetching,
+    refetch,
   } = useAllMoviesQuery({
     params: filterParams,
   });
   const bottomSheetRef = useRef<BottomSheetRef>(null);
+  const refreshControlVisible = useVisibility();
 
   const onShowModal = useCallback(() => {
     bottomSheetRef.current?.onShow();
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    try {
+      refreshControlVisible.show();
+      await refetch().then(() => {
+        setTimeout(refreshControlVisible.hide, 400);
+      });
+    } catch (err) {
+      if (DEBUG) console.error(err);
+    }
+  }, [refetch, refreshControlVisible]);
+
   return (
-    <Container isScroll={true}>
+    <Container>
       <Button
         title={'FILTER'}
         style={styles.button}
@@ -86,7 +103,25 @@ export default function CategoryScreen() {
         RightSection={<SliderIcon color={COLORS.white} size={24} />}
       />
       <Spacing height={18} />
-      <MovieList data={allMovies || []} loading={isLoading || isFetching} />
+      <RN.ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshControlVisible.visible}
+            onRefresh={onRefresh}
+            tintColor={COLORS.white}
+            colors={[COLORS.black, COLORS.orange, COLORS.black]}
+          />
+        }
+      >
+        <MovieList
+          data={allMovies || []}
+          loading={
+            refreshControlVisible.visible ? false : isLoading || isFetching
+          }
+        />
+        <Spacing steps={8} />
+      </RN.ScrollView>
       <CategoryBottomSheet
         filterState={filterState}
         updateFilterState={updateFilterState}
@@ -130,7 +165,7 @@ export const CategoryBottomSheet = ({
         {child}
         <RN.Text style={styles.title}>{'Filter'}</RN.Text>
 
-        <RN.ScrollView>
+        <ScrollView contentContainerStyle={{ paddingVertical: 15 }}>
           {/* Ganer list */}
           <RN.Text style={styles.filterTitle}>{'Janrlar:'}</RN.Text>
           <RN.View fd={'row'} g={5} style={{ flexWrap: 'wrap' }}>
@@ -241,7 +276,7 @@ export const CategoryBottomSheet = ({
               );
             })}
           </RN.View>
-        </RN.ScrollView>
+        </ScrollView>
         <RN.View fd={'row'} jc={'space-between'}>
           <Button
             title={'Oynani yopish'}
@@ -271,16 +306,7 @@ export const CategoryBottomSheet = ({
 
   return (
     <Portal>
-      <BottomSheet
-        {...config}
-        maxYPosition={0}
-        bottomSheetRef={bottomSheetRef}
-        containerStyle={
-          {
-            // maxHeight: SIZES.height * 0.9,
-          }
-        }
-      >
+      <BottomSheet {...config} maxYPosition={0} bottomSheetRef={bottomSheetRef}>
         {renderChild}
       </BottomSheet>
     </Portal>

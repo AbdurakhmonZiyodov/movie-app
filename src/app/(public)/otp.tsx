@@ -31,12 +31,12 @@ export default function OtpScreen() {
         setTimeout(() => {
           dispatch(onUpdateNewUser(false));
           dispatch(onUpdateTokens({ tokens: response.data?.data }));
-          router.push(PRIVATE_STACK.tab);
+          router.replace(PRIVATE_STACK.tab);
         }, 100);
       } else {
         dispatch(onUpdateNewUser(true));
         setTimeout(() => {
-          router.push(PUBLIC_STACK.profile);
+          router.replace(PUBLIC_STACK.profile);
           dispatch(onUpdateTokens({ tokens: response.data?.data }));
         }, 100);
       }
