@@ -13,11 +13,13 @@ const ProfileHeader = ({
   email,
   isLoading,
   imageUrl,
+  onRefresh,
 }: {
   name?: string;
   email?: string;
   isLoading: boolean;
   imageUrl: string | null;
+  onRefresh?: () => void;
 }) => {
   const renderChildren = useCallback(
     () => (
@@ -40,7 +42,7 @@ const ProfileHeader = ({
     [email, imageUrl, name],
   );
   return (
-    <RN.View as={'center'} ai={'center'} minH={180} jc={'center'}>
+    <RN.View as={'center'} ai={'center'} minH={180} jc={'center'} w={'100%'}>
       {isLoading ? (
         <RN.ActivityIndicator color={COLORS.orange} />
       ) : (
@@ -56,6 +58,11 @@ const styles = RN.StyleSheet.create({
     fontFamily: PoppinsFonts.Poppins_600,
     color: COLORS.white,
     textAlign: 'center',
+  },
+  refreshContainer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   headerSubTitle: {
     fontSize: normalizeHeight(14),

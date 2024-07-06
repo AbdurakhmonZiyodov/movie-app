@@ -11,6 +11,7 @@ import PlayerIcon from './PlayerIcon.svg';
 import { METRIC_HOST } from './constants';
 import { QualityTypes } from './types';
 import useManifest from './hooks/useManifest';
+import { DEBUG } from '@/shared/constants/global';
 
 interface VideoProps {
   videoID: string;
@@ -66,7 +67,7 @@ const Video: FC<VideoProps> = ({ videoID, usePoster, posterSource }) => {
         source={getSource()}
         shouldCorrectPitch={true}
         onError={(error) => {
-          console.error(['Video/onError', error]);
+          if (DEBUG) console.error(['Video/onError', error]);
         }}
         onFullscreenUpdate={async (event) => {
           if (!isAndroid) return;

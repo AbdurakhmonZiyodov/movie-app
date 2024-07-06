@@ -30,6 +30,7 @@ import { PoppinsFonts } from '@/shared/assets/fonts/poppins.fonts';
 import { COLORS } from '@/shared/constants/colors';
 import { GoogleImagePng } from '@/shared/assets/images';
 import { Spacing } from '@/components/Spacing';
+import { DEBUG } from '@/shared/constants/global';
 
 const schema = yup.object({
   email: emailFieldSchema,
@@ -74,7 +75,7 @@ export default function SignIn() {
           }, 100);
         }
       } catch (err) {
-        console.error(err);
+        if (DEBUG) console.error(err);
       }
     },
     [dispatch, goBack, loginWithGoogle],

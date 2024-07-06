@@ -36,6 +36,8 @@ import {
   phoneNumberSchema,
   uzbekistanPhoneNumberMask,
 } from '@/components/Inputs/utils';
+import { DEBUG } from '@/shared/constants/global';
+import { useGoogleAuth } from '@/shared/hooks/useGoogleAuth';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -56,6 +58,8 @@ export default function Login() {
     androidClientId: config.GOOGLE.android,
     iosClientId: config.GOOGLE.ios,
   });
+
+  const googleAuth = useGoogleAuth();
 
   const [shouldTriggerError, setShouldTriggerError] = useState(false);
   const [loginWithPhoneSendCode, { isLoading }] =
@@ -79,11 +83,11 @@ export default function Login() {
           setTimeout(() => {
             dispatch(onUpdateTokens({ tokens: response?.data.data }));
             dispatch(onUpdateNewUser(false));
-            router.push(PRIVATE_STACK.tab);
+            router.replace(PRIVATE_STACK.tab);
           }, 100);
         }
       } catch (err) {
-        console.error(err);
+        if (DEBUG) console.error(err);
       }
     },
     [dispatch, loginWithGoogle],
@@ -95,7 +99,7 @@ export default function Login() {
       await loginWithPhoneSendCode({ phone })
         .then((response) => {
           if (response.data?.success) {
-            router.push({
+            router.replace({
               pathname: PUBLIC_STACK.otp,
               params: {
                 phone,
@@ -104,17 +108,17 @@ export default function Login() {
           }
         })
         .catch((err) => {
-          console.error({ err });
+          if (DEBUG) console.error({ err });
         });
     },
     (_error) => setShouldTriggerError(true),
   );
 
   useEffect(() => {
-    if (response?.type === 'success' && response?.authentication?.idToken) {
-      onGoogleAuth(response.authentication.idToken);
+    if (googleAuth.idToken) {
+      onGoogleAuth(googleAuth.idToken);
     }
-  }, [onGoogleAuth, response]);
+  }, [googleAuth.idToken, onGoogleAuth, response]);
 
   const fieldProps = useMemo(
     () => ({
@@ -136,8 +140,8 @@ export default function Login() {
             <>
               <Button
                 title={'Google orqali kirish'}
-                loading={googleLoading}
-                onPress={() => promptAsync()}
+                loading={googleAuth.isLoading}
+                onPress={googleAuth.login || googleLoading}
                 loadingColor={COLORS.black}
                 style={{
                   backgroundColor: COLORS.white,

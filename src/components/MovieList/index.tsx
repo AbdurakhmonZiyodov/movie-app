@@ -1,5 +1,5 @@
 import { MovieType } from '@/shared/types';
-import { FC, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
 import RN from '../RN';
 import Card from '../Card';
@@ -28,10 +28,13 @@ const MovieList: FC<MovieListProps> = ({ data = [], loading }) => {
       renderItem={renderItem}
       numColumns={2}
       scrollEnabled={false}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       keyExtractor={(_, key) => key.toString()}
       contentContainerStyle={styles.flatlistContainer}
       columnWrapperStyle={{
         justifyContent: 'space-between',
+        gap: 15,
       }}
     />
   );
@@ -43,4 +46,6 @@ const styles = RN.StyleSheet.create({
     paddingTop: 20,
   },
 });
-export default MovieList;
+
+const MemorizedMovieList = memo(MovieList);
+export default MemorizedMovieList;

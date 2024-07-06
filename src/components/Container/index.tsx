@@ -1,12 +1,12 @@
 import { COLORS } from '@/shared/constants/colors';
-import RN from '../RN';
+import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
+import { FC, ReactNode } from 'react';
+import { ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
 import {
   SafeAreaView,
   SafeAreaViewProps,
 } from 'react-native-safe-area-context';
-import { FC, ReactNode } from 'react';
-import { normalizeHeight, normalizeWidth } from '@/shared/constants/dimensions';
-import { StyleProp, ViewStyle } from 'react-native';
+import RN from '../RN';
 
 interface ContainerProps extends SafeAreaViewProps {
   backgroundColor?: string;
@@ -14,6 +14,7 @@ interface ContainerProps extends SafeAreaViewProps {
   Footer?: ReactNode;
   isScroll?: boolean;
   mainStyle?: StyleProp<ViewStyle>;
+  refreshControl?: ScrollViewProps['refreshControl'];
 }
 
 const Container: FC<ContainerProps> = ({
@@ -23,6 +24,7 @@ const Container: FC<ContainerProps> = ({
   Footer,
   children,
   mainStyle,
+  refreshControl,
   ...resOfProps
 }) => {
   const Main = isScroll ? RN.ScrollView : RN.View;
@@ -36,6 +38,7 @@ const Container: FC<ContainerProps> = ({
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
         style={mainStyle}
+        refreshControl={refreshControl}
       >
         {children}
       </Main>

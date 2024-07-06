@@ -71,7 +71,6 @@ const styles = RN.StyleSheet.create({
     fontSize: 32,
     fontFamily: MontserratFonts.Montserrat_700,
     color: COLORS.white,
-    textTransform: 'uppercase',
     textAlign: 'center',
   },
   description: {

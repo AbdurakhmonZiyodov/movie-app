@@ -3,6 +3,7 @@ import { pickImageFromDevice } from '../utils/image-picker';
 import ApiClient from '@/store/services/ApiClient';
 import { BASE_URL } from '@/config';
 import { AxiosResponse } from 'axios';
+import { DEBUG } from '../constants/global';
 
 export const getFileNameFromPath = (path: string) =>
   path.substring(path.lastIndexOf('/') + 1, path.length);
@@ -67,7 +68,7 @@ const useImageUpload = (props: {
 
         return res.data;
       } catch (err) {
-        console.error(err);
+        if (DEBUG) console.error(err);
         err && setError(err);
         return null;
       }

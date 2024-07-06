@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "622012536210",
+    "project_id": "banana-tv-427013",
+    "storage_bucket": "banana-tv-427013.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622012536210:android:bf7e7ab915ecd29941dd4b",
+        "android_client_info": {
+          "package_name": "com.anonymous.movieapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622012536210-t8vlj88apopk6tfkeumum8grpamj1t4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.movieapp",
+            "certificate_hash": "8c666323017bd85896e10c6822a58e71b6b0e53d"
+          }
+        },
+        {
+          "client_id": "622012536210-7qjb208n14o4qvk6mojoq31gf7014p4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxTyPSL-6eXluaN1EFymfPTcEnlDiFqG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622012536210-7qjb208n14o4qvk6mojoq31gf7014p4c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "622012536210-95iakmt1ncea65ourkk96ofbgef738gb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymous.movieapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

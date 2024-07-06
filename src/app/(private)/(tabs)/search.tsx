@@ -4,13 +4,17 @@ import MovieList from '@/components/MovieList';
 import RN from '@/components/RN';
 import { Spacing } from '@/components/Spacing';
 import { COLORS } from '@/shared/constants/colors';
+import { DEBUG } from '@/shared/constants/global';
+import useVisibility from '@/shared/hooks/useVisibility';
 import { HIT_SLOP } from '@/shared/styles/globalStyles';
 import { useAllMoviesQuery } from '@/store/services/features/MovieApi';
 import { FontAwesome as FontAwesomeIcon } from '@expo/vector-icons';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { RefreshControl } from 'react-native';
 
 export default function SearchScreen() {
+  const refreshControlVisible = useVisibility();
   const { control, watch } = useForm({
     defaultValues: {
       searchValue: '',
@@ -28,8 +32,19 @@ export default function SearchScreen() {
     },
   });
 
+  const onRefresh = useCallback(async () => {
+    try {
+      refreshControlVisible.show();
+      await refetch().then(() => {
+        setTimeout(refreshControlVisible.hide, 400);
+      });
+    } catch (err) {
+      if (DEBUG) console.error(err);
+    }
+  }, [refetch, refreshControlVisible]);
+
   return (
-    <Container isScroll={true}>
+    <Container>
       <FormInput
         control={control}
         name={'searchValue'}
@@ -41,7 +56,24 @@ export default function SearchScreen() {
         }
       />
       <Spacing height={12} />
-      <MovieList data={allMovies || []} loading={isLoading || isFetching} />
+      <RN.ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshControlVisible.visible}
+            onRefresh={onRefresh}
+            tintColor={COLORS.white}
+            colors={[COLORS.black, COLORS.orange, COLORS.black]}
+          />
+        }
+      >
+        <MovieList
+          data={allMovies || []}
+          loading={
+            refreshControlVisible.visible ? false : isLoading || isFetching
+          }
+        />
+        <Spacing steps={8} />
+      </RN.ScrollView>
     </Container>
   );
 }
