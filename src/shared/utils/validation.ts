@@ -4,7 +4,7 @@ export const EMAIL_ERROR = 'Yaroqli elektron pochta manzilini kiriting!';
 
 export const emailFieldSchema = yup
   .string()
-  .required('Itlimos elektiron pochta manzilingizni kiriting!')
+  .required('Iltimos elektiron pochta manzilingizni kiriting!')
   .typeError(EMAIL_ERROR)
   .email(EMAIL_ERROR)
   .required(EMAIL_ERROR);

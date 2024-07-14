@@ -118,3 +118,13 @@ export interface OrderType {
     promo: any;
   };
 }
+
+export interface SettingsType {
+  success: boolean;
+  data: {
+    isGoogle: boolean;
+    isPremium: boolean;
+    isPayme: boolean;
+    isService: boolean;
+  };
+}

@@ -4,11 +4,13 @@ import { COLORS, addAlpha } from '@/shared/constants/colors';
 import { FC, useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import { useUserSettings } from '@/store/hooks/useSettings';
 
 enum ProfileMenu {
   PAYMENT,
   USER_EDIT,
   LOG_OUT,
+  DELETE,
 }
 
 const profileData = [
@@ -24,6 +26,10 @@ const profileData = [
     type: ProfileMenu.LOG_OUT,
     title: 'Chiqish',
   },
+  {
+    type: ProfileMenu.DELETE,
+    title: "Hisobni o'chirish (delete account)",
+  },
 ];
 
 interface ProfileMainProps {
@@ -37,38 +43,64 @@ const ProfileMain: FC<ProfileMainProps> = ({
   onBuyPremium,
   onProfileEdit,
 }) => {
+  const { settings, deleteAccountHandler } = useUserSettings();
+
   const onPressHandler = useCallback(
-    ({ type }: { type: ProfileMenu }) => {
+    async ({ type }: { type: ProfileMenu }) => {
       if (type === ProfileMenu.LOG_OUT) {
-        return onLogout();
+        await onLogout();
+        return;
       }
       if (type === ProfileMenu.PAYMENT) {
-        return onBuyPremium();
+        await onBuyPremium();
+        return;
       }
       if (type === ProfileMenu.USER_EDIT) {
-        onProfileEdit();
+        await onProfileEdit();
+        return;
+      }
+      if (type === ProfileMenu.DELETE) {
+        await deleteAccountHandler();
+        return;
       }
     },
-    [onBuyPremium, onLogout, onProfileEdit],
+    [deleteAccountHandler, onBuyPremium, onLogout, onProfileEdit],
   );
 
   const renderItem: ListRenderItem<(typeof profileData)[0]> = useCallback(
-    ({ item }) => (
-      <RN.TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.item}
-        onPress={() => onPressHandler({ type: item.type })}
-      >
-        <RN.Text style={styles.itemText}>{item.title}</RN.Text>
-        <SimpleLineIcons
-          name={'arrow-right'}
-          size={20}
-          color={COLORS.white}
-          style={styles.icon}
-        />
-      </RN.TouchableOpacity>
-    ),
-    [onPressHandler],
+    ({ item }) => {
+      if (
+        item.type === ProfileMenu.PAYMENT &&
+        !!settings &&
+        !settings.isPremium
+      ) {
+        // @TODO: it should be improved
+        return null;
+      }
+      return (
+        <RN.TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.item}
+          onPress={() => onPressHandler({ type: item.type })}
+        >
+          <RN.Text
+            style={[
+              styles.itemText,
+              item.type === ProfileMenu.DELETE && styles.deleteAccount,
+            ]}
+          >
+            {item.title}
+          </RN.Text>
+          <SimpleLineIcons
+            name={'arrow-right'}
+            size={20}
+            color={COLORS.white}
+            style={styles.icon}
+          />
+        </RN.TouchableOpacity>
+      );
+    },
+    [onPressHandler, settings],
   );
   return (
     <RN.FlatList
@@ -102,6 +134,9 @@ const styles = RN.StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 8,
+  },
+  deleteAccount: {
+    color: COLORS.orange,
   },
 });
 export default ProfileMain;

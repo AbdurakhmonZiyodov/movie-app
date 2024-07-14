@@ -5,6 +5,7 @@ import {
   CommitType,
   OrderType,
   PremiumDiscountType,
+  SettingsType,
 } from '@/components/Video/types';
 
 export const MovieApi = createApi({
@@ -125,6 +126,24 @@ export const MovieApi = createApi({
       }),
       providesTags: ['my-payment-status'],
     }),
+    getSettings: builder.query<SettingsType, undefined>({
+      query: () => ({
+        url: '/settings',
+        method: 'GET',
+      }),
+    }),
+    deleteMyAccount: builder.mutation<
+      {
+        success: boolean;
+        message: string;
+      },
+      undefined
+    >({
+      query: () => ({
+        url: '/auth/profile',
+        method: 'DELETE',
+      }),
+    }),
     addLikeOrDislike: builder.mutation<
       { count_like: number; count_dislike: number },
       { type: 'like' | 'dislike'; id: string }
@@ -164,4 +183,6 @@ export const {
   useGetOrderQuery,
   useMakePaymentOrderMutation,
   useAddLikeOrDislikeMutation,
+  useDeleteMyAccountMutation,
+  useGetSettingsQuery,
 } = MovieApi;

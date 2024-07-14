@@ -39,6 +39,7 @@ import { DEBUG } from '@/shared/constants/global';
 import { useGoogleAuth } from '@/shared/hooks/useGoogleAuth';
 import PrivatePoliceBottomSheet from '@/components/BottomSheets/PrivatePoliceBottomSheet';
 import { BottomSheetRef } from '@/components/BottomSheet';
+import { useUserSettings } from '@/store/hooks/useSettings';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -53,6 +54,8 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const [loginWithGoogle, { isLoading: googleLoading }] =
     useLoginWithGoogleMutation();
+
+  const { settings } = useUserSettings();
 
   const privatePoliceModalRef = useRef<BottomSheetRef>(null);
 
@@ -135,28 +138,30 @@ export default function Login() {
           mainStyle={styles.container}
           Footer={
             <>
-              <Button
-                title={'Google orqali kirish'}
-                loading={googleAuth.isLoading}
-                onPress={googleAuth.login || googleLoading}
-                loadingColor={COLORS.black}
-                style={{
-                  backgroundColor: COLORS.white,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 0,
-                }}
-                titleStyle={{
-                  color: COLORS.black,
-                }}
-                RightSection={
-                  <RN.Image
-                    source={GoogleImagePng}
-                    style={styles.googleImage}
-                    contentFit={'contain'}
-                  />
-                }
-              />
+              {!!settings && settings.isGoogle && (
+                <Button
+                  title={'Google orqali kirish'}
+                  loading={googleAuth.isLoading}
+                  onPress={googleAuth.login || googleLoading}
+                  loadingColor={COLORS.black}
+                  style={{
+                    backgroundColor: COLORS.white,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 0,
+                  }}
+                  titleStyle={{
+                    color: COLORS.black,
+                  }}
+                  RightSection={
+                    <RN.Image
+                      source={GoogleImagePng}
+                      style={styles.googleImage}
+                      contentFit={'contain'}
+                    />
+                  }
+                />
+              )}
               <Spacing />
             </>
           }
