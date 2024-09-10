@@ -40,9 +40,13 @@ function Card({ status_type, images, name, movie_genre, id }: CardProps) {
           contentFit={'cover'}
         />
       )}
-      {!!name && <RN.Text style={styles.movieName}>{name}</RN.Text>}
+      {!!name && (
+        <RN.Text style={styles.movieName} numberOfLines={2}>
+          {name}
+        </RN.Text>
+      )}
       {!!movie_genre && (
-        <RN.Text style={styles.movieCategories}>
+        <RN.Text style={styles.movieCategories} numberOfLines={2}>
           {join(
             map(movie_genre, (i) => i.name),
             ' / ',

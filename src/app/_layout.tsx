@@ -15,6 +15,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ROOT_STACK } from '../shared/routes';
 import { useLocalStore } from '@/store/hooks/useLocalStore';
+import * as ScreenCapture from 'expo-screen-capture';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,6 +29,14 @@ function RootLayout() {
   useEffect(() => {
     if (error) throw error;
   }, [error]);
+
+  useEffect(() => {
+    ScreenCapture.preventScreenCaptureAsync();
+
+    return () => {
+      ScreenCapture.allowScreenCaptureAsync();
+    };
+  }, []);
 
   useEffect(() => {
     if (loaded) {

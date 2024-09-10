@@ -64,6 +64,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - ExpoScreenCapture (6.0.1):
+    - ExpoModulesCore
   - ExpoScreenOrientation (7.0.5):
     - DoubleConversion
     - ExpoModulesCore
@@ -1503,6 +1505,7 @@ DEPENDENCIES:
   - ExpoImage (from `../node_modules/expo-image/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - ExpoScreenCapture (from `../node_modules/expo-screen-capture/ios`)
   - ExpoScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
   - ExpoSystemUI (from `../node_modules/expo-system-ui/ios`)
   - ExpoVideoThumbnails (from `../node_modules/expo-video-thumbnails/ios`)
@@ -1624,6 +1627,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
+  ExpoScreenCapture:
+    :path: "../node_modules/expo-screen-capture/ios"
   ExpoScreenOrientation:
     :path: "../node_modules/expo-screen-orientation/ios"
   ExpoSystemUI:
@@ -1782,6 +1787,7 @@ SPEC CHECKSUMS:
   ExpoImage: 2ccccff1219ebc765e344f3338f2430af2df4824
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
   ExpoModulesCore: 54c85b57000a2a82e5212d5e42cd7a36524be4ac
+  ExpoScreenCapture: ece7593264d1384aff2481eea29f9a238b484090
   ExpoScreenOrientation: 5d6a977177dc2f904cc072b51a0d37d0983c0d6a
   ExpoSystemUI: 65007dd0537cb38649ee55b4670a6ed222769b3a
   ExpoVideoThumbnails: 40c737b2507a7470b14e9452e286513beb9a7d77
@@ -1862,7 +1868,7 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
-  Yoga: b9a182ab00cf25926e7f79657d08c5d23c2d03b0
+  Yoga: 348f8b538c3ed4423eb58a8e5730feec50bce372
 
 PODFILE CHECKSUM: b872fcea38a964d9ba8406f24133c4043e194eef
 

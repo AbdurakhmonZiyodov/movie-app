@@ -30,7 +30,7 @@ const MovieList: FC<MovieListProps> = ({ data = [], loading }) => {
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      keyExtractor={(_, key) => key.toString()}
+      keyExtractor={(movie) => movie.id}
       contentContainerStyle={styles.flatlistContainer}
       columnWrapperStyle={{
         justifyContent: 'space-between',

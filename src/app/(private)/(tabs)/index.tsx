@@ -112,7 +112,9 @@ export default function HomeScreen() {
             style={styles.movieImage}
             contentFit={'cover'}
           />
-          <RN.Text style={styles.cardName}>{card.name}</RN.Text>
+          <RN.Text style={styles.cardName} numberOfLines={2}>
+            {card.name}
+          </RN.Text>
         </RN.View>
       </RN.TouchableOpacity>
     ),
@@ -149,11 +151,13 @@ export default function HomeScreen() {
               style={styles.movieImage}
               contentFit={'cover'}
             />
-            <RN.Text style={styles.cardName}>{slidersData[0]?.name}</RN.Text>
+            <RN.Text style={styles.cardName} numberOfLines={1}>
+              {slidersData[0]?.name}
+            </RN.Text>
           </RN.View>
         }
         width={SIZES.width}
-        height={SIZES.width * 0.85}
+        height={SIZES.width * 0.88}
       />
 
       <Spacing steps={4} />
@@ -174,12 +178,13 @@ const styles = RN.StyleSheet.create({
     height: sizes.height * 1,
   },
   cardName: {
-    fontSize: 17,
+    fontSize: 16,
     fontFamily: InterFonts.Inter_600,
     color: COLORS.white2,
     position: 'absolute',
     zIndex: 2,
-    bottom: -30,
+    bottom: -40,
     textAlign: 'center',
+    width: '70%',
   },
 });
