@@ -55,8 +55,6 @@ export default function Login() {
   const [loginWithGoogle, { isLoading: googleLoading }] =
     useLoginWithGoogleMutation();
 
-  const { settings } = useUserSettings();
-
   const privatePoliceModalRef = useRef<BottomSheetRef>(null);
 
   const googleAuth = useGoogleAuth();
@@ -138,30 +136,28 @@ export default function Login() {
           mainStyle={styles.container}
           Footer={
             <>
-              {!!settings && settings.isGoogle && (
-                <Button
-                  title={'Google orqali kirish'}
-                  loading={googleAuth.isLoading}
-                  onPress={googleAuth.login || googleLoading}
-                  loadingColor={COLORS.black}
-                  style={{
-                    backgroundColor: COLORS.white,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingVertical: 0,
-                  }}
-                  titleStyle={{
-                    color: COLORS.black,
-                  }}
-                  RightSection={
-                    <RN.Image
-                      source={GoogleImagePng}
-                      style={styles.googleImage}
-                      contentFit={'contain'}
-                    />
-                  }
-                />
-              )}
+              <Button
+                title={'Google orqali kirish'}
+                loading={googleAuth.isLoading}
+                onPress={googleAuth.login || googleLoading}
+                loadingColor={COLORS.black}
+                style={{
+                  backgroundColor: COLORS.white,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 0,
+                }}
+                titleStyle={{
+                  color: COLORS.black,
+                }}
+                RightSection={
+                  <RN.Image
+                    source={GoogleImagePng}
+                    style={styles.googleImage}
+                    contentFit={'contain'}
+                  />
+                }
+              />
               <Spacing />
             </>
           }

@@ -10,12 +10,10 @@ import { memo, useCallback, useMemo } from 'react';
 import RN from '../RN';
 import { router } from 'expo-router';
 import { CoreStyle } from '@/shared/styles/globalStyles';
-import { useUserSettings } from '@/store/hooks/useSettings';
 
 export interface CardProps extends MovieType {}
 
 function Card({ status_type, images, name, movie_genre, id }: CardProps) {
-  const { settings } = useUserSettings();
   const [movieImageUrl, isPremium] = useMemo(
     () => [config.IMAGE_URL + `/${images[0]}`, status_type === 'premium'],
     [images, status_type],
@@ -30,7 +28,7 @@ function Card({ status_type, images, name, movie_genre, id }: CardProps) {
       style={[CoreStyle.flex1, { maxWidth: '50%' }]}
       onPress={navigateToMovie}
     >
-      {!!settings && settings.isPremium && isPremium && (
+      {isPremium && (
         <RN.Image source={PremiumImagePng} style={styles.premiumImage} />
       )}
       {!!movieImageUrl && (

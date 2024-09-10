@@ -43,7 +43,7 @@ const ProfileMain: FC<ProfileMainProps> = ({
   onBuyPremium,
   onProfileEdit,
 }) => {
-  const { settings, deleteAccountHandler } = useUserSettings();
+  const { deleteAccountHandler } = useUserSettings();
 
   const onPressHandler = useCallback(
     async ({ type }: { type: ProfileMenu }) => {
@@ -68,39 +68,29 @@ const ProfileMain: FC<ProfileMainProps> = ({
   );
 
   const renderItem: ListRenderItem<(typeof profileData)[0]> = useCallback(
-    ({ item }) => {
-      if (
-        item.type === ProfileMenu.PAYMENT &&
-        !!settings &&
-        !settings.isPremium
-      ) {
-        // @TODO: it should be improved
-        return null;
-      }
-      return (
-        <RN.TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.item}
-          onPress={() => onPressHandler({ type: item.type })}
+    ({ item }) => (
+      <RN.TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.item}
+        onPress={() => onPressHandler({ type: item.type })}
+      >
+        <RN.Text
+          style={[
+            styles.itemText,
+            item.type === ProfileMenu.DELETE && styles.deleteAccount,
+          ]}
         >
-          <RN.Text
-            style={[
-              styles.itemText,
-              item.type === ProfileMenu.DELETE && styles.deleteAccount,
-            ]}
-          >
-            {item.title}
-          </RN.Text>
-          <SimpleLineIcons
-            name={'arrow-right'}
-            size={20}
-            color={COLORS.white}
-            style={styles.icon}
-          />
-        </RN.TouchableOpacity>
-      );
-    },
-    [onPressHandler, settings],
+          {item.title}
+        </RN.Text>
+        <SimpleLineIcons
+          name={'arrow-right'}
+          size={20}
+          color={COLORS.white}
+          style={styles.icon}
+        />
+      </RN.TouchableOpacity>
+    ),
+    [onPressHandler],
   );
   return (
     <RN.FlatList
