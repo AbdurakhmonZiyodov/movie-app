@@ -20,4 +20,5 @@ export enum TAB_BAR_STACK {
   SEARCH = 'search',
   CATEGORY = 'category',
   PROFILE = 'profile',
+  FAVORITES = 'favorites',
 }

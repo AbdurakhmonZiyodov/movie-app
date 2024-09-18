@@ -38,6 +38,12 @@ const tabs: Record<
     icon: ({ color }) => <GirdsIcon color={color} {...iconOptions} />,
     label: 'Katalog',
   },
+  [TAB_BAR_STACK.FAVORITES]: {
+    icon: ({ color }) => (
+      <FontAwesomeIcon name={'heart'} color={color} {...iconOptions} />
+    ),
+    label: 'Sevimlilar',
+  },
   [TAB_BAR_STACK.PROFILE]: {
     icon: ({ color }) => (
       <FontAwesomeIcon name={'user'} color={color} {...iconOptions} />
