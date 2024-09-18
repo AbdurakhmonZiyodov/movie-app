@@ -73,5 +73,6 @@ const styles = RN.StyleSheet.create({
   container: {
     flexGrow: 1,
     rowGap: 20,
+    paddingBottom: 20,
   },
 });
