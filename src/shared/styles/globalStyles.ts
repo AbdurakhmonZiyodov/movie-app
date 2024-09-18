@@ -12,6 +12,10 @@ export const CoreStyle = RN.StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 export const HIT_SLOP = {

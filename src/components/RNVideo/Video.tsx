@@ -1,17 +1,12 @@
-import { COLORS, addAlpha } from '@/shared/constants/colors';
-import { normalizeHeight } from '@/shared/constants/dimensions';
-import { isAndroid } from '@/shared/constants/platform';
+import { COLORS } from '@/shared/constants/colors';
 import useVisibility from '@/shared/hooks/useVisibility';
-import { HIT_SLOP } from '@/shared/styles/globalStyles';
-import { FontAwesome6 as FontAwesomeIcon } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
-import {
-  ResizeMode,
-  Video as ExpoVideo,
-  VideoFullscreenUpdate,
-  AVPlaybackStatus,
-} from 'expo-av';
-import * as ScreenOrientation from 'expo-screen-orientation';
+import Orientation, {
+  useOrientationChange,
+} from 'react-native-orientation-locker';
+import SystemSetting from 'react-native-system-setting';
+import RNVideo, { OnProgressData, VideoRef } from 'react-native-video';
+
+import { CoreStyle } from '@/shared/styles/globalStyles';
 import React, {
   FC,
   memo,
@@ -21,279 +16,301 @@ import React, {
   useState,
 } from 'react';
 import { ActivityIndicator } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import BackButton from '../BackButton';
 import RN from '../RN';
+import { styles } from './styles';
+import { RNVideoBottomControlls, RNVideoCentrialControlls } from './ui';
+import { useRNVideo } from './useRNVideo';
 
 interface VideoProps {
-  uri: string;
-  loading?: boolean;
+  id: string;
+  onBack?: () => void;
 }
 
-const CLOSING_TIME_OF_CONTROLLER = 5_000;
-
-export const Video: FC<VideoProps> = memo(({ uri, loading }) => {
-  const videoRef = useRef<ExpoVideo>(null);
-  const [status, setStatus] = useState<any>({});
-  const playVisiblity = useVisibility();
+export const Video: FC<VideoProps> = memo(({ id, onBack }) => {
+  const { movieUrl } = useRNVideo({ id });
+  const playVisiblity = useVisibility(true);
+  const muteVisiblity = useVisibility();
   const controllerVisiblity = useVisibility(true);
   const loadingVisiblity = useVisibility(true);
-  const interval = useRef<NodeJS.Timeout>();
+  const expandVisiblity = useVisibility();
+  const lockVisiblity = useVisibility();
+  const soundVisiblity = useVisibility();
+  const brightVisiblity = useVisibility();
 
-  const onForwardPress = useCallback(() => {
-    videoRef.current?.setPositionAsync(status.positionMillis + 10000);
-  }, [status?.positionMillis]);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0);
+  const [bright, setBright] = useState(0);
 
-  const onBackwardPress = useCallback(() => {
-    videoRef.current?.setPositionAsync(status.positionMillis - 10000);
-  }, [status?.positionMillis]);
+  // refs
+  const videoRef = useRef<VideoRef>(null);
+  const isFull = useRef(false);
+  const seekRef = useRef(false);
+  const screenTouch = useRef<null | NodeJS.Timeout>(null);
+  const volumeCounter = useRef(0);
+  const brightCounter = useRef(0);
 
-  const onSliderChange = useCallback(
+  const resetTimeout = useCallback(() => {
+    if (screenTouch.current) {
+      clearTimeout(screenTouch.current);
+    }
+    screenTouch.current = setTimeout(() => {
+      controllerVisiblity.hide();
+    }, 3000);
+  }, [controllerVisiblity]);
+
+  const startTimeout = useCallback(() => {
+    if (screenTouch.current) {
+      clearTimeout(screenTouch.current);
+    }
+    screenTouch.current = setTimeout(() => {
+      controllerVisiblity.hide();
+    }, 3000);
+  }, [controllerVisiblity]);
+
+  const onFullScreen = useCallback(() => {
+    expandVisiblity.toggle();
+    if (!isFull.current) {
+      isFull.current = true;
+      Orientation.lockToLandscapeLeft();
+    } else {
+      isFull.current = false;
+      Orientation.lockToPortrait();
+    }
+    resetTimeout();
+  }, [expandVisiblity, resetTimeout]);
+
+  const onChangeVideoDuration = useCallback(([value]: any) => {
+    setCurrentTime(value);
+    seekRef.current = true;
+    videoRef.current?.seek(value);
+  }, []);
+
+  const onChangeVolumeOfSystem = useCallback(async (val: number) => {
+    SystemSetting.setVolume(val);
+  }, []);
+
+  const onChangeBrightOfSystem = useCallback(async (val: number) => {
+    await SystemSetting.setAppBrightness(val);
+  }, []);
+
+  const onChangeVolume = useCallback(
     (value: number) => {
-      videoRef.current?.setPositionAsync(value * status.durationMillis);
+      if (lockVisiblity.visible) return;
+      setVolume((pr) => {
+        if (Math.floor(pr) !== Math.floor(value)) {
+          volumeCounter.current++;
+          if (volumeCounter.current > 3) {
+            soundVisiblity.show();
+            onChangeVolumeOfSystem(value / 100);
+          }
+        }
+        return value;
+      });
     },
-    [status?.durationMillis],
+    [lockVisiblity.visible, onChangeVolumeOfSystem, soundVisiblity],
   );
 
-  const formatTime = useCallback((time: number) => {
-    const hours = Math.floor(time / 3600000);
-    const minutes = Math.floor((time % 3600000) / 60000);
-    const seconds = Math.floor((time % 60000) / 1000);
-    return `${hours > 0 ? hours + ':' : ''}${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  const onForward = useCallback(() => {
+    setCurrentTime((prevTime) => {
+      const newTime = Math.min(prevTime + 10, duration);
+      videoRef.current?.seek(newTime);
+      return newTime;
+    });
+  }, [duration]);
+
+  const onBackward = useCallback(() => {
+    setCurrentTime((prevTime) => {
+      const newTime = Math.max(prevTime - 10, 0);
+      videoRef.current?.seek(newTime);
+      return newTime;
+    });
   }, []);
 
-  const showControls = useCallback(() => {
-    if (controllerVisiblity.visible) return 0;
-    clearTimeout(interval.current);
-    playVisiblity.show();
-    controllerVisiblity.show();
-  }, [controllerVisiblity, playVisiblity]);
-
-  const onUpdateStatus = useCallback((val: AVPlaybackStatus) => {
-    setStatus(val);
-  }, []);
-
-  const toggleFullScreen = useCallback(async () => {
-    if (status.isFullscreen) {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP,
-      );
-      await videoRef.current?.dismissFullscreenPlayer();
-    } else {
-      await videoRef.current?.presentFullscreenPlayer();
-      if (isAndroid) {
-        await ScreenOrientation.lockAsync(
-          ScreenOrientation.OrientationLock.LANDSCAPE_LEFT,
-        );
+  const onCompleteVolume = useCallback(
+    (value) => {
+      if (volumeCounter.current < 3) {
+        onForward();
+      } else {
+        soundVisiblity.hide();
       }
+      volumeCounter.current = 0;
+    },
+    [onForward, soundVisiblity],
+  );
+
+  const onChangeBright = useCallback(
+    (value: number) => {
+      if (lockVisiblity.visible) return;
+      setBright((pr) => {
+        if (Math.floor(pr) !== Math.floor(value)) {
+          brightCounter.current++;
+          if (brightCounter.current > 3) {
+            brightVisiblity.show();
+            onChangeBrightOfSystem(value / 100);
+          }
+        }
+        return value;
+      });
+    },
+    [brightVisiblity, lockVisiblity.visible, onChangeBrightOfSystem],
+  );
+
+  const onCompleteBright = useCallback(
+    (value) => {
+      if (brightCounter.current < 3) {
+        onBackward();
+      } else {
+        brightVisiblity.hide();
+      }
+      brightCounter.current = 0;
+    },
+    [brightVisiblity, onBackward],
+  );
+
+  const onProgress = useCallback((data: OnProgressData) => {
+    if (!seekRef.current) {
+      setCurrentTime(() => data.currentTime);
     }
-  }, [status.isFullscreen]);
+  }, []);
+
+  const onLoadStart = useCallback(() => {
+    loadingVisiblity.show();
+  }, [loadingVisiblity]);
+
+  const onLoad = useCallback(
+    (data: any) => {
+      loadingVisiblity.hide();
+      setDuration(data.duration);
+      videoRef.current?.seek(currentTime);
+    },
+    [currentTime, loadingVisiblity],
+  );
+
+  const onSeek = useCallback(() => {
+    seekRef.current = false;
+  }, []);
+
+  const onEnd = useCallback(() => {
+    setCurrentTime(0);
+    playVisiblity.show();
+  }, [playVisiblity]);
 
   useEffect(() => {
-    if (playVisiblity.visible) {
-      interval.current = setTimeout(
-        controllerVisiblity.hide,
-        CLOSING_TIME_OF_CONTROLLER,
-      );
-    } else {
-      if (interval.current) {
-        clearTimeout(interval.current);
+    startTimeout();
+    SystemSetting.getVolume().then((volume) => {
+      setVolume(volume * 100);
+    });
+    SystemSetting.getAppBrightness().then((bright) => {
+      setBright(bright * 100);
+    });
+
+    return () => {
+      if (screenTouch.current) {
+        clearTimeout(screenTouch.current);
       }
+    };
+  }, [startTimeout]);
+
+  useOrientationChange((orientation) => {
+    if (orientation === 'PORTRAIT') {
+      isFull.current = false;
+      expandVisiblity.hide();
     }
-  }, [
-    controllerVisiblity.hide,
-    playVisiblity.visible,
-    controllerVisiblity.visible,
-  ]);
+  });
+
+  useEffect(
+    () => () => {
+      Orientation.lockToPortrait();
+    },
+    [],
+  );
 
   return (
-    <RN.TouchableWithoutFeedback
-      style={styles.container}
-      onPress={showControls}
-    >
-      <RN.View style={styles.container}>
-        {/* loading... */}
-        {(loadingVisiblity.visible || loading) && (
-          <RN.View style={[RN.StyleSheet.absoluteFill, styles.loading]}>
-            <ActivityIndicator size={'small'} color={COLORS.white} />
-            {/* <RN.Text style={styles.loadingText}>{`${loadedPercent}%`}</RN.Text> */}
+    <GestureHandlerRootView style={CoreStyle.flex1}>
+      <RN.View
+        style={styles.container}
+        onTouchStart={() => {
+          controllerVisiblity.show();
+          resetTimeout();
+        }}
+        onTouchEnd={startTimeout}
+      >
+        {!lockVisiblity.visible && (
+          <RN.View style={styles.backButton}>
+            <BackButton color={COLORS.white} onGoBack={onBack} />
           </RN.View>
         )}
-        {/* Video */}
-        <ExpoVideo
-          ref={videoRef}
-          source={{ uri }}
-          style={styles.video}
-          onLoad={() => {
-            loadingVisiblity.hide();
-          }}
-          resizeMode={ResizeMode.CONTAIN}
-          onFullscreenUpdate={async (event) => {
-            if (isAndroid) {
-              switch (event.fullscreenUpdate) {
-                case VideoFullscreenUpdate.PLAYER_DID_PRESENT:
-                  await ScreenOrientation.unlockAsync();
-                  break;
-                case VideoFullscreenUpdate.PLAYER_WILL_DISMISS:
-                  await ScreenOrientation.lockAsync(
-                    ScreenOrientation.OrientationLock.PORTRAIT,
-                  );
-                  break;
-              }
-            } else {
-              if (
-                event.fullscreenUpdate ===
-                VideoFullscreenUpdate.PLAYER_WILL_DISMISS
-              ) {
-                await ScreenOrientation.lockAsync(
-                  ScreenOrientation.OrientationLock.PORTRAIT_UP,
-                );
-              }
-            }
-          }}
-          shouldPlay={playVisiblity.visible}
-          onPlaybackStatusUpdate={onUpdateStatus}
-          useNativeControls={false}
-        />
-        {controllerVisiblity.visible && (
-          <>
-            {/* controller */}
-            <RN.View style={[RN.StyleSheet.absoluteFill, styles.controls]}>
-              {/* left button */}
-              <RN.TouchableOpacity
-                onPress={onBackwardPress}
-                style={styles.controlButton}
-              >
-                <RN.Text style={styles.controlText}>{'-10s'}</RN.Text>
-              </RN.TouchableOpacity>
-
-              {/* play button */}
-              <RN.TouchableOpacity
-                onPress={playVisiblity.toggle}
-                style={styles.playButton}
-              >
-                {playVisiblity.visible ? (
-                  <FontAwesomeIcon
-                    name={'pause'}
-                    color={COLORS.white}
-                    size={50}
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    name={'play'}
-                    color={COLORS.white}
-                    size={50}
-                  />
-                )}
-              </RN.TouchableOpacity>
-
-              {/* right button */}
-              <RN.TouchableOpacity
-                onPress={onForwardPress}
-                style={styles.controlButton}
-              >
-                <RN.Text style={styles.controlText}>{'+10s'}</RN.Text>
-              </RN.TouchableOpacity>
-            </RN.View>
-            <RN.View style={styles.sliderContainer}>
-              {/* Slider */}
-              <RN.View pb={4}>
-                <RN.Text style={styles.timeText}>
-                  {formatTime(status.positionMillis)}
-                </RN.Text>
-              </RN.View>
-              <Slider
-                style={styles.slider}
-                minimumValue={0}
-                maximumValue={1}
-                hitSlop={HIT_SLOP}
-                minimumTrackTintColor={COLORS.white}
-                maximumTrackTintColor={addAlpha(COLORS.white, 0.5)}
-                // thumbTintColor={'transparent'}
-                thumbTintColor={COLORS.white}
-                value={status.positionMillis / status.durationMillis || 0}
-                onValueChange={onSliderChange}
-              />
-              <RN.View fd={'row'} g={4} pb={4} pr={4}>
-                <RN.Text style={styles.timeText}>
-                  {formatTime(status.durationMillis)}
-                </RN.Text>
-                <RN.TouchableOpacity
-                  onPress={toggleFullScreen}
-                  hitSlop={HIT_SLOP}
-                >
-                  <FontAwesomeIcon
-                    name={'expand'}
-                    color={COLORS.white}
-                    size={20}
-                  />
-                </RN.TouchableOpacity>
-              </RN.View>
-            </RN.View>
-          </>
+        {loadingVisiblity.visible && (
+          <RN.View style={[RN.StyleSheet.absoluteFill, styles.loading]}>
+            <ActivityIndicator size={'small'} color={COLORS.white} />
+          </RN.View>
         )}
-      </RN.View>
-    </RN.TouchableWithoutFeedback>
-  );
-});
 
-const styles = RN.StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  video: {
-    height: normalizeHeight(300),
-    width: '100%',
-  },
-  slider: {
-    height: 40,
-    flex: 1,
-  },
-  loading: {
-    zIndex: 2,
-    backgroundColor: COLORS.black,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loadingText: {
-    color: COLORS.white,
-    marginTop: 10,
-  },
-  playButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 60,
-    height: 60,
-  },
-  controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    width: '100%',
-    paddingHorizontal: 10,
-    marginTop: 10,
-  },
-  controlButton: {
-    borderRadius: 30,
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: addAlpha(COLORS.white, 0.3),
-  },
-  controlText: {
-    color: addAlpha(COLORS.white, 0.7),
-  },
-  timeText: {
-    color: COLORS.white,
-    width: 55,
-  },
-  sliderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 0,
-  },
+        <RN.View style={styles.mainContainer}>
+          {/* Video section*/}
+          <RN.View
+            style={[
+              styles.videoContainer,
+              expandVisiblity.visible && { height: '90%' },
+            ]}
+          >
+            <RNVideo
+              ref={videoRef}
+              source={{ uri: movieUrl! }}
+              paused={playVisiblity.visible}
+              onLoad={onLoad}
+              onLoadStart={onLoadStart}
+              onSeek={onSeek}
+              onProgress={onProgress}
+              onEnd={onEnd}
+              style={styles.video}
+              resizeMode={'contain'}
+              repeat={true}
+              useTextureView={true}
+              muted={muteVisiblity.visible}
+              ignoreSilentSwitch={'ignore'}
+              onPictureInPictureStatusChanged={(props) =>
+                console.log('PIP STATE CHANGE', props)
+              }
+            />
+
+            {/* centrial button */}
+            {controllerVisiblity.visible && (
+              <RNVideoCentrialControlls
+                volume={volume}
+                bright={bright}
+                onChangeVolume={onChangeVolume}
+                onCompleteBright={onCompleteBright}
+                onCompleteVolume={onCompleteVolume}
+                onChangeBright={onChangeBright}
+                playVisiblity={playVisiblity}
+                onForward={onForward}
+                onBackward={onBackward}
+                isShowVolume={soundVisiblity.visible}
+                isShowBright={brightVisiblity.visible}
+                isLock={lockVisiblity.visible}
+              />
+            )}
+          </RN.View>
+
+          {/* bottom controlls */}
+          {controllerVisiblity.visible && (
+            <RNVideoBottomControlls
+              lockVisiblity={lockVisiblity}
+              currentTime={currentTime}
+              duration={duration}
+              onChangeVideoDuration={onChangeVideoDuration}
+              onExpandHandler={onFullScreen}
+              expandVisiblity={expandVisiblity}
+            />
+          )}
+        </RN.View>
+      </RN.View>
+    </GestureHandlerRootView>
+  );
 });
 
 Video.displayName = 'Video';

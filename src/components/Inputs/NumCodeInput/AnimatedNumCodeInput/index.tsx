@@ -17,13 +17,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import styles, {
-  ACTIVE_CELL_BG_COLOR,
-  CELL_BORDER_RADIUS,
-  CELL_SIZE,
-  DEFAULT_CELL_BG_COLOR,
-  NOT_EMPTY_CELL_BG_COLOR,
-} from './styles';
+import styles from './styles';
 
 const { Value } = Animated;
 

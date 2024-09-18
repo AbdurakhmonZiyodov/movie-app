@@ -20,12 +20,6 @@ const useVisibility = (initialState?: boolean) => {
   );
 };
 
-export type UseVisibility = {
-  visible: boolean;
-  show: () => void;
-  hide: () => void;
-  toggle: () => void;
-  set: (neeValue: boolean) => void;
-};
+export type UseVisibility = ReturnType<typeof useVisibility>;
 
 export default useVisibility;
