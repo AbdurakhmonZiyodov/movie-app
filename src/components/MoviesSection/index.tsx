@@ -1,6 +1,7 @@
+import { COLORS } from '@/shared/constants/colors';
 import { useMovieCategoriesQuery } from '@/store/services/features/MovieApi';
 import { useCallback } from 'react';
-import { ListRenderItem } from 'react-native';
+import { ActivityIndicator, ListRenderItem } from 'react-native';
 import RN from '../RN';
 import HorizantalList from './ui/HorizantalList';
 
@@ -14,11 +15,7 @@ const MoviesSection = () => {
   }> = useCallback(({ item }) => <HorizantalList category={item} />, []);
 
   if (categoriesLoading) {
-    return (
-      <RN.View>
-        <RN.Text>{'Loading...'}</RN.Text>
-      </RN.View>
-    );
+    return <ActivityIndicator size={'large'} color={COLORS.white} />;
   }
 
   return (

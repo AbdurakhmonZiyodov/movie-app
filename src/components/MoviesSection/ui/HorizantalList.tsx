@@ -44,8 +44,10 @@ export default function HorizantalList({ category }: HorizantalListProps) {
 
   if (isLoading || isError) {
     return (
-      <RN.View>
-        <RN.Text>{'Loading...'}</RN.Text>
+      <RN.View style={styles.container}>
+        <RN.Text style={styles.title}>
+          {category.name + ' yuklanmoqda...'}
+        </RN.Text>
       </RN.View>
     );
   }

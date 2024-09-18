@@ -16,3 +16,11 @@ export const addAlpha = (hex: string, alpha: number) =>
   `${hex}${Math.floor(alpha * 255)
     .toString(16)
     .padStart(2, '0')}`;
+
+export const hexToRgb = (hex: string): [number, number, number] => {
+  const bigint = parseInt(hex.slice(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return [r, g, b];
+};
