@@ -9,6 +9,7 @@ export default function PrivateLayout() {
       }}
     >
       <Stack.Screen name={PRIVATE_STACK.tab} />
+      <Stack.Screen name={PRIVATE_STACK.movieOfCategory} />
     </Stack>
   );
 }

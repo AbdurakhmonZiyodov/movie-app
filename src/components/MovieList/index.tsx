@@ -33,7 +33,7 @@ const MovieList: FC<MovieListProps> = ({ data = [], loading }) => {
       keyExtractor={(movie) => movie.id}
       contentContainerStyle={styles.flatlistContainer}
       columnWrapperStyle={{
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         gap: 15,
       }}
     />

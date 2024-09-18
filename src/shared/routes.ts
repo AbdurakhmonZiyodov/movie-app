@@ -12,6 +12,7 @@ export enum PUBLIC_STACK {
 
 export enum PRIVATE_STACK {
   tab = '(tabs)',
+  movieOfCategory = 'movie-of-category',
 }
 
 export enum TAB_BAR_STACK {

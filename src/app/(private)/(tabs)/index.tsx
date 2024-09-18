@@ -1,24 +1,19 @@
 import Carousel from '@/components/Carousel';
 import Container from '@/components/Container';
-import CardHorizantalFilter from '@/components/Filters/CardHorizantalFilter';
-import MovieList from '@/components/MovieList';
+import MoviesSection from '@/components/MoviesSection';
 import RN from '@/components/RN';
 import { Spacing } from '@/components/Spacing';
 import config from '@/config';
 import { InterFonts } from '@/shared/assets/fonts/inter.fonts';
 import { COLORS } from '@/shared/constants/colors';
-import { SIZES } from '@/shared/constants/dimensions';
+import { normalizeWidth, SIZES } from '@/shared/constants/dimensions';
 import { DEBUG } from '@/shared/constants/global';
 import useVisibility from '@/shared/hooks/useVisibility';
 import { CoreStyle } from '@/shared/styles/globalStyles';
-import {
-  useAllMoviesQuery,
-  useMovieCategoriesQuery,
-  useMovieSlidesQuery,
-} from '@/store/services/features/MovieApi';
+import { useMovieSlidesQuery } from '@/store/services/features/MovieApi';
 import { router } from 'expo-router';
 import { map } from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { RefreshControl } from 'react-native';
 import type { CarouselRenderItem } from 'react-native-reanimated-carousel';
 
@@ -27,39 +22,13 @@ const sizes = {
   height: SIZES.width * 1 * 0.8,
 };
 export default function HomeScreen() {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null,
-  );
   const refreshControlVisible = useVisibility();
 
-  const filterParams = useMemo(() => {
-    const params: any = {};
-    if (selectedCategoryId) {
-      params['category_id'] = selectedCategoryId;
-    } else {
-      delete params['category_id'];
-    }
-    return params;
-  }, [selectedCategoryId]);
-
-  const {
-    data: allMovies,
-    isLoading: allMovieLoading,
-    refetch: refetchOfAllMovies,
-  } = useAllMoviesQuery({
-    params: filterParams,
-  });
   const {
     data: sliders,
     isLoading: slidersLoading,
     refetch: refetchOfSliders,
   } = useMovieSlidesQuery();
-
-  const {
-    data: categoriesList,
-    isLoading: categoriesLoading,
-    refetch: refetchOfCategories,
-  } = useMovieCategoriesQuery();
 
   const slidersData = useMemo(
     () =>
@@ -74,27 +43,15 @@ export default function HomeScreen() {
   const onRefresh = useCallback(async () => {
     try {
       refreshControlVisible.show();
-      await Promise.allSettled([
-        refetchOfAllMovies(),
-        refetchOfCategories(),
-        refetchOfSliders(),
-      ]).then(() => {
+      await Promise.allSettled([refetchOfSliders()]).then(() => {
         setTimeout(refreshControlVisible.hide, 400);
       });
     } catch (err) {
       if (DEBUG) console.error(err);
     }
-  }, [
-    refetchOfAllMovies,
-    refetchOfCategories,
-    refetchOfSliders,
-    refreshControlVisible,
-  ]);
+  }, [refetchOfSliders, refreshControlVisible]);
 
-  const allLoading = useMemo(
-    () => slidersLoading || categoriesLoading || allMovieLoading,
-    [allMovieLoading, categoriesLoading, slidersLoading],
-  );
+  const allLoading = useMemo(() => slidersLoading, [slidersLoading]);
 
   const navigateToMovie = useCallback((id: string) => {
     router.navigate(`/movie/${id}`);
@@ -130,8 +87,13 @@ export default function HomeScreen() {
   }
   return (
     <Container
+      edges={['top']}
       isScroll={true}
-      style={{ padding: 0, margin: 0, paddingVertical: 0, marginVertical: 0 }}
+      style={{
+        paddingVertical: 0,
+        marginVertical: 0,
+        paddingHorizontal: 0,
+      }}
       refreshControl={
         <RefreshControl
           refreshing={refreshControlVisible.visible}
@@ -141,32 +103,30 @@ export default function HomeScreen() {
         />
       }
     >
-      <Carousel
-        data={slidersData}
-        renderItem={renderItem}
-        fistImage={
-          <RN.View w={sizes.width * 0.87} h={sizes.width * 0.8} ai={'center'}>
-            <RN.Image
-              source={slidersData[0]?.source}
-              style={styles.movieImage}
-              contentFit={'cover'}
-            />
-            <RN.Text style={styles.cardName} numberOfLines={1}>
-              {slidersData[0]?.name}
-            </RN.Text>
-          </RN.View>
-        }
-        width={SIZES.width}
-        height={SIZES.width * 0.88}
-      />
+      <RN.View style={styles.withPadding}>
+        <Carousel
+          data={slidersData}
+          renderItem={renderItem}
+          fistImage={
+            <RN.View w={sizes.width * 0.87} h={sizes.width * 0.8} ai={'center'}>
+              <RN.Image
+                source={slidersData[0]?.source}
+                style={styles.movieImage}
+                contentFit={'cover'}
+              />
+              <RN.Text style={styles.cardName} numberOfLines={1}>
+                {slidersData[0]?.name}
+              </RN.Text>
+            </RN.View>
+          }
+          width={SIZES.width}
+          height={SIZES.width * 0.88}
+        />
+      </RN.View>
 
-      <Spacing steps={4} />
-      <CardHorizantalFilter
-        categories={categoriesList ?? []}
-        selectedCategoryId={selectedCategoryId}
-        updateSelectedCategoryId={setSelectedCategoryId}
-      />
-      <MovieList data={allMovies || []} loading={allMovieLoading} />
+      <Spacing steps={2} />
+
+      <MoviesSection />
     </Container>
   );
 }
@@ -186,5 +146,8 @@ const styles = RN.StyleSheet.create({
     bottom: -40,
     textAlign: 'center',
     width: '70%',
+  },
+  withPadding: {
+    paddingHorizontal: normalizeWidth(16),
   },
 });
